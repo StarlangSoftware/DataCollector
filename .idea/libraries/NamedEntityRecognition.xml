@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="NamedEntityRecognition">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/src/libs/NamedEntityRecognition.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

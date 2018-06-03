@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="AnnotatedTree">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/src/libs/AnnotatedTree.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

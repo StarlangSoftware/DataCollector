@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="DependencyParser">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/src/libs/DependencyParser.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>
