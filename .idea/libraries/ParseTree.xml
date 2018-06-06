@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="ParseTree">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/src/libs/ParseTree.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

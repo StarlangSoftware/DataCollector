@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="PropBank">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/src/libs/PropBank.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>
