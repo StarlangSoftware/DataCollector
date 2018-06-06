@@ -53,3 +53,15 @@ nb-configuration.xml
 release.properties
 pom.xml.releaseBackup
 pom.xml.tag
+out/artifacts/DataCollector_jar/DataCollector.jar
+out/production/DataCollector/libs/AnnotatedSentence.jar
+out/production/DataCollector/libs/AnnotatedTree.jar
+out/production/DataCollector/libs/DataGenerator.jar
+out/production/DataCollector/libs/DependencyParser.jar
+out/production/DataCollector/libs/MorphologicalAnalysis.jar
+out/production/DataCollector/libs/NamedEntityRecognition.jar
+out/production/DataCollector/libs/ParseTree.jar
+out/production/DataCollector/libs/PropBank.jar
+out/production/DataCollector/libs/Translation.jar
+out/production/DataCollector/libs/Util.jar
+out/production/DataCollector/libs/WordNet.jar
