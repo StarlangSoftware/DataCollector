@@ -1,6 +1,7 @@
 package DataCollector.Sentence;
 
 import AnnotatedSentence.*;
+import AnnotatedSentence.AutoProcessor.AutoArgument.TurkishSentenceAutoArgument;
 import PropBank.Frameset;
 import PropBank.FramesetArgument;
 import PropBank.FramesetList;
@@ -23,6 +24,7 @@ public class SentencePropbankArgumentPanel extends AnnotatorPanel{
     private DefaultTreeModel treeModel;
     private boolean selfSelected = false;
     private HashSet<Frameset> currentFrameSets;
+    private TurkishSentenceAutoArgument turkishSentenceAutoArgument;
 
     public SentencePropbankArgumentPanel(String currentPath, String fileName, WordNet wordNet){
         super(currentPath, fileName, ViewLayerType.PROPBANK, null);
@@ -30,6 +32,7 @@ public class SentencePropbankArgumentPanel extends AnnotatorPanel{
         setLayout(new BorderLayout());
         xmlParser = new FramesetList("frameset.xml");
         DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("FrameSets");
+        turkishSentenceAutoArgument = new TurkishSentenceAutoArgument();
         treeModel = new DefaultTreeModel(rootNode);
         tree = new JTree(treeModel);
         tree.setVisible(false);
@@ -60,32 +63,7 @@ public class SentencePropbankArgumentPanel extends AnnotatorPanel{
     }
 
     public void autoDetect(){
-        boolean modified = false;
-        String predicateId = null;
-        for (int i = 0; i < sentence.wordCount(); i++){
-            AnnotatedWord word = (AnnotatedWord) sentence.getWord(i);
-            if (word.getArgument() != null && word.getArgument().getArgumentType().equals("PREDICATE")){
-                predicateId = word.getArgument().getId();
-                break;
-            }
-        }
-        if (predicateId != null){
-            for (int i = 0; i < sentence.wordCount(); i++){
-                AnnotatedWord word = (AnnotatedWord) sentence.getWord(i);
-                if (word.getArgument() == null){
-                    if (word.getShallowParse().equalsIgnoreCase("ÖZNE")){
-                        word.setArgument("ARG0$" + predicateId);
-                        modified = true;
-                    } else {
-                        if (word.getShallowParse().equalsIgnoreCase("NESNE")){
-                            word.setArgument("ARG1$" + predicateId);
-                            modified = true;
-                        }
-                    }
-                }
-            }
-        }
-        if (modified){
+        if (turkishSentenceAutoArgument.autoArgument(sentence)){
             sentence.save();
             this.repaint();
         }

@@ -1,30 +1,28 @@
 package DataCollector.Sentence;
 
 import AnnotatedSentence.*;
+import AnnotatedSentence.AutoProcessor.AutoPredicate.TurkishSentenceAutoPredicate;
 import PropBank.Argument;
 import PropBank.FramesetList;
 
 import java.awt.*;
-import java.util.ArrayList;
 
 public class SentencePropbankPredicatePanel extends AnnotatorPanel{
     private FramesetList xmlParser;
+    private TurkishSentenceAutoPredicate turkishSentenceAutoPredicate;
 
     public SentencePropbankPredicatePanel(String currentPath, String fileName){
         super(currentPath, fileName, ViewLayerType.PROPBANK, null);
         setLayout(new BorderLayout());
         xmlParser = new FramesetList("frameset.xml");
+        turkishSentenceAutoPredicate = new TurkishSentenceAutoPredicate(xmlParser);
     }
 
     public void autoDetect(){
-        ArrayList<AnnotatedWord> candidateList = sentence.predicateCandidates(xmlParser);
-        for (AnnotatedWord word : candidateList){
-            word.setArgument("PREDICATE$" + word.getSemantic());
-        }
-        if (candidateList.size() > 0){
+        if (turkishSentenceAutoPredicate.autoPredicate(sentence)){
             sentence.save();
+            this.repaint();
         }
-        this.repaint();
     }
 
     public int populateLeaf(AnnotatedSentence sentence, int wordIndex){
