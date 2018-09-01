@@ -1,7 +1,8 @@
 package DataCollector.Sentence;
 
+import AnnotatedSentence.AnnotatedWord;
 import Classification.Model.Model;
-import DataCollector.DataCollector;
+import DataCollector.*;
 import DataCollector.ParseTree.EditorPanel;
 
 import javax.swing.*;
@@ -88,10 +89,18 @@ public abstract class AnnotatorFrame extends DataCollector{
             fcinput.setDialogType(JFileChooser.OPEN_DIALOG);
             int returnVal = fcinput.showOpenDialog(null);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
-                ArrayList<String> fileList = loadMultipleFileNames(fcinput.getSelectedFile().getParent() + "/" + fcinput.getSelectedFile().getName());
-                for (String fileName : fileList){
-                    AnnotatorPanel annotatorPanel = generatePanel(fcinput.getSelectedFile().getParent(), fileName);
-                    addPanelToFrame(annotatorPanel, fileName);
+                ArrayList<FileWithSelectedWords> fileList = loadMultipleFileNames(fcinput.getSelectedFile().getParent() + "/" + fcinput.getSelectedFile().getName());
+                for (FileWithSelectedWords fileItem : fileList){
+                    AnnotatorPanel annotatorPanel = generatePanel(fcinput.getSelectedFile().getParent(), fileItem.getFileName());
+                    for (int i = 0; i < fileItem.size(); i++){
+                        for (int j = 0; j < annotatorPanel.sentence.wordCount(); j++){
+                            if (fileItem.getWord(i).equals(annotatorPanel.sentence.getWord(j).getName())){
+                                ((AnnotatedWord)annotatorPanel.sentence.getWord(j)).setSelected(true);
+                                break;
+                            }
+                        }
+                    }
+                    addPanelToFrame(annotatorPanel, fileItem.getFileName());
                 }
             }
         });

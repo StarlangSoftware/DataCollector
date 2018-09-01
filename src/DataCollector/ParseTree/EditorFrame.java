@@ -1,10 +1,9 @@
 package DataCollector.ParseTree;
 
 import AnnotatedSentence.ViewLayerType;
-import DataCollector.DataCollector;
+import DataCollector.*;
 import Translation.AutomaticTranslationDictionary;
 import Translation.BilingualDictionary;
-import AnnotatedTree.*;
 import Util.DrawingButton;
 
 import javax.swing.*;
@@ -116,11 +115,11 @@ public abstract class EditorFrame extends DataCollector{
             fcinput.setDialogType(JFileChooser.OPEN_DIALOG);
             int returnVal = fcinput.showOpenDialog(null);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
-                ArrayList<String> fileList = loadMultipleFileNames(fcinput.getSelectedFile().getParent() + "/" + fcinput.getSelectedFile().getName());
-                for (String fileName : fileList){
-                    EditorPanel editorPanel = generatePanel(fcinput.getSelectedFile().getParent(), fileName);
+                ArrayList<FileWithSelectedWords> fileList = loadMultipleFileNames(fcinput.getSelectedFile().getParent() + "/" + fcinput.getSelectedFile().getName());
+                for (FileWithSelectedWords fileItem : fileList){
+                    EditorPanel editorPanel = generatePanel(fcinput.getSelectedFile().getParent(), fileItem.getFileName());
                     if (editorPanel != null){
-                        addPanelToFrame(editorPanel, fileName);
+                        addPanelToFrame(editorPanel, fileItem.getFileName());
                     }
                 }
             }

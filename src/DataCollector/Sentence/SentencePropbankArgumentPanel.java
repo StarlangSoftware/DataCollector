@@ -12,6 +12,7 @@ import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
+import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -35,6 +36,7 @@ public class SentencePropbankArgumentPanel extends AnnotatorPanel{
         turkishSentenceAutoArgument = new TurkishSentenceAutoArgument();
         treeModel = new DefaultTreeModel(rootNode);
         tree = new JTree(treeModel);
+        tree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
         tree.setVisible(false);
         tree.addTreeSelectionListener(e -> {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();

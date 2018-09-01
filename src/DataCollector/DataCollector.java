@@ -87,20 +87,24 @@ public class DataCollector extends JFrame implements ActionListener {
         itemSave.setEnabled(false);
     }
 
-    protected ArrayList<String> loadMultipleFileNames(String fileName){
-        ArrayList<String> fileNameList = new ArrayList<String>();
+    protected ArrayList<FileWithSelectedWords> loadMultipleFileNames(String fileName){
+        ArrayList<FileWithSelectedWords> fileList = new ArrayList<FileWithSelectedWords>();
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), "UTF8"));
             String line = br.readLine();
             while (line != null){
-                fileNameList.add(line.trim());
+                FileWithSelectedWords fileWithSelectedWords = new FileWithSelectedWords(line.trim());
+                if (fileList.size() == 0 || !fileWithSelectedWords.getFileName().equals(fileList.get(fileList.size() - 1).getFileName())){
+                    fileList.add(fileWithSelectedWords);
+                } else {
+                    fileList.get(fileList.size() - 1).addWord(fileWithSelectedWords.getWord(0));
+                }
                 line = br.readLine();
             }
             br.close();
-        } catch (FileNotFoundException e) {
         } catch (IOException e) {
         }
-        return fileNameList;
+        return fileList;
     }
 
     protected DataCollector(){
