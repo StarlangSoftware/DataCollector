@@ -8,13 +8,11 @@ import PropBank.FramesetList;
 import java.awt.*;
 
 public class SentencePropbankPredicatePanel extends AnnotatorPanel{
-    private FramesetList xmlParser;
     private TurkishSentenceAutoPredicate turkishSentenceAutoPredicate;
 
-    public SentencePropbankPredicatePanel(String currentPath, String fileName){
+    public SentencePropbankPredicatePanel(String currentPath, String fileName, FramesetList xmlParser){
         super(currentPath, fileName, ViewLayerType.PROPBANK, null);
         setLayout(new BorderLayout());
-        xmlParser = new FramesetList("frameset.xml");
         turkishSentenceAutoPredicate = new TurkishSentenceAutoPredicate(xmlParser);
     }
 

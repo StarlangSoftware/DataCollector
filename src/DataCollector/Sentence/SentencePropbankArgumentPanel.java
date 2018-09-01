@@ -27,11 +27,11 @@ public class SentencePropbankArgumentPanel extends AnnotatorPanel{
     private HashSet<Frameset> currentFrameSets;
     private TurkishSentenceAutoArgument turkishSentenceAutoArgument;
 
-    public SentencePropbankArgumentPanel(String currentPath, String fileName, WordNet wordNet){
+    public SentencePropbankArgumentPanel(String currentPath, String fileName, WordNet wordNet, FramesetList xmlParser){
         super(currentPath, fileName, ViewLayerType.PROPBANK, null);
         this.wordNet = wordNet;
         setLayout(new BorderLayout());
-        xmlParser = new FramesetList("frameset.xml");
+        this.xmlParser = xmlParser;
         DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("FrameSets");
         turkishSentenceAutoArgument = new TurkishSentenceAutoArgument();
         treeModel = new DefaultTreeModel(rootNode);
@@ -102,7 +102,7 @@ public class SentencePropbankArgumentPanel extends AnnotatorPanel{
             for (FramesetArgument argument : frameset.getFramesetArguments()){
                 DefaultMutableTreeNode argumentNode = new DefaultMutableTreeNode(argument);
                 frameNode.add(argumentNode);
-                if (word.getArgument() != null && word.getArgument().getArgumentType().equals(argument.getArgumentType())){
+                if (word.getArgument() != null && word.getArgument().getId().equals(frameset.getId()) && word.getArgument().getArgumentType().equals(argument.getArgumentType())){
                     selectedNode = argumentNode;
                 }
                 if (argument.getArgumentType().equals("ARGMTMP")){
