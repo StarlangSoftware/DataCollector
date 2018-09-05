@@ -12,10 +12,10 @@ public class SentencePropbankArgumentFrame extends AnnotatorFrame{
 
     public SentencePropbankArgumentFrame(final WordNet wordNet) {
         super("propbank");
-        this.wordNet = wordNet;
-        xmlParser = new FramesetList("frameset.xml");
         autoArgumentDetectionOption = new JCheckBox("Auto Argument Detection", false);
         toolBar.add(autoArgumentDetectionOption);
+        this.wordNet = wordNet;
+        xmlParser = new FramesetList("frameset.xml");
     }
 
     @Override

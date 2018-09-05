@@ -110,7 +110,11 @@ public abstract class AnnotatorPanel extends JPanel implements MouseListener, Mo
 
     public String getSourceSentence(){
         ParseTreeDrawable englishTree = new ParseTreeDrawable(EditorPanel.ENGLISH_PATH, fileDescription);
-        return englishTree.toSentence();
+        if (englishTree.getRoot() != null){
+            return englishTree.toSentence();
+        } else {
+            return "";
+        }
     }
 
     public String getRawFileName(){

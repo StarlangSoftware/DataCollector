@@ -11,8 +11,8 @@ public class SentencePropbankPredicateFrame extends AnnotatorFrame {
     public SentencePropbankPredicateFrame() {
         super("propbank");
         autoPredicateDetectionOption = new JCheckBox("Auto Predicate Detection", false);
-        xmlParser = new FramesetList("frameset.xml");
         toolBar.add(autoPredicateDetectionOption);
+        xmlParser = new FramesetList("frameset.xml");
     }
 
     @Override

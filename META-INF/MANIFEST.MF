@@ -1,3 +1,3 @@
 Manifest-Version: 1.0
-Main-Class: DataCollector.Sentence.TestSentencePropbankArgumentFrame
+Main-Class: DataCollector.Sentence.TestSentenceNERFrame
 

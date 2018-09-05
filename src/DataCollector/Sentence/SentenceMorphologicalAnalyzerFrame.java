@@ -14,9 +14,9 @@ public class SentenceMorphologicalAnalyzerFrame extends AnnotatorFrame{
     public SentenceMorphologicalAnalyzerFrame(final FsmMorphologicalAnalyzer fsm){
         super("mor");
         autoAnalysisDetectionOption = new JCheckBox("Auto Morphological Disambiguation", false);
+        toolBar.add(autoAnalysisDetectionOption);
         this.fsm = fsm;
         turkishSentenceAutoDisambiguator = new TurkishSentenceAutoDisambiguator(new RootWordStatistics("Model/rootwordstatistics.bin"));
-        toolBar.add(autoAnalysisDetectionOption);
     }
 
     @Override
