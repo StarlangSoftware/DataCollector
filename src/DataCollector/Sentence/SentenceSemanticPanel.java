@@ -78,6 +78,61 @@ public class SentenceSemanticPanel extends AnnotatorPanel{
         return selectedNode;
     }
 
+    protected void paintComponent(Graphics g){
+        super.paintComponent(g);
+        AnnotatedWord word;
+        int lineIndex = 0, currentLeft = wordSpace, multiple = 1;
+        String current;
+        Font currentFont = g.getFont();
+        g.setColor(Color.BLUE);
+        for (int i = 0; i < sentence.wordCount(); i++){
+            word = (AnnotatedWord) sentence.getWord(i);
+            int maxSize = maxLayerLength(word, g);
+            if (maxSize + currentLeft >= getWidth()){
+                lineIndex++;
+                currentLeft = wordSpace;
+                multiple = 1;
+            }
+            multiple--;
+            if (word.getSemantic() != null && multiple == 0) {
+                SynSet synSet = wordNet.getSynSetWithId(word.getSemantic());
+                if (synSet != null){
+                    multiple = 1;
+                    if (i + 1 < sentence.wordCount()){
+                        AnnotatedWord next = (AnnotatedWord) sentence.getWord(i + 1);
+                        if (next.getSemantic() != null && synSet.equals(wordNet.getSynSetWithId(next.getSemantic()))){
+                            multiple = 2;
+                        }
+                    }
+                    if (i + 2 < sentence.wordCount()){
+                        AnnotatedWord twoNext = (AnnotatedWord) sentence.getWord(i + 2);
+                        if (twoNext.getSemantic() != null && multiple == 2 && synSet.equals(wordNet.getSynSetWithId(twoNext.getSemantic()))){
+                            multiple = 3;
+                        }
+                    }
+                    if (synSet.getDefinition() != null){
+                        if (synSet.getDefinition().length() < 24 + (multiple - 1) * 35){
+                            current = synSet.getDefinition();
+                        } else {
+                            current = synSet.getDefinition().substring(0, 24 + (multiple - 1) * 35);
+                        }
+                        g.setFont(new Font(currentFont.getName(), Font.PLAIN, currentFont.getSize() - 2));
+                        g.drawString(current, currentLeft, (lineIndex + 1) * lineSpace + 50);
+                        g.setFont(currentFont);
+                    }
+                }
+            } else {
+                if (word.getSemantic() == null){
+                    multiple = 1;
+                }
+            }
+            currentLeft += maxSize + wordSpace;
+        }
+        setPreferredSize(new Dimension((int) getPreferredSize().getWidth(), (lineIndex + 2) * lineSpace));
+        getParent().invalidate();
+    }
+
+
     public int populateLeaf(AnnotatedSentence sentence, int wordIndex){
         int selectedIndex = -1;
         AnnotatedWord word = (AnnotatedWord) sentence.getWord(wordIndex);

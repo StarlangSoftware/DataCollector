@@ -121,7 +121,7 @@ public abstract class AnnotatorPanel extends JPanel implements MouseListener, Mo
         return fileDescription.getRawFileName();
     }
 
-    private int maxLayerLength(AnnotatedWord word, Graphics g){
+    protected int maxLayerLength(AnnotatedWord word, Graphics g){
         int size, maxSize = g.getFontMetrics().stringWidth(word.getName());
         switch (layerType){
             case NER:
