@@ -1,3 +1,4 @@
 Manifest-Version: 1.0
-Main-Class: DataCollector.Sentence.TestSentenceSemanticFrame
+Main-Class: DataCollector.Sentence.TestSentenceMorphologicalAnalyzerFr
+ ame
 

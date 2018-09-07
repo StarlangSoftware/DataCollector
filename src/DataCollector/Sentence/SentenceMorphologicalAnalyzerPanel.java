@@ -24,6 +24,10 @@ public class SentenceMorphologicalAnalyzerPanel extends AnnotatorPanel{
         this.repaint();
     }
 
+    public void setFsm(FsmMorphologicalAnalyzer fsm){
+        this.fsm = fsm;
+    }
+
     public int populateLeaf(AnnotatedSentence sentence, int wordIndex){
         int selectedIndex = -1;
         AnnotatedWord word = (AnnotatedWord) sentence.getWord(wordIndex);

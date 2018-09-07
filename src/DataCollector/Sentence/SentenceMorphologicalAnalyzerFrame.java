@@ -5,6 +5,8 @@ import MorphologicalAnalysis.FsmMorphologicalAnalyzer;
 import MorphologicalDisambiguation.RootWordStatistics;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
 public class SentenceMorphologicalAnalyzerFrame extends AnnotatorFrame{
     private JCheckBox autoAnalysisDetectionOption;
@@ -13,6 +15,14 @@ public class SentenceMorphologicalAnalyzerFrame extends AnnotatorFrame{
 
     public SentenceMorphologicalAnalyzerFrame(final FsmMorphologicalAnalyzer fsm){
         super("mor");
+        JMenuItem itemUpdateDictionary = addMenuItem(projectMenu, "Update Analyzer", KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
+        itemUpdateDictionary.addActionListener(e -> {
+            this.fsm = new FsmMorphologicalAnalyzer();
+            for (int i = 0; i < projectPane.getTabCount(); i++){
+                SentenceMorphologicalAnalyzerPanel current = (SentenceMorphologicalAnalyzerPanel) ((JScrollPane) projectPane.getComponentAt(i)).getViewport().getView();
+                current.setFsm(this.fsm);
+            }
+        });
         autoAnalysisDetectionOption = new JCheckBox("Auto Morphological Disambiguation", false);
         toolBar.add(autoAnalysisDetectionOption);
         this.fsm = fsm;
