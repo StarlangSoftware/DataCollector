@@ -203,9 +203,7 @@ public abstract class EditorFrame extends DataCollector{
             current.saveTree();
         }
     }
-    /**
-     * Displays the next tree in the panel of this frame.
-     */
+
     protected void nextTree(int count){
         EditorPanel current = (EditorPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
         if (current != null){
@@ -217,9 +215,6 @@ public abstract class EditorFrame extends DataCollector{
         }
     }
 
-    /**
-     * Displays the previous tree in the panel of this frame.
-     */
     protected void previousTree(int count){
         EditorPanel current = (EditorPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
         if (current != null){
@@ -234,8 +229,8 @@ public abstract class EditorFrame extends DataCollector{
     /**
      * Each frame has different Action buttons. EditorFrame, since it is the uppermost parent class of all tree based frames,
      * this method calls appropriate methods for going forward and backward one tree.
-     * @param e Action event to be responded. Depending on the action command of the event, the method calls {@link this#previousTree}
-     *          or {@link this#nextTree}.
+     * @param e Action event to be responded. Depending on the action command of the event, the method calls previousTree
+     *          or nextTree.
      */
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);

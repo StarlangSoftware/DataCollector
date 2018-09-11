@@ -87,6 +87,7 @@ public class ViewerPanel extends JPanel {
      * Overloaded function that displays the next tree according to the index of the parse tree. For example, if the current
      * tree fileName is 0123.train, after the call of nextTree, ViewerPanel will display 0124.train. If the next tree does not
      * exist, nothing will happen.
+     * @param count Number of trees to pass next
      */
     protected void nextTree(int count){
         currentTree.nextTree(count);
@@ -97,6 +98,7 @@ public class ViewerPanel extends JPanel {
      * Overloaded function that displays the previous tree according to the index of the parse tree. For example, if the current
      * tree fileName is 0123.train, after the call of previousTree, ViewerPanel will display 0122.train. If the previous tree does not
      * exist, nothing will happen.
+     * @param count Number of trees to pass before
      */
     protected void previousTree(int count){
         currentTree.previousTree(count);
