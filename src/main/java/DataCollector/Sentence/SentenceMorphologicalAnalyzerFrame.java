@@ -28,7 +28,7 @@ public class SentenceMorphologicalAnalyzerFrame extends AnnotatorFrame{
         autoAnalysisDetectionOption = new JCheckBox("Auto Morphological Disambiguation", false);
         toolBar.add(autoAnalysisDetectionOption);
         this.fsm = fsm;
-        turkishSentenceAutoDisambiguator = new TurkishSentenceAutoDisambiguator(new RootWordStatistics("Model/rootwordstatistics.bin"));
+        turkishSentenceAutoDisambiguator = new TurkishSentenceAutoDisambiguator(new RootWordStatistics("rootwordstatistics.bin"));
     }
 
     @Override
