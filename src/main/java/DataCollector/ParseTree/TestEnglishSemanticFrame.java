@@ -7,7 +7,7 @@ import WordNet.WordNet;
 public class TestEnglishSemanticFrame {
 
     public static void main(String[] args){
-        WordNet englishWordNet = new WordNet("Data/Wordnet/english_wordnet_version_31.xml", "Data/Wordnet/english_exception.xml", new Locale("en"));
+        WordNet englishWordNet = new WordNet("english_wordnet_version_31.xml");
         WordNet turkishWordNet = new WordNet();
         new EnglishSemanticFrame(englishWordNet, turkishWordNet);
     }
