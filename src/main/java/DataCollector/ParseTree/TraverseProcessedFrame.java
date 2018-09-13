@@ -16,14 +16,13 @@ import AnnotatedTree.TreeBankDrawable;
 import javax.swing.*;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.EnumMap;
 
 public class TraverseProcessedFrame extends TraverseFrame{
 
     protected JMenu traverseMenu, viewMenu;
 
-    public TraverseProcessedFrame(FsmMorphologicalAnalyzer fsm, EnumMap<ViewLayerType, AutomaticTranslationDictionary> automaticDictionaryMap, TreeBankDrawable traverseBank){
-        super(fsm, automaticDictionaryMap, traverseBank);
+    public TraverseProcessedFrame(FsmMorphologicalAnalyzer fsm, TreeBankDrawable traverseBank){
+        super(fsm, traverseBank);
         String layerNames[];
         layerCount = 6;
         traverseMenu = new JMenu("Traverse");

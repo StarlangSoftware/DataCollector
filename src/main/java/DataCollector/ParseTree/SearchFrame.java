@@ -6,13 +6,11 @@ import MorphologicalAnalysis.FsmMorphologicalAnalyzer;
 import AnnotatedTree.*;
 import AnnotatedTree.Processor.*;
 import AnnotatedTree.Processor.LeafConverter.LeafToTurkish;
-import Translation.AutomaticTranslationDictionary;
 import AnnotatedTree.TreeBankDrawable;
 
 import javax.swing.*;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.EnumMap;
 
 public class SearchFrame extends TraverseFrame{
 
@@ -20,8 +18,8 @@ public class SearchFrame extends TraverseFrame{
     private JCheckBoxMenuItem searchWhere[];
     private SearchTree currentSearchTree;
 
-    public SearchFrame(FsmMorphologicalAnalyzer fsm, EnumMap<ViewLayerType, AutomaticTranslationDictionary> automaticDictionaryMap, final TreeBankDrawable traverseBank){
-        super(fsm, automaticDictionaryMap, traverseBank);
+    public SearchFrame(FsmMorphologicalAnalyzer fsm, final TreeBankDrawable traverseBank){
+        super(fsm, traverseBank);
         layerCount = 8;
         searchMenu = new JMenu("Search");
         menu.add(searchMenu);
@@ -58,13 +56,14 @@ public class SearchFrame extends TraverseFrame{
             }
             displayTree();
         });
+        itemOpen.removeActionListener(itemOpen.getActionListeners()[0]);
         itemOpen.addActionListener(e -> {
             int i;
             if (projectPane.getTabCount() > 0) {
                 projectPane.remove(0);
             }
             final JFileChooser fcinput = new JFileChooser();
-            fcinput.setDialogTitle("Select project file");
+            fcinput.setDialogTitle("Select search file");
             fcinput.setDialogType(JFileChooser.OPEN_DIALOG);
             fcinput.setCurrentDirectory(new File("."));
             int returnVal = fcinput.showOpenDialog(null);

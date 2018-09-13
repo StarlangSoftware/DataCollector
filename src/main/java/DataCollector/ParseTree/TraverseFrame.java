@@ -29,15 +29,13 @@ public abstract class TraverseFrame extends StructureEditorFrame{
     protected ViewerPanel viewer;
     protected String traverseFile;
     protected FsmMorphologicalAnalyzer fsm;
-    protected EnumMap<ViewLayerType, AutomaticTranslationDictionary> automaticDictionaryMap;
     protected BilingualDictionary bilingualDictionary;
     protected WordNet turkish, english;
     protected TreeBankDrawable traverseBank;
 
-    public TraverseFrame(FsmMorphologicalAnalyzer fsm, EnumMap<ViewLayerType, AutomaticTranslationDictionary> automaticDictionaryMap, TreeBankDrawable traverseBank){
+    public TraverseFrame(FsmMorphologicalAnalyzer fsm, TreeBankDrawable traverseBank){
         this.fsm = fsm;
         this.traverseBank = traverseBank;
-        this.automaticDictionaryMap = automaticDictionaryMap;
         treeFiles = new ArrayList<>();
         toolBar.addSeparator();
         JButton button = new DrawingButton(DataCollector.class, this, "save", SAVE, "Save Names of Trees");
