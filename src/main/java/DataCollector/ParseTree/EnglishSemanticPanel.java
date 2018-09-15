@@ -24,6 +24,7 @@ public class EnglishSemanticPanel extends LeafEditorPanel{
 
     public EnglishSemanticPanel(String path, String fileName, WordNet englishWordNet, WordNet turkishWordNet) {
         super(path, fileName, ViewLayerType.ENGLISH_SEMANTICS, false);
+        heightDecrease = 280;
         this.turkishWordNet = turkishWordNet;
         this.englishWordNet = englishWordNet;
         listModel = new DefaultListModel();
@@ -155,7 +156,7 @@ public class EnglishSemanticPanel extends LeafEditorPanel{
         list.setVisible(true);
         pane.setVisible(true);
         pane.getVerticalScrollBar().setValue(0);
-        pane.setBounds(node.getArea().x - 5, node.getArea().y + 30, 300, 90);
+        pane.setBounds(node.getArea().x - 5, node.getArea().y + 30, 300, 30 + Math.max(3, Math.min(15, listModel.getSize() + 1)) * 18);
         this.repaint();
         isEditing = true;
     }

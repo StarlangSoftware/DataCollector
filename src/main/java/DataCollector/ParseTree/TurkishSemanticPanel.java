@@ -26,6 +26,7 @@ public class TurkishSemanticPanel extends LeafEditorPanel {
 
     public TurkishSemanticPanel(String path, String fileName, WordNet wordNet, FsmMorphologicalAnalyzer fsm, boolean defaultFillEnabled) {
         super(path, fileName, ViewLayerType.SEMANTICS, defaultFillEnabled);
+        heightDecrease = 280;
         this.wordNet = wordNet;
         this.fsm = fsm;
         DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("Anlamlar");
@@ -256,7 +257,7 @@ public class TurkishSemanticPanel extends LeafEditorPanel {
         tree.setVisible(true);
         pane.setVisible(true);
         pane.getVerticalScrollBar().setValue(0);
-        pane.setBounds(node.getArea().x - 5, node.getArea().y + 30, 250, 90);
+        pane.setBounds(node.getArea().x - 5, node.getArea().y + 30, 250, 30 + Math.max(3, Math.min(15, ((DefaultMutableTreeNode) treeModel.getRoot()).getChildCount() + 1)) * 18);
         this.repaint();
         isEditing = true;
         tree.setCellRenderer(new ExampleTreeCellRenderer());
