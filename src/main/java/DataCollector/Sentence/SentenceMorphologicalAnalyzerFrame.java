@@ -36,8 +36,8 @@ public class SentenceMorphologicalAnalyzerFrame extends AnnotatorFrame{
         return new SentenceMorphologicalAnalyzerPanel(currentPath, rawFileName, fsm, turkishSentenceAutoDisambiguator);
     }
 
-    public void next(){
-        super.next();
+    public void next(int count){
+        super.next(count);
         SentenceMorphologicalAnalyzerPanel current;
         current = (SentenceMorphologicalAnalyzerPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
         if (autoAnalysisDetectionOption.isSelected()){
@@ -45,8 +45,8 @@ public class SentenceMorphologicalAnalyzerFrame extends AnnotatorFrame{
         }
     }
 
-    public void previous(){
-        super.previous();
+    public void previous(int count){
+        super.previous(count);
         SentenceMorphologicalAnalyzerPanel current;
         current = (SentenceMorphologicalAnalyzerPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
         if (autoAnalysisDetectionOption.isSelected()){

@@ -90,18 +90,18 @@ public abstract class AnnotatorPanel extends JPanel implements MouseListener, Mo
         setFocusable(false);
     }
 
-    public void previous() {
-        if (fileDescription.previousFileExists(1)){
-            fileDescription.addToIndex(-1);
+    public void previous(int count) {
+        if (fileDescription.previousFileExists(count)){
+            fileDescription.addToIndex(-count);
             sentence = new AnnotatedSentence(new File(fileDescription.getFileName()));
             pane.setVisible(false);
             repaint();
         }
     }
 
-    public void next() {
-        if (fileDescription.nextFileExists(1)){
-            fileDescription.addToIndex(1);
+    public void next(int count) {
+        if (fileDescription.nextFileExists(count)){
+            fileDescription.addToIndex(count);
             sentence = new AnnotatedSentence(new File(fileDescription.getFileName()));
             pane.setVisible(false);
             repaint();

@@ -136,6 +136,7 @@ public class DataCollector extends JFrame implements ActionListener {
         info.add(infoBottom, BorderLayout.SOUTH);
         setLocationRelativeTo(null);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
         itemClose.addActionListener(e -> {
             projectPane.remove(projectPane.getSelectedIndex());

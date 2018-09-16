@@ -20,8 +20,8 @@ public class SentencePropbankPredicateFrame extends AnnotatorFrame {
         return new SentencePropbankPredicatePanel(currentPath, rawFileName, xmlParser);
     }
 
-    public void next(){
-        super.next();
+    public void next(int count){
+        super.next(count);
         SentencePropbankPredicatePanel current;
         current = (SentencePropbankPredicatePanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
         if (autoPredicateDetectionOption.isSelected() && !current.sentence.containsPredicate()){
@@ -29,8 +29,8 @@ public class SentencePropbankPredicateFrame extends AnnotatorFrame {
         }
     }
 
-    public void previous(){
-        super.previous();
+    public void previous(int count){
+        super.previous(count);
         SentencePropbankPredicatePanel current;
         current = (SentencePropbankPredicatePanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
         if (autoPredicateDetectionOption.isSelected() && !current.sentence.containsPredicate()){

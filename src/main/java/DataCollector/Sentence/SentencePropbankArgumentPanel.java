@@ -153,9 +153,9 @@ public class SentencePropbankArgumentPanel extends AnnotatorPanel{
         }
     }
 
-    public void previous() {
-        while (fileDescription.previousFileExists(1)){
-            fileDescription.addToIndex(-1);
+    public void previous(int count) {
+        while (fileDescription.previousFileExists(count)){
+            fileDescription.addToIndex(-count);
             sentence = new AnnotatedSentence(new File(fileDescription.getFileName()));
             if (sentence.containsPredicate()){
                 break;
@@ -165,9 +165,9 @@ public class SentencePropbankArgumentPanel extends AnnotatorPanel{
         repaint();
     }
 
-    public void next() {
-        while (fileDescription.nextFileExists(1)){
-            fileDescription.addToIndex(1);
+    public void next(int count) {
+        while (fileDescription.nextFileExists(count)){
+            fileDescription.addToIndex(count);
             sentence = new AnnotatedSentence(new File(fileDescription.getFileName()));
             if (sentence.containsPredicate()) {
                 break;

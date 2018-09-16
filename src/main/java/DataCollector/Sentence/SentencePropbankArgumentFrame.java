@@ -15,7 +15,7 @@ public class SentencePropbankArgumentFrame extends AnnotatorFrame{
         autoArgumentDetectionOption = new JCheckBox("Auto Argument Detection", false);
         toolBar.add(autoArgumentDetectionOption);
         this.wordNet = wordNet;
-        xmlParser = new FramesetList("frameset.xml");
+        xmlParser = new FramesetList();
     }
 
     @Override
@@ -23,8 +23,8 @@ public class SentencePropbankArgumentFrame extends AnnotatorFrame{
         return new SentencePropbankArgumentPanel(currentPath, rawFileName, wordNet, xmlParser);
     }
 
-    public void next(){
-        super.next();
+    public void next(int count){
+        super.next(count);
         SentencePropbankArgumentPanel current;
         current = (SentencePropbankArgumentPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
         if (autoArgumentDetectionOption.isSelected() && current.sentence.containsPredicate()){
@@ -32,8 +32,8 @@ public class SentencePropbankArgumentFrame extends AnnotatorFrame{
         }
     }
 
-    public void previous(){
-        super.previous();
+    public void previous(int count){
+        super.previous(count);
         SentencePropbankArgumentPanel current;
         current = (SentencePropbankArgumentPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
         if (autoArgumentDetectionOption.isSelected() && current.sentence.containsPredicate()){

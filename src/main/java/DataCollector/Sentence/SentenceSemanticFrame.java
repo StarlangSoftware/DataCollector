@@ -22,8 +22,8 @@ public class SentenceSemanticFrame extends AnnotatorFrame {
         return new SentenceSemanticPanel(currentPath, rawFileName, fsm, wordNet);
     }
 
-    public void next(){
-        super.next();
+    public void next(int count){
+        super.next(count);
         SentenceSemanticPanel current;
         current = (SentenceSemanticPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
         if (autoSemanticDetectionOption.isSelected()){
@@ -31,8 +31,8 @@ public class SentenceSemanticFrame extends AnnotatorFrame {
         }
     }
 
-    public void previous(){
-        super.previous();
+    public void previous(int count){
+        super.previous(count);
         SentenceSemanticPanel current;
         current = (SentenceSemanticPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
         if (autoSemanticDetectionOption.isSelected()){

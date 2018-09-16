@@ -16,8 +16,8 @@ public class SentenceNERFrame extends AnnotatorFrame {
         return new SentenceNERPanel(currentPath, rawFileName);
     }
 
-    public void next(){
-        super.next();
+    public void next(int count){
+        super.next(count);
         SentenceNERPanel current;
         current = (SentenceNERPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
         if (autoNERDetectionOption.isSelected()){
@@ -25,8 +25,8 @@ public class SentenceNERFrame extends AnnotatorFrame {
         }
     }
 
-    public void previous(){
-        super.previous();
+    public void previous(int count){
+        super.previous(count);
         SentenceNERPanel current;
         current = (SentenceNERPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
         if (autoNERDetectionOption.isSelected()){

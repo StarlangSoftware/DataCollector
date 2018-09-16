@@ -4,6 +4,7 @@ import AnnotatedSentence.AnnotatedWord;
 import Classification.Model.Model;
 import DataCollector.*;
 import DataCollector.ParseTree.EditorPanel;
+import Util.DrawingButton;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,6 +24,19 @@ public abstract class AnnotatorFrame extends DataCollector{
     public AnnotatorFrame(String prefix){
         FileInputStream inFile;
         ObjectInputStream inObject;
+        JButton button;
+        button = new DrawingButton(DataCollector.class, this, "fastfastbackward", FAST_FAST_BACKWARD, "Previous 100 Sentence");
+        button.setVisible(true);
+        toolBar.add(button, 0);
+        button = new DrawingButton(DataCollector.class, this, "fastbackward", FAST_BACKWARD, "Previous 10 Sentence");
+        button.setVisible(true);
+        toolBar.add(button, 1);
+        button = new DrawingButton(DataCollector.class, this, "fastforward", FAST_FORWARD, "Next 10 Sentence");
+        button.setVisible(true);
+        toolBar.add(button, 4);
+        button = new DrawingButton(DataCollector.class, this, "fastfastforward", FAST_FAST_FORWARD, "Next 100 Sentence");
+        button.setVisible(true);
+        toolBar.add(button, 5);
         toolBar.addSeparator();
         File[] listOfFiles = new File(".").listFiles();
         Arrays.sort(listOfFiles);
@@ -109,10 +123,22 @@ public abstract class AnnotatorFrame extends DataCollector{
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()){
             case BACKWARD:
-                previous();
+                previous(1);
                 break;
             case FORWARD:
-                next();
+                next(1);
+                break;
+            case FAST_BACKWARD:
+                previous(10);
+                break;
+            case FAST_FORWARD:
+                next(10);
+                break;
+            case FAST_FAST_BACKWARD:
+                previous(100);
+                break;
+            case FAST_FAST_FORWARD:
+                next(100);
                 break;
         }
     }
@@ -133,21 +159,21 @@ public abstract class AnnotatorFrame extends DataCollector{
         enableMenu();
     }
 
-    public void next(){
+    public void next(int count){
         AnnotatorPanel current;
         current = (AnnotatorPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
         if (current == null)
             return;
-        current.next();
+        current.next(count);
         updateInfo(current);
     }
 
-    public void previous(){
+    public void previous(int count){
         AnnotatorPanel current;
         current = (AnnotatorPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
         if (current == null)
             return;
-        current.previous();
+        current.previous(count);
         updateInfo(current);
     }
 
