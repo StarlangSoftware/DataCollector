@@ -102,7 +102,7 @@ public class SentencePropbankArgumentPanel extends AnnotatorPanel{
             for (FramesetArgument argument : frameset.getFramesetArguments()){
                 DefaultMutableTreeNode argumentNode = new DefaultMutableTreeNode(argument);
                 frameNode.add(argumentNode);
-                if (word.getArgument() != null && word.getArgument().getId().equals(frameset.getId()) && word.getArgument().getArgumentType().equals(argument.getArgumentType())){
+                if (word.getArgument() != null && word.getArgument().getId() != null && word.getArgument().getId().equals(frameset.getId()) && word.getArgument().getArgumentType() != null && word.getArgument().getArgumentType().equals(argument.getArgumentType())){
                     selectedNode = argumentNode;
                 }
                 if (argument.getArgumentType().equals("ARGMTMP")){
