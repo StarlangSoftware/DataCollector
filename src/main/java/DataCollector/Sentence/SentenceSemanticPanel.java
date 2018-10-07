@@ -39,6 +39,9 @@ public class SentenceSemanticPanel extends AnnotatorPanel{
                     if (node.getLevel() == 0){
                         clickedWord.setSemantic(null);
                     } else {
+                        if (clickedWord.getSemantic() != null){
+                            sentence.updateConnectedPredicate(clickedWord.getSemantic(), ((SynSet) node.getUserObject()).getId());
+                        }
                         clickedWord.setSemantic(((SynSet) node.getUserObject()).getId());
                     }
                     tree.setVisible(false);

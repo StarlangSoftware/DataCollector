@@ -47,6 +47,11 @@ public class TurkishSemanticPanel extends LeafEditorPanel {
                         for (int i = 1; i < selectedMeanings.size(); i++) {
                             semantics = semantics + "$" + selectedMeanings.get(i);
                         }
+                        if (selectedMeanings.size() == 1 && previousNode.getLayerData(ViewLayerType.SEMANTICS) != null){
+                            if (currentTree.updateConnectedPredicate(previousNode.getLayerData(ViewLayerType.SEMANTICS), semantics)){
+                                currentTree.save();
+                            }
+                        }
                         LayerAction action = new LayerAction(((TurkishSemanticPanel) tree.getParent().getParent().getParent()), previousNode.getLayerInfo(), semantics, ViewLayerType.SEMANTICS);
                         setAction(action);
                         tree.setVisible(false);
