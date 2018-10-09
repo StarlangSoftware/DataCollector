@@ -1,23 +1,26 @@
 package DataCollector.Sentence;
 
 import PropBank.FramesetList;
+import WordNet.WordNet;
 
 import javax.swing.*;
 
 public class SentencePropbankPredicateFrame extends AnnotatorFrame {
     private JCheckBox autoPredicateDetectionOption;
     private FramesetList xmlParser;
+    private WordNet wordNet;
 
     public SentencePropbankPredicateFrame() {
         super("propbank");
         autoPredicateDetectionOption = new JCheckBox("Auto Predicate Detection", false);
+        wordNet = new WordNet();
         toolBar.add(autoPredicateDetectionOption);
         xmlParser = new FramesetList("frameset.xml");
     }
 
     @Override
     protected AnnotatorPanel generatePanel(String currentPath, String rawFileName) {
-        return new SentencePropbankPredicatePanel(currentPath, rawFileName, xmlParser);
+        return new SentencePropbankPredicatePanel(currentPath, rawFileName, xmlParser, wordNet);
     }
 
     public void next(int count){
