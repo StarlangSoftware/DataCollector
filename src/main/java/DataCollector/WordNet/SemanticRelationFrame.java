@@ -96,7 +96,7 @@ public class SemanticRelationFrame extends JFrame implements ActionListener {
     public SemanticRelationFrame(){
         this.pos = Pos.NOUN;
         this.semanticRelationType = SemanticRelationType.HYPONYM;
-        english = new WordNet("Data/Wordnet/english_wordnet_version_31.xml", "Data/Wordnet/english_exception.xml", new Locale("en"));
+        english = new WordNet("english_wordnet_version_31.xml");
         turkish = new WordNet();
         JToolBar toolBar = new JToolBar("ToolBox");
         addButtons(toolBar);

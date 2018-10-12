@@ -185,7 +185,7 @@ public class SemanticRelationExtractor extends SynSetProcessorFrame{
     }
 
     public SemanticRelationExtractor(){
-        WordNet english = new WordNet("Data/Wordnet/english_wordnet_version_31.xml", new Locale("en"));
+        WordNet english = new WordNet("english_wordnet_version_31.xml");
         tree.setCellRenderer(new SynSetTreeCellRenderer(oldTurkish00, oldTurkish01, turkish, english));
         ToolTipManager.sharedInstance().registerComponent(tree);
         JPanel leftPanel = new JPanel(new BorderLayout());

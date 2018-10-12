@@ -40,8 +40,8 @@ public abstract class SynSetProcessorFrame extends JFrame implements ActionListe
     public SynSetProcessorFrame(){
         this.pos = Pos.NOUN;
         turkish = new WordNet();
-        oldTurkish00 = new WordNet("Data/Wordnet/turkish_wordnet_version_00.xml", new Locale("tr"));
-        oldTurkish01 = new WordNet("Data/Wordnet/turkish_wordnet_version_01.xml", new Locale("tr"));
+        oldTurkish00 = new WordNet("turkish_wordnet_version_00.xml");
+        oldTurkish01 = new WordNet("turkish_wordnet_version_01.xml");
         JToolBar toolBar = new JToolBar("ToolBox");
         addButtons(toolBar);
         add(toolBar, BorderLayout.PAGE_START);
