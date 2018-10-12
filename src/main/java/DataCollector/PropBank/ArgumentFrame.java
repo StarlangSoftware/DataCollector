@@ -53,7 +53,7 @@ public class ArgumentFrame extends DataCollector implements Comparator<DefaultMu
 
     public ArgumentFrame(WordNet wordNet, TreeBankDrawable treeBank) throws WordNotExistsException, LayerNotExistsException {
         this.wordNet = wordNet;
-        xmlParser = new FramesetList("frameset.xml");
+        xmlParser = new FramesetList();
         argumentsPanel = new JPanel();
         autoArgumentOption = new JCheckBox("AutoArgument", false);
         toolBar.add(autoArgumentOption);

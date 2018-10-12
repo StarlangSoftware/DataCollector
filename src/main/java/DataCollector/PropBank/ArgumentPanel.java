@@ -86,7 +86,7 @@ public class ArgumentPanel extends LeafEditorPanel {
         previousNode = node;
         listModel.clear();
         try {
-           FramesetList xmlParser = new FramesetList("frameset.xml");
+           FramesetList xmlParser = new FramesetList();
             Map<ArgumentType, String> map = xmlParser.readFromXML(synsetId);
             for (int i = 0; i < map.size(); i++){
                 listModel.addElement((ArgumentType) map.keySet().toArray()[i]);

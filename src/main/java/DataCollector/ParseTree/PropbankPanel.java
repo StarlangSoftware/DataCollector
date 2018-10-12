@@ -28,7 +28,7 @@ public class PropbankPanel extends LeafEditorPanel{
     public PropbankPanel(String path, String fileName, WordNet wordNet) {
         super(path, fileName, ViewLayerType.ENGLISH_PROPBANK, false);
         this.wordNet = wordNet;
-        xmlParser = new FramesetList("frameset.xml");
+        xmlParser = new FramesetList();
         DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("FrameSets");
         treeModel = new DefaultTreeModel(rootNode);
         tree = new JTree(treeModel);
@@ -105,7 +105,7 @@ public class PropbankPanel extends LeafEditorPanel{
         tree.setVisible(true);
         pane.setVisible(true);
         pane.getVerticalScrollBar().setValue(0);
-        pane.setBounds(node.getArea().x - 5, node.getArea().y + 30, 200, 90);
+        pane.setBounds(node.getArea().x - 5, node.getArea().y + 30, 250, 200);
         this.repaint();
         isEditing = true;
     }

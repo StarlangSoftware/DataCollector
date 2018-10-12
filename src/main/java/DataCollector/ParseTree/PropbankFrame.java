@@ -6,7 +6,7 @@ public class PropbankFrame extends EditorFrame{
     private WordNet wordNet;
 
     public PropbankFrame(WordNet wordNet){
-        this.setTitle("Propbank Predicate/Argument Editor");
+        this.setTitle("Propbank Argument Editor");
         this.wordNet = wordNet;
     }
 
