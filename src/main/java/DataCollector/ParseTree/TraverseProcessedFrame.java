@@ -1,7 +1,6 @@
 package DataCollector.ParseTree;
 
 import AnnotatedSentence.ViewLayerType;
-import Translation.AutomaticTranslationDictionary;
 import MorphologicalAnalysis.FsmMorphologicalAnalyzer;
 import AnnotatedTree.*;
 import AnnotatedTree.Processor.*;
@@ -145,7 +144,7 @@ public class TraverseProcessedFrame extends TraverseFrame{
                 viewer = new TurkishSemanticPanel(EditorPanel.TURKISH_PATH, treeFiles.get(treeIndex), turkish, fsm, false);
                 break;
             case 5:
-                viewer = new PropbankPanel(EditorPanel.TURKISH_PATH, treeFiles.get(treeIndex), turkish);
+                viewer = new PropbankArgumentPanel(EditorPanel.TURKISH_PATH, treeFiles.get(treeIndex), turkish);
                 break;
         }
         viewer.setNodeWidth(widthSlider.getValue() * 5);

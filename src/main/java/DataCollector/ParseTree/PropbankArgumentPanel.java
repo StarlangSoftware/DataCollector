@@ -18,15 +18,15 @@ import javax.swing.tree.TreePath;
 import java.util.ArrayList;
 import java.util.HashSet;
 
-public class PropbankPanel extends LeafEditorPanel{
+public class PropbankArgumentPanel extends LeafEditorPanel{
 
     private FramesetList xmlParser;
     private WordNet wordNet;
     private JTree tree;
     private DefaultTreeModel treeModel;
 
-    public PropbankPanel(String path, String fileName, WordNet wordNet) {
-        super(path, fileName, ViewLayerType.ENGLISH_PROPBANK, false);
+    public PropbankArgumentPanel(String path, String fileName, WordNet wordNet) {
+        super(path, fileName, ViewLayerType.PROPBANK, false);
         this.wordNet = wordNet;
         xmlParser = new FramesetList();
         DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("FrameSets");
@@ -41,9 +41,9 @@ public class PropbankPanel extends LeafEditorPanel{
                 if (treeNode.getLevel() == 2){
                     SynSet predicateSynSet = (SynSet)((DefaultMutableTreeNode)treeNode.getParent()).getUserObject();
                     FramesetArgument argument = (FramesetArgument) treeNode.getUserObject();
-                    action = new LayerAction(((PropbankPanel)((JTree) e.getSource()).getParent().getParent().getParent()), previousNode.getLayerInfo(), argument.getArgumentType() + "$" + predicateSynSet.getId(), ViewLayerType.PROPBANK);
+                    action = new LayerAction(((PropbankArgumentPanel)((JTree) e.getSource()).getParent().getParent().getParent()), previousNode.getLayerInfo(), argument.getArgumentType() + "$" + predicateSynSet.getId(), ViewLayerType.PROPBANK);
                 } else {
-                    action = new LayerAction(((PropbankPanel)((JTree) e.getSource()).getParent().getParent().getParent()), previousNode.getLayerInfo(), "NONE", ViewLayerType.PROPBANK);
+                    action = new LayerAction(((PropbankArgumentPanel)((JTree) e.getSource()).getParent().getParent().getParent()), previousNode.getLayerInfo(), "NONE", ViewLayerType.PROPBANK);
                 }
                 actionList.add(action);
                 action.execute();

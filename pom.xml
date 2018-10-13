@@ -287,7 +287,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>tree-propbank</id>
+                        <id>tree-arguments</id>
                         <phase>package</phase>
                         <goals>
                             <goal>single</goal>
@@ -295,10 +295,25 @@
                         <configuration>
                             <archive>
                                 <manifest>
-                                    <mainClass>DataCollector.ParseTree.TestPropbankFrame</mainClass>
+                                    <mainClass>DataCollector.ParseTree.TestPropbankArgumentFrame</mainClass>
                                 </manifest>
                             </archive>
-                            <finalName>tree-propbank</finalName>
+                            <finalName>tree-arguments</finalName>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>tree-predicate</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <archive>
+                                <manifest>
+                                    <mainClass>DataCollector.ParseTree.TestPropbankPredicateFrame</mainClass>
+                                </manifest>
+                            </archive>
+                            <finalName>tree-predicate</finalName>
                         </configuration>
                     </execution>
                     <execution>

@@ -1,18 +1,25 @@
 package DataCollector.ParseTree;
 
+import AnnotatedSentence.LayerNotExistsException;
 import AnnotatedSentence.ViewLayerType;
-import NamedEntityRecognition.NamedEntityType;
-import AnnotatedTree.*;
+import AnnotatedTree.ParseNodeDrawable;
+import AnnotatedTree.WordNotExistsException;
 import DataCollector.ParseTree.TreeAction.LayerAction;
+import Dictionary.Pos;
+import NamedEntityRecognition.NamedEntityType;
+import PropBank.Argument;
+import WordNet.WordNet;
 
 import javax.swing.*;
 
-public class NERPanel extends LeafEditorPanel {
+public class PropbankPredicatePanel extends LeafEditorPanel{
+    private WordNet wordNet;
     private JList list;
     private DefaultListModel listModel;
 
-    public NERPanel(String path, String fileName, boolean defaultFillEnabled) {
-        super(path, fileName, ViewLayerType.NER, defaultFillEnabled);
+    public PropbankPredicatePanel(String path, String fileName, WordNet wordNet) {
+        super(path, fileName, ViewLayerType.PROPBANK, false);
+        this.wordNet = wordNet;
         listModel = new DefaultListModel();
         list = new JList(listModel);
         list.setVisible(false);
@@ -20,7 +27,7 @@ public class NERPanel extends LeafEditorPanel {
             if (!listSelectionEvent.getValueIsAdjusting()) {
                 if (list.getSelectedIndex() != -1 && previousNode != null) {
                     previousNode.setSelected(false);
-                    LayerAction action = new LayerAction(((NERPanel)((JList) listSelectionEvent.getSource()).getParent().getParent().getParent()), previousNode.getLayerInfo(), NamedEntityType.values()[list.getSelectedIndex()].toString(), ViewLayerType.NER);
+                    LayerAction action = new LayerAction(((PropbankPredicatePanel)((JList) listSelectionEvent.getSource()).getParent().getParent().getParent()), previousNode.getLayerInfo(), list.getSelectedValue().toString(), ViewLayerType.PROPBANK);
                     actionList.add(action);
                     action.execute();
                     list.setVisible(false);
@@ -46,11 +53,20 @@ public class NERPanel extends LeafEditorPanel {
         }
         previousNode = node;
         listModel.clear();
-        for (int i = 0; i < NamedEntityType.values().length; i++){
-            if (node.getLayerData(ViewLayerType.NER) != null && node.getLayerData(ViewLayerType.NER).equals(NamedEntityType.values()[i].toString())){
-                selectedIndex = i;
+        listModel.addElement(new Argument("NONE", null));
+        if (node.getLayerData(ViewLayerType.SEMANTICS) != null){
+            String semantics = node.getLayerData(ViewLayerType.SEMANTICS);
+            if (node.getLayerInfo().getNumberOfMeanings() == 1 && wordNet.getSynSetWithId(semantics) != null && wordNet.getSynSetWithId(semantics).getPos().equals(Pos.VERB)){
+                listModel.addElement(new Argument("PREDICATE", semantics));
+                if (node.getLayerInfo().getArgument() != null){
+                    if (node.getLayerInfo().getArgument().getArgumentType().equals("PREDICATE") && node.getLayerInfo().getArgument().getId().equals(semantics)){
+                        selectedIndex = 1;
+                    }
+                    if (node.getLayerInfo().getArgument().getArgumentType().equals("NONE")){
+                        selectedIndex = 0;
+                    }
+                }
             }
-            listModel.addElement(NamedEntityType.values()[i].toString());
         }
         if (selectedIndex != -1){
             list.setValueIsAdjusting(true);
