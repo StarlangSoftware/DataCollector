@@ -1,4 +1,4 @@
-package DataCollector.PropBank;
+package DataCollector;
 
 import Dictionary.TurkishWordComparator;
 import Dictionary.TxtDictionary;
