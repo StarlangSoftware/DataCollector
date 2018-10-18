@@ -133,7 +133,7 @@ public class ArgumentEditorPanel extends JPanel {
         });
         saveButton.addActionListener(evt -> {
             if (definition.getText().length() != 0 && argumentList.getSelectedItem() != ArgumentType.NONE) {
-                xmlParser.saveAsXml(currentSynSet.getId(), argumentList.getSelectedItem().toString(), definition.getText(), SAVE);
+                //xmlParser.saveAsXml(currentSynSet.getId(), argumentList.getSelectedItem().toString(), definition.getText(), SAVE);
             }
             fillFrameList(frameList);
             argumentList.setSelectedItem(ArgumentType.NONE);
@@ -148,7 +148,7 @@ public class ArgumentEditorPanel extends JPanel {
         deleteButton.addActionListener(e -> {
             if (frameList.getSelectedValue() != null) {
                 for (Object o : frameList.getSelectedValuesList()) {
-                    xmlParser.saveAsXml(currentSynSet.getId(), o.toString().trim().split(":")[0], o.toString().trim().split(":")[1], DELETE);
+                    //xmlParser.saveAsXml(currentSynSet.getId(), o.toString().trim().split(":")[0], o.toString().trim().split(":")[1], DELETE);
                 }
                 fillFrameList(frameList);
                 argumentList.setSelectedItem(ArgumentType.NONE);
