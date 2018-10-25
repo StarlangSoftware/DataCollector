@@ -6,7 +6,7 @@
 
     <groupId>NlpToolkit</groupId>
     <artifactId>DataCollector</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -26,12 +26,12 @@
         <dependency>
             <groupId>NlpToolkit</groupId>
             <artifactId>AnnotatedSentence</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.2</version>
         </dependency>
         <dependency>
             <groupId>NlpToolkit</groupId>
             <artifactId>AnnotatedTree</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.1</version>
         </dependency>
         <dependency>
             <groupId>NlpToolkit</groupId>
@@ -86,7 +86,7 @@
         <dependency>
             <groupId>NlpToolkit</groupId>
             <artifactId>WordNet</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.2</version>
         </dependency>
         <dependency>
             <groupId>NlpToolkit</groupId>
