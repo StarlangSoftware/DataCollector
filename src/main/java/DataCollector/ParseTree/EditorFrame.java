@@ -1,6 +1,10 @@
 package DataCollector.ParseTree;
 
+import AnnotatedSentence.AnnotatedWord;
 import AnnotatedSentence.ViewLayerType;
+import AnnotatedTree.ParseNodeDrawable;
+import AnnotatedTree.Processor.Condition.IsTurkishLeafNode;
+import AnnotatedTree.Processor.NodeDrawableCollector;
 import DataCollector.*;
 import Translation.AutomaticTranslationDictionary;
 import Translation.BilingualDictionary;
@@ -118,6 +122,16 @@ public abstract class EditorFrame extends DataCollector{
                 ArrayList<FileWithSelectedWords> fileList = loadMultipleFileNames(fcinput.getSelectedFile().getParent() + "/" + fcinput.getSelectedFile().getName());
                 for (FileWithSelectedWords fileItem : fileList){
                     EditorPanel editorPanel = generatePanel(fcinput.getSelectedFile().getParent(), fileItem.getFileName());
+                    NodeDrawableCollector nodeDrawableCollector = new NodeDrawableCollector((ParseNodeDrawable) editorPanel.currentTree.getRoot(), new IsTurkishLeafNode());
+                    ArrayList<ParseNodeDrawable> leafList = nodeDrawableCollector.collect();
+                    for (int i = 0; i < fileItem.size(); i++){
+                        for (ParseNodeDrawable parseNode : leafList){
+                            if (fileItem.getWord(i).equals(parseNode.getLayerData(ViewLayerType.TURKISH_WORD))){
+                                parseNode.setSelected(true);
+                                break;
+                            }
+                        }
+                    }
                     if (editorPanel != null){
                         addPanelToFrame(editorPanel, fileItem.getFileName());
                     }
