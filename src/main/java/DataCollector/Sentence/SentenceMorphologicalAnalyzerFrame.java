@@ -19,7 +19,7 @@ public class SentenceMorphologicalAnalyzerFrame extends AnnotatorFrame{
         super("mor");
         JMenuItem itemUpdateDictionary = addMenuItem(projectMenu, "Update Analyzer", KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
         itemUpdateDictionary.addActionListener(e -> {
-            this.fsm = new FsmMorphologicalAnalyzer("turkish_finite_state_machine.xml", new TxtDictionary("turkish_dictionary.txt", new TurkishWordComparator()));
+            this.fsm = new FsmMorphologicalAnalyzer("tourism_dictionary.txt");
             for (int i = 0; i < projectPane.getTabCount(); i++){
                 SentenceMorphologicalAnalyzerPanel current = (SentenceMorphologicalAnalyzerPanel) ((JScrollPane) projectPane.getComponentAt(i)).getViewport().getView();
                 current.setFsm(this.fsm);
