@@ -29,6 +29,7 @@ public class SentenceMorphologicalAnalyzerFrame extends AnnotatorFrame{
             for (int i = 0; i < projectPane.getTabCount(); i++){
                 SentenceMorphologicalAnalyzerPanel current = (SentenceMorphologicalAnalyzerPanel) ((JScrollPane) projectPane.getComponentAt(i)).getViewport().getView();
                 current.setFsm(this.fsm);
+                current.setTurkishSentenceAutoDisambiguator(turkishSentenceAutoDisambiguator);
             }
         });
         autoAnalysisDetectionOption = new JCheckBox("Auto Morphological Disambiguation", false);

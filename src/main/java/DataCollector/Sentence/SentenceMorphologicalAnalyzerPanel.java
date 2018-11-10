@@ -28,6 +28,10 @@ public class SentenceMorphologicalAnalyzerPanel extends AnnotatorPanel{
         this.fsm = fsm;
     }
 
+    public void setTurkishSentenceAutoDisambiguator(TurkishSentenceAutoDisambiguator turkishSentenceAutoDisambiguator){
+        this.turkishSentenceAutoDisambiguator = turkishSentenceAutoDisambiguator;
+    }
+
     public int populateLeaf(AnnotatedSentence sentence, int wordIndex){
         int selectedIndex = -1;
         AnnotatedWord word = (AnnotatedWord) sentence.getWord(wordIndex);
