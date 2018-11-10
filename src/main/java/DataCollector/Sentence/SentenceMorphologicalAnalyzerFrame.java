@@ -9,6 +9,8 @@ import MorphologicalDisambiguation.RootWordStatistics;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 public class SentenceMorphologicalAnalyzerFrame extends AnnotatorFrame{
     private JCheckBox autoAnalysisDetectionOption;
@@ -20,7 +22,10 @@ public class SentenceMorphologicalAnalyzerFrame extends AnnotatorFrame{
         JMenuItem itemUpdateDictionary = addMenuItem(projectMenu, "Update Analyzer", KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
         itemUpdateDictionary.addActionListener(e -> {
             this.fsm = new FsmMorphologicalAnalyzer("tourism_dictionary.txt");
-            turkishSentenceAutoDisambiguator = new TurkishSentenceAutoDisambiguator(this.fsm, new RootWordStatistics("rootwordstatistics.bin"));
+            try {
+                turkishSentenceAutoDisambiguator = new TurkishSentenceAutoDisambiguator(this.fsm, new RootWordStatistics(new FileInputStream("tourism_statistics.bin")));
+            } catch (FileNotFoundException e1) {
+            }
             for (int i = 0; i < projectPane.getTabCount(); i++){
                 SentenceMorphologicalAnalyzerPanel current = (SentenceMorphologicalAnalyzerPanel) ((JScrollPane) projectPane.getComponentAt(i)).getViewport().getView();
                 current.setFsm(this.fsm);
