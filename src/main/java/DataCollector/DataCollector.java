@@ -34,7 +34,16 @@ public class DataCollector extends JFrame implements ActionListener {
     static final protected String RANDOM = "random";
     static final protected String CLEAR = "clear";
 
-    protected JMenuItem addMenuItem(JMenu menu, String name, KeyStroke stroke){
+    /**
+     * The addMenuItem method creates a new {@link JMenuItem} with given name and {@link KeyStroke} then adds
+     * this item to the given {@link JMenu}.
+     *
+     * @param menu   {@link JMenu} to add item.
+     * @param name   text of the <code>JMenuItem</code>.
+     * @param stroke key combination which invokes the menu item's action listeners.
+     * @return A new {@link JMenuItem}.
+     */
+    protected JMenuItem addMenuItem(JMenu menu, String name, KeyStroke stroke) {
         JMenuItem newItem;
         newItem = new JMenuItem(name);
         newItem.setAccelerator(stroke);
@@ -42,7 +51,17 @@ public class DataCollector extends JFrame implements ActionListener {
         return newItem;
     }
 
-    protected JCheckBoxMenuItem addMenuItem(JMenu menu, String name, KeyStroke stroke, boolean checked){
+    /**
+     * The addMenuItem method creates a new {@link JCheckBoxMenuItem} with given name and {@link KeyStroke} then adds
+     * this item to the given {@link JMenu}.
+     *
+     * @param menu    {@link JMenu} to add item.
+     * @param name    text of the {@link JCheckBoxMenuItem}.
+     * @param stroke  key combination which invokes the menu item's action listeners.
+     * @param checked the state of the button.
+     * @return A new {@link JMenuItem}.
+     */
+    protected JCheckBoxMenuItem addMenuItem(JMenu menu, String name, KeyStroke stroke, boolean checked) {
         JCheckBoxMenuItem newItem;
         newItem = new JCheckBoxMenuItem(name);
         newItem.setAccelerator(stroke);
@@ -51,21 +70,42 @@ public class DataCollector extends JFrame implements ActionListener {
         return newItem;
     }
 
-    protected JMenuItem addMenuItem(JMenu menu, String name){
+    /**
+     * The addMenuItem method creates a new {@link JMenuItem} with given name then adds
+     * this item to the given {@link JMenu}.
+     *
+     * @param menu {@link JMenu} to add item.
+     * @param name text of the <code>JMenuItem</code>.
+     * @return A new {@link JMenuItem}.
+     */
+    protected JMenuItem addMenuItem(JMenu menu, String name) {
         JMenuItem newItem;
         newItem = new JMenuItem(name);
         menu.add(newItem);
         return newItem;
     }
 
-    protected JMenu addMenu(JMenu menu, String name){
+    /**
+     * The addMenu method creates a new {@link JMenu} with given name then adds
+     * it to the given {@link JMenu}.
+     *
+     * @param menu {@link JMenu} to add newly created menu.
+     * @param name text of the <code>JMenu</code>.
+     * @return A new {@link JMenu}.
+     */
+    protected JMenu addMenu(JMenu menu, String name) {
         JMenu newItem;
         newItem = new JMenu(name);
         menu.add(newItem);
         return newItem;
     }
 
-    protected void addButtons(JToolBar toolBar){
+    /**
+     * The addButtons method creates {@link JButton} as "backward" and "forward", and adds them to the given {@link JToolBar}.
+     *
+     * @param toolBar component that is useful for displaying buttons.
+     */
+    protected void addButtons(JToolBar toolBar) {
         JButton button;
         button = new DrawingButton(DataCollector.class, this, "backward", BACKWARD, "Previous Tree");
         button.setVisible(true);
@@ -75,26 +115,39 @@ public class DataCollector extends JFrame implements ActionListener {
         toolBar.add(button);
     }
 
-    protected void enableMenu(){
+    /**
+     * The enableMenu method enables Close, Close All and Save menu items.
+     */
+    protected void enableMenu() {
         itemClose.setEnabled(true);
         itemCloseAll.setEnabled(true);
         itemSave.setEnabled(true);
     }
 
-    protected void disableMenu(){
+    /**
+     * The disableMenu method disables Close, Close All and Save menu items.
+     */
+    protected void disableMenu() {
         itemClose.setEnabled(false);
         itemCloseAll.setEnabled(false);
         itemSave.setEnabled(false);
     }
 
-    protected ArrayList<FileWithSelectedWords> loadMultipleFileNames(String fileName){
+    /**
+     * The loadMultipleFileNames method takes a file name as an input which has multiple file names in it. It then creates
+     * an {@link ArrayList} which holds each distinct file name inside the given file.
+     *
+     * @param fileName File that has multiple file names in it.
+     * @return an {@link ArrayList} of file names to be loaded.
+     */
+    protected ArrayList<FileWithSelectedWords> loadMultipleFileNames(String fileName) {
         ArrayList<FileWithSelectedWords> fileList = new ArrayList<FileWithSelectedWords>();
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), "UTF8"));
             String line = br.readLine();
-            while (line != null){
+            while (line != null) {
                 FileWithSelectedWords fileWithSelectedWords = new FileWithSelectedWords(line.trim());
-                if (fileList.size() == 0 || !fileWithSelectedWords.getFileName().equals(fileList.get(fileList.size() - 1).getFileName())){
+                if (fileList.size() == 0 || !fileWithSelectedWords.getFileName().equals(fileList.get(fileList.size() - 1).getFileName())) {
                     fileList.add(fileWithSelectedWords);
                 } else {
                     fileList.get(fileList.size() - 1).addWord(fileWithSelectedWords.getWord(0));
@@ -107,7 +160,11 @@ public class DataCollector extends JFrame implements ActionListener {
         return fileList;
     }
 
-    protected DataCollector(){
+    /**
+     * DataCollector constructor initially creates a new menu bar and a <code>JMenu</code> with the supplied string "Project".
+     * Then adds Open, Open Multiple, Save, Close and Close All items to the {@link JMenu} and define actions for Close and Close All items.
+     */
+    protected DataCollector() {
         JPanel info;
         menu = new JMenuBar();
         setJMenuBar(menu);
@@ -140,18 +197,23 @@ public class DataCollector extends JFrame implements ActionListener {
         setVisible(true);
         itemClose.addActionListener(e -> {
             projectPane.remove(projectPane.getSelectedIndex());
-            if (projectPane.getTabCount() == 0){
+            if (projectPane.getTabCount() == 0) {
                 disableMenu();
             }
         });
         itemCloseAll.addActionListener(e -> {
-            while (projectPane.getTabCount() != 0){
+            while (projectPane.getTabCount() != 0) {
                 projectPane.remove(0);
             }
             disableMenu();
         });
     }
 
+    /**
+     * Overridden actionPerformed method.
+     *
+     * @param e {@link ActionEvent} input.
+     */
     public void actionPerformed(ActionEvent e) {
     }
 }
