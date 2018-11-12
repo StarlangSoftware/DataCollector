@@ -16,12 +16,21 @@ import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public abstract class AnnotatorFrame extends DataCollector{
+public abstract class AnnotatorFrame extends DataCollector {
     protected JComboBox modelComboBox;
     protected ArrayList<Model> models;
+
     protected abstract AnnotatorPanel generatePanel(String currentPath, String rawFileName);
 
-    public AnnotatorFrame(String prefix){
+    /**
+     * The {@link AnnotatorFrame} constructor takes a prefix as input and starts to creates items of the menu. I.e fastbackward, fast_backward,
+     * fastfastbackward, and fastfastforward. It then gets the list of files and loops through them, if there has been some
+     * trained models it adds them to the model {@link JComboBox}. Then, adds actions to this {@link JComboBox} in order to
+     * select project and annotation files.
+     *
+     * @param prefix Is used to chose models start with that prefix.
+     */
+    public AnnotatorFrame(String prefix) {
         FileInputStream inFile;
         ObjectInputStream inObject;
         JButton button;
@@ -43,30 +52,30 @@ public abstract class AnnotatorFrame extends DataCollector{
         ArrayList<String> modelNames = new ArrayList<String>();
         models = new ArrayList<>();
         models.add(null);
-        for (File file : listOfFiles){
-            if (file.getName().endsWith(".bin") && file.getName().startsWith(prefix)){
+        for (File file : listOfFiles) {
+            if (file.getName().endsWith(".bin") && file.getName().startsWith(prefix)) {
                 modelNames.add(file.getName().substring(prefix.length() + 1, file.getName().indexOf(".bin")));
             }
         }
         String[] modelArray = new String[modelNames.size() + 1];
         modelArray[0] = "None";
-        for (int i = 1; i <= modelNames.size(); i++){
+        for (int i = 1; i <= modelNames.size(); i++) {
             modelArray[i] = modelNames.get(i - 1);
         }
         modelComboBox = new JComboBox(modelArray);
         modelComboBox.setMaximumSize(new Dimension(250, 35));
         modelComboBox.setSelectedIndex(0);
         modelComboBox.addActionListener(e -> {
-            if (modelComboBox.getSelectedIndex() < models.size()){
-                for (int i = 0; i < projectPane.getTabCount(); i++){
+            if (modelComboBox.getSelectedIndex() < models.size()) {
+                for (int i = 0; i < projectPane.getTabCount(); i++) {
                     AnnotatorPanel panel = (AnnotatorPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
                     panel.classificationModel = models.get(modelComboBox.getSelectedIndex());
                 }
             }
         });
         toolBar.add(modelComboBox);
-        for (File file : listOfFiles){
-            if (file.getName().endsWith(".bin") && file.getName().startsWith(prefix)){
+        for (File file : listOfFiles) {
+            if (file.getName().endsWith(".bin") && file.getName().startsWith(prefix)) {
                 try {
                     inFile = new FileInputStream(file);
                     inObject = new ObjectInputStream(inFile);
@@ -77,9 +86,9 @@ public abstract class AnnotatorFrame extends DataCollector{
         }
         projectPane.addChangeListener(e -> {
             AnnotatorPanel current;
-            if (projectPane.getTabCount() > 0){
+            if (projectPane.getTabCount() > 0) {
                 current = (AnnotatorPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
-                if (current != null){
+                if (current != null) {
                     updateInfo(current);
                 }
             }
@@ -92,7 +101,7 @@ public abstract class AnnotatorFrame extends DataCollector{
             fcinput.setDialogType(JFileChooser.OPEN_DIALOG);
             fcinput.setCurrentDirectory(new File(EditorPanel.TURKISH_PHRASE_PATH));
             int returnVal = fcinput.showOpenDialog(null);
-            if (returnVal == JFileChooser.APPROVE_OPTION){
+            if (returnVal == JFileChooser.APPROVE_OPTION) {
                 AnnotatorPanel annotatorPanel = generatePanel(fcinput.getSelectedFile().getParent(), fcinput.getSelectedFile().getName());
                 addPanelToFrame(annotatorPanel, fcinput.getSelectedFile().getName());
             }
@@ -104,12 +113,12 @@ public abstract class AnnotatorFrame extends DataCollector{
             int returnVal = fcinput.showOpenDialog(null);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 ArrayList<FileWithSelectedWords> fileList = loadMultipleFileNames(fcinput.getSelectedFile().getParent() + "/" + fcinput.getSelectedFile().getName());
-                for (FileWithSelectedWords fileItem : fileList){
+                for (FileWithSelectedWords fileItem : fileList) {
                     AnnotatorPanel annotatorPanel = generatePanel(fcinput.getSelectedFile().getParent(), fileItem.getFileName());
-                    for (int i = 0; i < fileItem.size(); i++){
-                        for (int j = 0; j < annotatorPanel.sentence.wordCount(); j++){
-                            if (fileItem.getWord(i).equals(annotatorPanel.sentence.getWord(j).getName())){
-                                ((AnnotatedWord)annotatorPanel.sentence.getWord(j)).setSelected(true);
+                    for (int i = 0; i < fileItem.size(); i++) {
+                        for (int j = 0; j < annotatorPanel.sentence.wordCount(); j++) {
+                            if (fileItem.getWord(i).equals(annotatorPanel.sentence.getWord(j).getName())) {
+                                ((AnnotatedWord) annotatorPanel.sentence.getWord(j)).setSelected(true);
                                 break;
                             }
                         }
@@ -120,8 +129,20 @@ public abstract class AnnotatorFrame extends DataCollector{
         });
     }
 
+    /**
+     * The actionPerformed method takes an {@link ActionEvent} as an input and calls previous or next methods according to
+     * this {@link ActionEvent}. If the {@link ActionEvent} is;
+     * BACKWARD, it goes to previous {@link AnnotatorPanel},
+     * FORWARD, it goes to next {@link AnnotatorPanel};
+     * FAST_BACKWARD it goes 10 before,
+     * FAST_FAST_BACKWARD it goes 100 before,
+     * FAST_FORWARD it goes 10 after,
+     * FAST_FAST_FORWARD it goes 100 after the current {@link AnnotatorPanel}.
+     *
+     * @param e {@link ActionEvent} input.
+     */
     public void actionPerformed(ActionEvent e) {
-        switch (e.getActionCommand()){
+        switch (e.getActionCommand()) {
             case BACKWARD:
                 previous(1);
                 break;
@@ -143,13 +164,26 @@ public abstract class AnnotatorFrame extends DataCollector{
         }
     }
 
-    public void updateInfo(AnnotatorPanel current){
+    /**
+     * The updateInfo method takes an {@link AnnotatorPanel} as input and sets the title of the current {@link JTabbedPane},
+     * as the file name. Then sets the infoTop and infoBottom {@link JLabel}s.
+     *
+     * @param current {@link AnnotatorPanel} input.
+     */
+    public void updateInfo(AnnotatorPanel current) {
         projectPane.setTitleAt(projectPane.getSelectedIndex(), current.getRawFileName());
         infoTop.setText("<html>" + current.getSourceSentence() + "</html>");
         infoBottom.setText("<html>" + "</html>");
     }
 
-    protected void addPanelToFrame(AnnotatorPanel annotatorPanel, String fileName){
+    /**
+     * The addPanelToFrame method takes an {@link AnnotatorPanel} and a file name as inputs. It creates a new {@link JScrollPane}
+     * and adds given {@link AnnotatorPanel} which can be scrolled. It then adds to {@link JTabbedPane}, updates top and bottom info.
+     *
+     * @param annotatorPanel {@link AnnotatorPanel} input.
+     * @param fileName       File name input.
+     */
+    protected void addPanelToFrame(AnnotatorPanel annotatorPanel, String fileName) {
         JScrollPane treePane = new JScrollPane();
         treePane.setViewportView(annotatorPanel);
         projectPane.add(treePane, fileName);
@@ -159,7 +193,13 @@ public abstract class AnnotatorFrame extends DataCollector{
         enableMenu();
     }
 
-    public void next(int count){
+    /**
+     * The next method takes an int count as input and moves forward along the {@link AnnotatorPanel}s as much as the count.
+     * At the end updates the top and bottom info.
+     *
+     * @param count Integer count is used to move.
+     */
+    public void next(int count) {
         AnnotatorPanel current;
         current = (AnnotatorPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
         if (current == null)
@@ -168,7 +208,13 @@ public abstract class AnnotatorFrame extends DataCollector{
         updateInfo(current);
     }
 
-    public void previous(int count){
+    /**
+     * The next method takes an int count as input and moves backward along the {@link AnnotatorPanel}s as much as the count.
+     * At the end updates the top and bottom info.
+     *
+     * @param count Integer count is used to move.
+     */
+    public void previous(int count) {
         AnnotatorPanel current;
         current = (AnnotatorPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
         if (current == null)
