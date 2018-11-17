@@ -173,7 +173,7 @@ public abstract class AnnotatorFrame extends DataCollector {
     public void updateInfo(AnnotatorPanel current) {
         projectPane.setTitleAt(projectPane.getSelectedIndex(), current.getRawFileName());
         infoTop.setText("<html>" + current.getSourceSentence() + "</html>");
-        infoBottom.setText("<html>" + "</html>");
+        infoBottom.setText("<html>" + current.getOriginalSentence() + "</html>");
     }
 
     /**

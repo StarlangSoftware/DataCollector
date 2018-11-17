@@ -117,6 +117,11 @@ public abstract class AnnotatorPanel extends JPanel implements MouseListener, Mo
         }
     }
 
+    public String getOriginalSentence(){
+        AnnotatedSentence originalSentence = new AnnotatedSentence(new File(EditorPanel.ORIGINAL_PATH + fileDescription.getRawFileName()));
+        return originalSentence.toWords();
+    }
+
     public String getRawFileName(){
         return fileDescription.getRawFileName();
     }

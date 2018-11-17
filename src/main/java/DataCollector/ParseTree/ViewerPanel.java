@@ -12,9 +12,14 @@ import java.awt.*;
 public class ViewerPanel extends JPanel {
 
     /**
-     * Relative path for the English ScriptLanguage parse trees.
+     * Relative path for the English parse trees.
      */
     static final public String ENGLISH_PATH = "../English/";
+
+    /**
+     * Relative path for the original forms of the sentences.
+     */
+    static final public String ORIGINAL_PATH = "../Original/";
 
     /**
      * Current tree displayed in the panel.
