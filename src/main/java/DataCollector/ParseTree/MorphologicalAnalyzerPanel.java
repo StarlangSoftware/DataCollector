@@ -2,6 +2,7 @@ package DataCollector.ParseTree;
 
 import AnnotatedSentence.LayerNotExistsException;
 import AnnotatedSentence.ViewLayerType;
+import DataCollector.WordNet.LiteralTreeCellRenderer;
 import MorphologicalAnalysis.FsmMorphologicalAnalyzer;
 import MorphologicalAnalysis.FsmParse;
 import MorphologicalAnalysis.FsmParseList;
@@ -53,6 +54,8 @@ public class MorphologicalAnalyzerPanel extends LeafEditorPanel {
         pane = new JScrollPane(tree);
         add(pane);
         pane.setFocusTraversalKeysEnabled(false);
+        tree.setCellRenderer(new FsmParseTreeCellRenderer());
+        ToolTipManager.sharedInstance().registerComponent(tree);
         setFocusable(false);
         addMouseListener(this);
         addMouseMotionListener(this);
@@ -105,7 +108,7 @@ public class MorphologicalAnalyzerPanel extends LeafEditorPanel {
                     case 1:
                         for (int i = 0; i < fsmParses[0].size(); i++){
                             FsmParse fsmParse = fsmParses[0].getFsmParse(i);
-                            DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(fsmParse.transitionList());
+                            DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(fsmParse);
                             ((DefaultMutableTreeNode) treeModel.getRoot()).add(childNode);
                             if (node.getLayerData(ViewLayerType.INFLECTIONAL_GROUP) != null && node.getLayerData(ViewLayerType.INFLECTIONAL_GROUP).equals(fsmParse.transitionList())){
                                 selectedNode = childNode;
@@ -115,11 +118,11 @@ public class MorphologicalAnalyzerPanel extends LeafEditorPanel {
                     case 2:
                         for (int i = 0; i < fsmParses[0].size(); i++){
                             FsmParse fsmParse0 = fsmParses[0].getFsmParse(i);
-                            DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(fsmParse0.transitionList());
+                            DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(fsmParse0);
                             ((DefaultMutableTreeNode) treeModel.getRoot()).add(childNode);
                             for (int j = 0; j < fsmParses[1].size(); j++){
                                 FsmParse fsmParse1 = fsmParses[1].getFsmParse(j);
-                                DefaultMutableTreeNode grandChildNode = new DefaultMutableTreeNode(fsmParse1.transitionList());
+                                DefaultMutableTreeNode grandChildNode = new DefaultMutableTreeNode(fsmParse1);
                                 childNode.add(grandChildNode);
                                 if (node.getLayerData(ViewLayerType.INFLECTIONAL_GROUP) != null && node.getLayerData(ViewLayerType.INFLECTIONAL_GROUP).equals(fsmParse0.transitionList() + " " + fsmParse1.transitionList())){
                                     selectedNode = grandChildNode;
@@ -130,15 +133,15 @@ public class MorphologicalAnalyzerPanel extends LeafEditorPanel {
                     case 3:
                         for (int i = 0; i < fsmParses[0].size(); i++){
                             FsmParse fsmParse0 = fsmParses[0].getFsmParse(i);
-                            DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(fsmParse0.transitionList());
+                            DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(fsmParse0);
                             ((DefaultMutableTreeNode) treeModel.getRoot()).add(childNode);
                             for (int j = 0; j < fsmParses[1].size(); j++){
                                 FsmParse fsmParse1 = fsmParses[1].getFsmParse(j);
-                                DefaultMutableTreeNode grandChildNode = new DefaultMutableTreeNode(fsmParse1.transitionList());
+                                DefaultMutableTreeNode grandChildNode = new DefaultMutableTreeNode(fsmParse1);
                                 childNode.add(grandChildNode);
                                 for (int k = 0; k < fsmParses[2].size(); k++){
                                     FsmParse fsmParse2 = fsmParses[2].getFsmParse(k);
-                                    DefaultMutableTreeNode grandGrandChildNode = new DefaultMutableTreeNode(fsmParse2.transitionList());
+                                    DefaultMutableTreeNode grandGrandChildNode = new DefaultMutableTreeNode(fsmParse2);
                                     grandChildNode.add(grandGrandChildNode);
                                     if (node.getLayerData(ViewLayerType.INFLECTIONAL_GROUP) != null && node.getLayerData(ViewLayerType.INFLECTIONAL_GROUP).equals(fsmParse0.transitionList() + " " + fsmParse1.transitionList() + " " + fsmParse2.transitionList())){
                                         selectedNode = grandGrandChildNode;

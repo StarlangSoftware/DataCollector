@@ -5,6 +5,7 @@ import AnnotatedSentence.AutoProcessor.AutoDisambiguation.TurkishSentenceAutoDis
 import MorphologicalAnalysis.FsmMorphologicalAnalyzer;
 import MorphologicalAnalysis.FsmParseList;
 
+import javax.swing.*;
 import java.awt.*;
 
 public class SentenceMorphologicalAnalyzerPanel extends AnnotatorPanel{
@@ -16,6 +17,8 @@ public class SentenceMorphologicalAnalyzerPanel extends AnnotatorPanel{
         this.fsm = fsm;
         this.turkishSentenceAutoDisambiguator = turkishSentenceAutoDisambiguator;
         setLayout(new BorderLayout());
+        list.setCellRenderer(new FsmParseListCellRenderer());
+        ToolTipManager.sharedInstance().registerComponent(list);
     }
 
     public void autoDetect(){
