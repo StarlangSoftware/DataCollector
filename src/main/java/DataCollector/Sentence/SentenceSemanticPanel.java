@@ -1,6 +1,7 @@
 package DataCollector.Sentence;
 
 import AnnotatedSentence.*;
+import AnnotatedSentence.AutoProcessor.AutoDisambiguation.TurkishSentenceAutoDisambiguator;
 import AnnotatedSentence.AutoProcessor.AutoSemantic.TurkishSentenceAutoSemantic;
 import MorphologicalAnalysis.FsmMorphologicalAnalyzer;
 import DataGenerator.InstanceGenerator.FeaturedSemanticInstanceGenerator;
@@ -63,6 +64,18 @@ public class SentenceSemanticPanel extends AnnotatorPanel{
         turkishSentenceAutoSemantic.autoSemantic(sentence);
         sentence.save();
         this.repaint();
+    }
+
+    public void setFsm(FsmMorphologicalAnalyzer fsm){
+        this.fsm = fsm;
+    }
+
+    public void setWordnet(WordNet wordNet){
+        this.wordNet = wordNet;
+    }
+
+    public void setTurkishSentenceAutoSemantic(TurkishSentenceAutoSemantic turkishSentenceAutoSemantic){
+        this.turkishSentenceAutoSemantic = turkishSentenceAutoSemantic;
     }
 
     private DefaultMutableTreeNode addSynSets(AnnotatedWord word, ArrayList<SynSet> synSets){
