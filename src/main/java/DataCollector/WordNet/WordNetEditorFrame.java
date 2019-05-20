@@ -214,13 +214,15 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
                                 SynSet parentSynSet = domainWordNet.getSynSetWithId(relation.getName());
                                 if (parentSynSet != null){
                                     parent = nodeList.get(parentSynSet);
-                                    try{
-                                        insertIntoCorrectPosition(parent, child);
-                                    } catch (IllegalArgumentException e){
-                                        System.out.println(synSet.getSynonym());
+                                    if (parent != null){
+                                        try{
+                                            insertIntoCorrectPosition(parent, child);
+                                        } catch (IllegalArgumentException e){
+                                            System.out.println(synSet.getSynonym());
+                                        }
+                                        parentFound = true;
+                                        break;
                                     }
-                                    parentFound = true;
-                                    break;
                                 }
                             }
                         }
