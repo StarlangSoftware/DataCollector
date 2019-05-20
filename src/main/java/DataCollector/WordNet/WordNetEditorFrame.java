@@ -9,6 +9,7 @@ import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.Collator;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -145,15 +146,21 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
                 synSet = turkish.getSynSetWithId(synsetId);
                 if (synSet != null){
                     if (synSet.getPos() == Pos.NOUN){
-                        id.setText(synsetId);
-                        literal.setText(synSet.getSynonym().getLiteral(0).getName());
-                        sense.setText("" + synSet.getSynonym().getLiteral(0).getSense());
-                        definition.setText(synSet.getLongDefinition());
+                        if (domainWordNet.getSynSetWithId(synsetId) == null){
+                            id.setText(synsetId);
+                            literal.setText(synSet.getSynonym().getLiteral(0).getName());
+                            sense.setText("" + synSet.getSynonym().getLiteral(0).getSense());
+                            definition.setText(synSet.getLongDefinition());
+                        } else {
+                            DefaultMutableTreeNode node = noun.nodeList.get(domainWordNet.getSynSetWithId(synsetId));
+                            noun.tree.setSelectionPath(new TreePath(noun.treeModel.getPathToRoot(node)));
+                            JOptionPane.showMessageDialog(this, "Synset Does Exist In Domain WordNet!", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
                     } else {
                         JOptionPane.showMessageDialog(this, "Synset Is Not a Noun!", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 } else {
-                    JOptionPane.showMessageDialog(this, "Synset Does Not Exist!", "Error", JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(this, "Synset Does Not Exist In Turkish WordNet!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
                 break;
             case INSERT_CHILD:
@@ -182,9 +189,11 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
     }
 
     private void insertIntoCorrectPosition(DefaultMutableTreeNode parent, DefaultMutableTreeNode newChild) {
+        Locale locale = new Locale("tr");
+        Collator collator = Collator.getInstance(locale);
         for (int i = 0; i < parent.getChildCount(); i++) {
             DefaultMutableTreeNode child = (DefaultMutableTreeNode) parent.getChildAt(i);
-            if (child.getUserObject().toString().compareTo(newChild.getUserObject().toString()) > 0){
+            if (collator.compare(child.getUserObject().toString(), newChild.getUserObject().toString()) > 0){
                 parent.insert(newChild, i);
                 return;
             }
