@@ -115,16 +115,24 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
             case ADD_NEW:
                 if (id.getText().length() == 13 && id.getText().charAt(5) == '-'){
                     if (domainWordNet.getSynSetWithId(id.getText()) == null){
-                        SynSet newSynSet = new SynSet(id.getText());
-                        newSynSet.addLiteral(new Literal(literal.getText(), Integer.parseInt(sense.getText()), id.getText()));
-                        newSynSet.setDefinition(definition.getText());
-                        newSynSet.setPos(Pos.NOUN);
-                        domainWordNet.addSynSet(newSynSet);
-                        DefaultMutableTreeNode newChild = new DefaultMutableTreeNode(new SynSetObject(newSynSet));
-                        noun.nodeList.put(newSynSet, newChild);
-                        DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode)noun.tree.getModel().getRoot();
-                        insertIntoCorrectPosition(rootNode, newChild);
-                        noun.treeModel.reload(rootNode);
+                        if (definition.getText().length() != 0){
+                            if (domainWordNet.getSynSetWithLiteral(literal.getText(), Integer.parseInt(sense.getText())) == null){
+                                SynSet newSynSet = new SynSet(id.getText());
+                                newSynSet.addLiteral(new Literal(literal.getText(), Integer.parseInt(sense.getText()), id.getText()));
+                                newSynSet.setDefinition(definition.getText());
+                                newSynSet.setPos(Pos.NOUN);
+                                domainWordNet.addSynSet(newSynSet);
+                                DefaultMutableTreeNode newChild = new DefaultMutableTreeNode(new SynSetObject(newSynSet));
+                                noun.nodeList.put(newSynSet, newChild);
+                                DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode)noun.tree.getModel().getRoot();
+                                insertIntoCorrectPosition(rootNode, newChild);
+                                noun.treeModel.reload(rootNode);
+                            } else {
+                                JOptionPane.showMessageDialog(this, "SynSet with Same Literal and Same Sense Already Exists!", "Error", JOptionPane.ERROR_MESSAGE);
+                            }
+                        } else {
+                            JOptionPane.showMessageDialog(this, "No Definition Given!", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
                     } else {
                         JOptionPane.showMessageDialog(this, "Synset Does Exist!", "Error", JOptionPane.ERROR_MESSAGE);
                     }
