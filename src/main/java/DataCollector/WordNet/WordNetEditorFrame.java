@@ -128,7 +128,9 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
                                 DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode)noun.tree.getModel().getRoot();
                                 insertIntoCorrectPosition(rootNode, newChild);
                                 noun.treeModel.reload(rootNode);
-                                noun.tree.setSelectionPath(new TreePath(noun.treeModel.getPathToRoot(newChild)));
+                                TreePath treePath = new TreePath(noun.treeModel.getPathToRoot(newChild));
+                                noun.tree.setSelectionPath(treePath);
+                                noun.tree.scrollPathToVisible(treePath);
                             } else {
                                 JOptionPane.showMessageDialog(this, "SynSet with Same Literal and Same Sense Already Exists!", "Error", JOptionPane.ERROR_MESSAGE);
                             }
@@ -154,7 +156,9 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
                             definition.setText(synSet.getLongDefinition());
                         } else {
                             DefaultMutableTreeNode node = noun.nodeList.get(domainWordNet.getSynSetWithId(synsetId));
-                            noun.tree.setSelectionPath(new TreePath(noun.treeModel.getPathToRoot(node)));
+                            TreePath treePath = new TreePath(noun.treeModel.getPathToRoot(node));
+                            noun.tree.setSelectionPath(treePath);
+                            noun.tree.scrollPathToVisible(treePath);
                             JOptionPane.showMessageDialog(this, "Synset Does Exist In Domain WordNet!", "Error", JOptionPane.ERROR_MESSAGE);
                         }
                     } else {
