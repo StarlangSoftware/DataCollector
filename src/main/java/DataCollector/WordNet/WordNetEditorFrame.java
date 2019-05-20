@@ -128,6 +128,7 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
                                 DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode)noun.tree.getModel().getRoot();
                                 insertIntoCorrectPosition(rootNode, newChild);
                                 noun.treeModel.reload(rootNode);
+                                noun.tree.setSelectionPath(new TreePath(noun.treeModel.getPathToRoot(newChild)));
                             } else {
                                 JOptionPane.showMessageDialog(this, "SynSet with Same Literal and Same Sense Already Exists!", "Error", JOptionPane.ERROR_MESSAGE);
                             }
