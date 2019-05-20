@@ -6,7 +6,7 @@
 
     <groupId>NlpToolkit</groupId>
     <artifactId>DataCollector</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -86,7 +86,7 @@
         <dependency>
             <groupId>NlpToolkit</groupId>
             <artifactId>WordNet</artifactId>
-            <version>1.0.7</version>
+            <version>1.0.9</version>
         </dependency>
         <dependency>
             <groupId>NlpToolkit</groupId>
@@ -374,6 +374,21 @@
                                 </manifest>
                             </archive>
                             <finalName>tree-traverse</finalName>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>wordnet-editor</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <archive>
+                                <manifest>
+                                    <mainClass>DataCollector.WordNet.TestWordNetEditorFrame</mainClass>
+                                </manifest>
+                            </archive>
+                            <finalName>wordnet-editor</finalName>
                         </configuration>
                     </execution>
                 </executions>

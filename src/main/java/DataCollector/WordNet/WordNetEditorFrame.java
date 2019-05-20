@@ -83,6 +83,8 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        String synsetId;
+        SynSet synSet;
         switch (e.getActionCommand()){
             case SAVE:
                 domainWordNet.saveAsXml("estate_wordnet.xml");
@@ -94,28 +96,79 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
                     parent.remove(selectedTreeNode);
                     selectedPartOfSpeechTree.treeModel.reload(parent);
                     selectedSynSet = null;
+                } else {
+                    JOptionPane.showMessageDialog(this, "No Synset Selected!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
                 break;
             case EDIT:
                 if (selectedSynSet != null){
-                    selectedSynSet.setId(id.getText());
                     selectedSynSet.getSynonym().getLiteral(0).setName(literal.getText());
                     selectedSynSet.getSynonym().getLiteral(0).setSense(Integer.parseInt(sense.getText()));
                     selectedSynSet.setDefinition(definition.getText());
                     DefaultMutableTreeNode parent = (DefaultMutableTreeNode) selectedTreeNode.getParent();
                     selectedPartOfSpeechTree.treeModel.reload(parent);
                     selectedSynSet = null;
+                } else {
+                    JOptionPane.showMessageDialog(this, "No Synset Selected!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
                 break;
             case ADD_NEW:
-                SynSet newSynSet = new SynSet(id.getText());
-                newSynSet.addLiteral(new Literal(literal.getText(), Integer.parseInt(sense.getText()), id.getText()));
-                newSynSet.setDefinition(definition.getText());
-                domainWordNet.addSynSet(newSynSet);
-                DefaultMutableTreeNode newChild = new DefaultMutableTreeNode(new SynSetObject(newSynSet));
-                DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode)selectedPartOfSpeechTree.tree.getModel().getRoot();
-                insertIntoCorrectPosition(rootNode, newChild);
-                selectedPartOfSpeechTree.treeModel.reload(rootNode);
+                if (id.getText().length() == 13 && id.getText().charAt(5) == '-'){
+                    if (domainWordNet.getSynSetWithId(id.getText()) == null){
+                        SynSet newSynSet = new SynSet(id.getText());
+                        newSynSet.addLiteral(new Literal(literal.getText(), Integer.parseInt(sense.getText()), id.getText()));
+                        newSynSet.setDefinition(definition.getText());
+                        newSynSet.setPos(Pos.NOUN);
+                        domainWordNet.addSynSet(newSynSet);
+                        DefaultMutableTreeNode newChild = new DefaultMutableTreeNode(new SynSetObject(newSynSet));
+                        noun.nodeList.put(newSynSet, newChild);
+                        DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode)noun.tree.getModel().getRoot();
+                        insertIntoCorrectPosition(rootNode, newChild);
+                        noun.treeModel.reload(rootNode);
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Synset Does Exist!", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Invalid Synset Id!", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                break;
+            case INSERT_FROM_WORDNET:
+                synsetId = JOptionPane.showInputDialog("Enter synset id");
+                synSet = turkish.getSynSetWithId(synsetId);
+                if (synSet != null){
+                    if (synSet.getPos() == Pos.NOUN){
+                        id.setText(synsetId);
+                        literal.setText(synSet.getSynonym().getLiteral(0).getName());
+                        sense.setText("" + synSet.getSynonym().getLiteral(0).getSense());
+                        definition.setText(synSet.getLongDefinition());
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Synset Is Not a Noun!", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Synset Does Not Exist!", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                break;
+            case INSERT_CHILD:
+                if (selectedSynSet != null){
+                    synsetId = JOptionPane.showInputDialog("Enter parent synset id");
+                    synSet = domainWordNet.getSynSetWithId(synsetId);
+                    if (synSet != null){
+                        if (synSet.getPos() == Pos.NOUN){
+                            DefaultMutableTreeNode parentNode = noun.nodeList.get(synSet);
+                            insertIntoCorrectPosition(parentNode, selectedTreeNode);
+                            DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode)noun.tree.getModel().getRoot();
+                            noun.treeModel.reload(rootNode);
+                            selectedSynSet.addRelation(new SemanticRelation(synSet.getId(), SemanticRelationType.HYPERNYM));
+                            synSet.addRelation(new SemanticRelation(selectedSynSet.getId(), SemanticRelationType.HYPONYM));
+                        } else {
+                            JOptionPane.showMessageDialog(this, "Parent Synset Is Not a Noun!", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Parent Synset Does Not Exist!", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "No Synset Selected!", "Error", JOptionPane.ERROR_MESSAGE);
+                }
                 break;
         }
     }
@@ -139,19 +192,6 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
             if (synSet.getPos() == partOfSpeech){
                 DefaultMutableTreeNode node = new DefaultMutableTreeNode(new SynSetObject(synSet));
                 nodeList.put(synSet, node);
-/*                for (int j = 0; j < synSet.relationSize(); j++){
-                    if (synSet.getRelation(j) instanceof SemanticRelation){
-                       if (!((SemanticRelation) synSet.getRelation(j)).getRelationType().equals(SemanticRelationType.INSTANCE_HYPERNYM) && !((SemanticRelation) synSet.getRelation(j)).getRelationType().equals(SemanticRelationType.HYPERNYM) && !((SemanticRelation) synSet.getRelation(j)).getRelationType().equals(SemanticRelationType.INSTANCE_HYPONYM) && !((SemanticRelation) synSet.getRelation(j)).getRelationType().equals(SemanticRelationType.HYPONYM)){
-                           SemanticRelation relation = (SemanticRelation) synSet.getRelation(j);
-                           child = new DefaultMutableTreeNode(relation);
-                           node.add(child);
-                       }
-                    } else {
-                        InterlingualRelation relation = (InterlingualRelation) synSet.getRelation(j);
-                        child = new DefaultMutableTreeNode(relation);
-                        node.add(child);
-                    }
-                }*/
             }
         }
         for (SynSet synSet : domainWordNet.synSetList()){
