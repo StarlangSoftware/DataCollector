@@ -10,24 +10,35 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.Collator;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class WordNetEditorFrame extends JFrame implements ActionListener {
     private PartOfSpeechTree noun;
     private PartOfSpeechTree selectedPartOfSpeechTree;
-    private JTextField id, literal, sense, definition;
+    private JTextField leftSearch, id, literal, sense, definition;
     private WordNet turkish, domainWordNet;
     private DefaultMutableTreeNode selectedTreeNode = null;
     private SynSet selectedSynSet = null;
+    private JComboBox alternatives;
+    private boolean completed = false;
 
-    static final protected String SAVE = "save";
-    static final protected String EDIT = "edit";
-    static final protected String ADD_NEW = "add new";
-    static final protected String INSERT_FROM_WORDNET = "insert from wordnet";
-    static final protected String INSERT_CHILD = "insert child";
-    static final protected String REMOVE_FROM_PARENT = "remove from parent";
-    static final protected String DELETE = "delete";
+    private static final String SAVE = "save";
+    private static final String EDIT = "edit";
+    private static final String ADD_NEW = "add new";
+    private static final String INSERT_FROM_WORDNET = "insert from wordnet";
+    private static final String INSERT_CHILD = "insert child";
+    private static final String REMOVE_FROM_PARENT = "remove from parent";
+    private static final String DELETE = "delete";
+    private static final String REPLACE = "replace with new synset";
+
+    private final String domainWordNetFileName = "estate_wordnet.xml";
+    private final String prefix = "EST01-";
+    //private final String domainWordNetFileName = "tourism_wordnet.xml";
+    //private final String prefix = "TOU01-";
+    private int finalId;
 
     public class PartOfSpeechTree{
         private JTree tree;
@@ -38,15 +49,11 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
             return tree;
         }
 
-        public HashMap<SynSet, DefaultMutableTreeNode> getNodeList() {
-            return nodeList;
-        }
-
         public DefaultTreeModel getTreeModel() {
             return treeModel;
         }
 
-        public PartOfSpeechTree(JTree tree, HashMap<SynSet, DefaultMutableTreeNode> nodeList, DefaultTreeModel treeModel) {
+        PartOfSpeechTree(JTree tree, HashMap<SynSet, DefaultMutableTreeNode> nodeList, DefaultTreeModel treeModel) {
             this.tree = tree;
             this.nodeList = nodeList;
             this.treeModel = treeModel;
@@ -56,7 +63,7 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
     public class SynSetObject{
         private SynSet synSet;
 
-        public SynSetObject(SynSet synSet){
+        SynSetObject(SynSet synSet){
             this.synSet = synSet;
         }
 
@@ -69,19 +76,38 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
         }
     }
 
-    protected void addButtons(JToolBar toolBar) {
+    private int getFinalId(){
+        int max = 0;
+        for (SynSet synSet : domainWordNet.synSetList()){
+            if (synSet.getId().startsWith(prefix)){
+                int id = Integer.parseInt(synSet.getId().substring(prefix.length()));
+                if (id > max){
+                    max = id;
+                }
+            }
+        }
+        return max;
+    }
+
+    private void addButtons(JToolBar toolBar) {
         JButton save = new DrawingButton(WordNetEditorFrame.class, this, "save", SAVE, "Save");
         toolBar.add(save);
         JButton edit = new DrawingButton(WordNetEditorFrame.class, this, "edit", EDIT, "Edit");
         toolBar.add(edit);
+        toolBar.addSeparator();
         JButton addNew = new DrawingButton(WordNetEditorFrame.class, this, "addparent", ADD_NEW, "Add New SynSet");
         toolBar.add(addNew);
         JButton insertFromWordNet = new DrawingButton(WordNetEditorFrame.class, this, "merge", INSERT_FROM_WORDNET, "Insert From Turkish WordNet");
         toolBar.add(insertFromWordNet);
+        toolBar.addSeparator();
         JButton insertChild = new DrawingButton(WordNetEditorFrame.class, this, "semanticrelation", INSERT_CHILD, "Insert Child");
         toolBar.add(insertChild);
         JButton breakLink = new DrawingButton(WordNetEditorFrame.class, this, "split", REMOVE_FROM_PARENT, "Remove From Parent");
         toolBar.add(breakLink);
+        toolBar.addSeparator();
+        JButton replace = new DrawingButton(WordNetEditorFrame.class, this, "interlingual", REPLACE, "Replace With New Synset");
+        toolBar.add(replace);
+        toolBar.addSeparator();
         JButton delete = new DrawingButton(WordNetEditorFrame.class, this, "delete", DELETE, "Delete");
         toolBar.add(delete);
     }
@@ -98,7 +124,7 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
         SynSet synSet;
         switch (e.getActionCommand()){
             case SAVE:
-                domainWordNet.saveAsXml("estate_wordnet.xml");
+                domainWordNet.saveAsXml(domainWordNetFileName);
                 break;
             case DELETE:
                 if (selectedSynSet != null){
@@ -119,6 +145,28 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
                     DefaultMutableTreeNode parent = (DefaultMutableTreeNode) selectedTreeNode.getParent();
                     selectedPartOfSpeechTree.treeModel.reload(parent);
                     selectedSynSet = null;
+                } else {
+                    JOptionPane.showMessageDialog(this, "No Synset Selected!", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                break;
+            case REPLACE:
+                if (selectedSynSet != null){
+                    finalId += 10;
+                    String newSynSetId = prefix + "" + finalId;
+                    DefaultMutableTreeNode node = noun.nodeList.get(selectedSynSet);
+                    noun.nodeList.remove(selectedSynSet);
+                    for (SynSet synSet1 : domainWordNet.synSetList()){
+                        for (int i = 0; i < synSet1.relationSize(); i++){
+                            if (synSet1.getRelation(i).getName().equals(selectedSynSet.getId())){
+                                synSet1.getRelation(i).setName(newSynSetId);
+                            }
+                        }
+                    }
+                    selectedSynSet.setId(newSynSetId);
+                    selectedSynSet.setDefinition(" ");
+                    noun.nodeList.put(selectedSynSet, node);
+                    node.setUserObject(new SynSetObject(selectedSynSet));
+                    noun.treeModel.reload(node);
                 } else {
                     JOptionPane.showMessageDialog(this, "No Synset Selected!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
@@ -300,6 +348,22 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
                     literal.setText(selectedSynSet.getSynonym().getLiteral(0).getName());
                     sense.setText("" + selectedSynSet.getSynonym().getLiteral(0).getSense());
                     definition.setText(selectedSynSet.getDefinition());
+                    ArrayList<SynSet> alternativeList = turkish.getSynSetsWithLiteral(selectedSynSet.getSynonym().getLiteral(0).getName());
+                    completed = false;
+                    alternatives.removeAllItems();
+                    alternatives.setSelectedIndex(-1);
+                    for (SynSet synSet : alternativeList){
+                        alternatives.addItem(synSet);
+                        if (synSet.equals(selectedSynSet)){
+                            alternatives.setSelectedItem(synSet);
+                        }
+                    }
+                    if (alternatives.getItemCount() <= 1){
+                        alternatives.setEnabled(false);
+                    } else {
+                        alternatives.setEnabled(true);
+                    }
+                    completed = true;
                 } else {
                     selectedTreeNode = null;
                     selectedSynSet = null;
@@ -311,14 +375,34 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
         return partOfSpeechTree;
     }
 
-    public WordNetEditorFrame(){
-        domainWordNet = new WordNet("estate_wordnet.xml", new Locale("tr"));
+    private void replaceWithNewSynSet(SynSet newSynSet){
+        if (newSynSet != null && selectedSynSet != null){
+            DefaultMutableTreeNode node = noun.nodeList.get(selectedSynSet);
+            noun.nodeList.remove(selectedSynSet);
+            for (SynSet synSet1 : domainWordNet.synSetList()){
+                for (int i = 0; i < synSet1.relationSize(); i++){
+                    if (synSet1.getRelation(i).getName().equals(selectedSynSet.getId())){
+                        synSet1.getRelation(i).setName(newSynSet.getId());
+                    }
+                }
+            }
+            noun.nodeList.put(newSynSet, node);
+            node.setUserObject(new SynSetObject(newSynSet));
+            noun.treeModel.reload(node);
+            domainWordNet.removeSynSet(selectedSynSet);
+            domainWordNet.addSynSet(newSynSet);
+        }
+    }
+
+    WordNetEditorFrame(){
+        domainWordNet = new WordNet(domainWordNetFileName, new Locale("tr"));
+        finalId = getFinalId();
         turkish = new WordNet();
         JToolBar toolBar = new JToolBar("ToolBox");
         addButtons(toolBar);
         add(toolBar, BorderLayout.PAGE_START);
         toolBar.setVisible(true);
-        JPanel topPanel = new JPanel(new GridLayout(2, 4));
+        JPanel topPanel = new JPanel(new GridLayout(3, 4));
         topPanel.add(new JLabel("Id"));
         id = new JTextField();
         topPanel.add(id);
@@ -331,6 +415,18 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
         topPanel.add(new JLabel("Definition"));
         definition = new JTextField();
         topPanel.add(definition);
+        leftSearch = new JTextField();
+        leftSearch.addActionListener(e -> selectTree(leftSearch.getText()));
+        topPanel.add(leftSearch);
+        alternatives = new JComboBox();
+        topPanel.add(alternatives);
+        alternatives.addActionListener (new ActionListener () {
+            public void actionPerformed(ActionEvent e) {
+                if (completed){
+                    replaceWithNewSynSet((SynSet) alternatives.getSelectedItem());
+                }
+            }
+        });
         JPanel leftPanel = new JPanel(new BorderLayout());
         noun = constructTree(Pos.NOUN, true);
         JScrollPane nounPane = new JScrollPane(noun.tree);
@@ -358,5 +454,18 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
         setVisible(true);
         setName("WordNet Editor");
     }
+
+    private void selectTree(String searchKey){
+        noun.tree.clearSelection();
+        for (Map.Entry<SynSet, DefaultMutableTreeNode> entry : noun.nodeList.entrySet()){
+            if (entry.getKey().getSynonym().containsLiteral(searchKey)){
+                TreePath treePath = new TreePath(noun.treeModel.getPathToRoot(entry.getValue()));
+                noun.tree.addSelectionPath(treePath);
+                noun.tree.scrollPathToVisible(treePath);
+                break;
+            }
+        }
+    }
+
 
 }
