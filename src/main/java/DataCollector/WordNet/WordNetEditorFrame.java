@@ -14,7 +14,8 @@ import java.util.HashMap;
 import java.util.Locale;
 
 public class WordNetEditorFrame extends JFrame implements ActionListener {
-    private PartOfSpeechTree noun, adjective, verb, adverb, selectedPartOfSpeechTree;
+    private PartOfSpeechTree noun;
+    private PartOfSpeechTree selectedPartOfSpeechTree;
     private JTextField id, literal, sense, definition;
     private WordNet turkish, domainWordNet;
     private DefaultMutableTreeNode selectedTreeNode = null;
@@ -25,6 +26,7 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
     static final protected String ADD_NEW = "add new";
     static final protected String INSERT_FROM_WORDNET = "insert from wordnet";
     static final protected String INSERT_CHILD = "insert child";
+    static final protected String REMOVE_FROM_PARENT = "remove from parent";
     static final protected String DELETE = "delete";
 
     public class PartOfSpeechTree{
@@ -78,8 +80,16 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
         toolBar.add(insertFromWordNet);
         JButton insertChild = new DrawingButton(WordNetEditorFrame.class, this, "semanticrelation", INSERT_CHILD, "Insert Child");
         toolBar.add(insertChild);
+        JButton breakLink = new DrawingButton(WordNetEditorFrame.class, this, "split", REMOVE_FROM_PARENT, "Remove From Parent");
+        toolBar.add(breakLink);
         JButton delete = new DrawingButton(WordNetEditorFrame.class, this, "delete", DELETE, "Delete");
         toolBar.add(delete);
+    }
+
+    private void showPath(DefaultMutableTreeNode treeNode){
+        TreePath treePath = new TreePath(noun.treeModel.getPathToRoot(treeNode));
+        noun.tree.setSelectionPath(treePath);
+        noun.tree.scrollPathToVisible(treePath);
     }
 
     @Override
@@ -128,9 +138,7 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
                                 DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode)noun.tree.getModel().getRoot();
                                 insertIntoCorrectPosition(rootNode, newChild);
                                 noun.treeModel.reload(rootNode);
-                                TreePath treePath = new TreePath(noun.treeModel.getPathToRoot(newChild));
-                                noun.tree.setSelectionPath(treePath);
-                                noun.tree.scrollPathToVisible(treePath);
+                                showPath(newChild);
                             } else {
                                 JOptionPane.showMessageDialog(this, "SynSet with Same Literal and Same Sense Already Exists!", "Error", JOptionPane.ERROR_MESSAGE);
                             }
@@ -156,9 +164,7 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
                             definition.setText(synSet.getLongDefinition());
                         } else {
                             DefaultMutableTreeNode node = noun.nodeList.get(domainWordNet.getSynSetWithId(synsetId));
-                            TreePath treePath = new TreePath(noun.treeModel.getPathToRoot(node));
-                            noun.tree.setSelectionPath(treePath);
-                            noun.tree.scrollPathToVisible(treePath);
+                            showPath(node);
                             JOptionPane.showMessageDialog(this, "Synset Does Exist In Domain WordNet!", "Error", JOptionPane.ERROR_MESSAGE);
                         }
                     } else {
@@ -178,6 +184,7 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
                             insertIntoCorrectPosition(parentNode, selectedTreeNode);
                             DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode)noun.tree.getModel().getRoot();
                             noun.treeModel.reload(rootNode);
+                            showPath(selectedTreeNode);
                             selectedSynSet.addRelation(new SemanticRelation(synSet.getId(), SemanticRelationType.HYPERNYM));
                             synSet.addRelation(new SemanticRelation(selectedSynSet.getId(), SemanticRelationType.HYPONYM));
                         } else {
@@ -188,6 +195,36 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
                     }
                 } else {
                     JOptionPane.showMessageDialog(this, "No Synset Selected!", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                break;
+            case REMOVE_FROM_PARENT:
+                if (selectedSynSet != null) {
+                    for (int i = 0; i < selectedSynSet.relationSize(); i++){
+                        if (selectedSynSet.getRelation(i) instanceof SemanticRelation){
+                            if (((SemanticRelation) selectedSynSet.getRelation(i)).getRelationType() == SemanticRelationType.HYPERNYM || ((SemanticRelation) selectedSynSet.getRelation(i)).getRelationType() == SemanticRelationType.INSTANCE_HYPERNYM){
+                                synsetId = selectedSynSet.getRelation(i).getName();
+                                synSet = domainWordNet.getSynSetWithId(synsetId);
+                                selectedSynSet.removeRelation(selectedSynSet.getRelation(i));
+                                if (synSet != null){
+                                    for (int j = 0; j < synSet.relationSize(); j++){
+                                        if (synSet.getRelation(j) instanceof SemanticRelation){
+                                            if ((((SemanticRelation) synSet.getRelation(j)).getRelationType() == SemanticRelationType.HYPONYM || ((SemanticRelation) synSet.getRelation(j)).getRelationType() == SemanticRelationType.INSTANCE_HYPONYM) && synSet.getRelation(j).getName().equals(selectedSynSet.getId())){
+                                                synSet.removeRelation(synSet.getRelation(j));
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    DefaultMutableTreeNode parentNode = noun.nodeList.get(synSet);
+                                    parentNode.remove(selectedTreeNode);
+                                    DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode)noun.tree.getModel().getRoot();
+                                    insertIntoCorrectPosition(rootNode, selectedTreeNode);
+                                    noun.treeModel.reload(rootNode);
+                                    showPath(parentNode);
+                                }
+                                break;
+                            }
+                        }
+                    }
                 }
                 break;
         }
@@ -296,16 +333,16 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
         noun = constructTree(Pos.NOUN, true);
         JScrollPane nounPane = new JScrollPane(noun.tree);
         nounPane.setMinimumSize(new Dimension(400, 400));
-        adjective = constructTree(Pos.ADJECTIVE, false);
+        PartOfSpeechTree adjective = constructTree(Pos.ADJECTIVE, false);
         JScrollPane adjectivePane = new JScrollPane(adjective.tree);
         adjectivePane.setMinimumSize(new Dimension(400, 200));
         JSplitPane leftSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, nounPane, adjectivePane);
         leftPanel.add(leftSplitPane, BorderLayout.CENTER);
-        verb = constructTree(Pos.VERB, true);
+        PartOfSpeechTree verb = constructTree(Pos.VERB, true);
         JScrollPane verbPane = new JScrollPane(verb.tree);
         verbPane.setMinimumSize(new Dimension(400, 400));
         JPanel rightPanel = new JPanel(new BorderLayout());
-        adverb = constructTree(Pos.ADVERB, false);
+        PartOfSpeechTree adverb = constructTree(Pos.ADVERB, false);
         JScrollPane adverbPane = new JScrollPane(adverb.tree);
         adverbPane.setMinimumSize(new Dimension(400, 200));
         JSplitPane rightSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, verbPane, adverbPane);
