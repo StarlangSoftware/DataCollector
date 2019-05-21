@@ -225,6 +225,8 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
                             }
                         }
                     }
+                } else {
+                    JOptionPane.showMessageDialog(this, "No Synset Selected!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
                 break;
         }
