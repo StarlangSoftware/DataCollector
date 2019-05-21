@@ -23,6 +23,7 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
     private DefaultMutableTreeNode selectedTreeNode = null;
     private SynSet selectedSynSet = null;
     private JComboBox alternatives;
+    private JCheckBox showMoved;
     private boolean completed = false;
 
     private static final String SAVE = "save";
@@ -110,6 +111,8 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
         toolBar.addSeparator();
         JButton delete = new DrawingButton(WordNetEditorFrame.class, this, "delete", DELETE, "Delete");
         toolBar.add(delete);
+        showMoved = new JCheckBox("Show Moved");
+        toolBar.add(showMoved);
     }
 
     private void showPath(DefaultMutableTreeNode treeNode){
@@ -232,7 +235,9 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
                             insertIntoCorrectPosition(parentNode, selectedTreeNode);
                             DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode)noun.tree.getModel().getRoot();
                             noun.treeModel.reload(rootNode);
-                            showPath(selectedTreeNode);
+                            if (showMoved.isSelected()){
+                                showPath(selectedTreeNode);
+                            }
                             selectedSynSet.addRelation(new SemanticRelation(synSet.getId(), SemanticRelationType.HYPERNYM));
                             synSet.addRelation(new SemanticRelation(selectedSynSet.getId(), SemanticRelationType.HYPONYM));
                         } else {
@@ -267,7 +272,11 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
                                     DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode)noun.tree.getModel().getRoot();
                                     insertIntoCorrectPosition(rootNode, selectedTreeNode);
                                     noun.treeModel.reload(rootNode);
-                                    showPath(parentNode);
+                                    if (showMoved.isSelected()){
+                                        showPath(selectedTreeNode);
+                                    } else {
+                                        showPath(parentNode);
+                                    }
                                 }
                                 break;
                             }
