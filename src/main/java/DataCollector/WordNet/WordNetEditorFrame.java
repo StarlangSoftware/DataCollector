@@ -34,11 +34,12 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
     private static final String REMOVE_FROM_PARENT = "remove from parent";
     private static final String DELETE = "delete";
     private static final String REPLACE = "replace with new synset";
+    private static final String MERGE = "merge two synsets";
 
-    private final String domainWordNetFileName = "estate_wordnet.xml";
-    private final String prefix = "EST01-";
-    //private final String domainWordNetFileName = "tourism_wordnet.xml";
-    //private final String prefix = "TOU01-";
+    //private final String domainWordNetFileName = "estate_wordnet.xml";
+    //private final String prefix = "EST01-";
+    private final String domainWordNetFileName = "tourism_wordnet.xml";
+    private final String prefix = "TOU01-";
     private int finalId;
 
     public class PartOfSpeechTree{
@@ -69,7 +70,11 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
         }
 
         public String toString(){
-            return synSet.getSynonym().getLiteral(0).getName() + " (" + synSet.getDefinition() + ")";
+            String literal = synSet.getSynonym().getLiteral(0).getName();
+            for (int i = 1; i < synSet.getSynonym().literalSize(); i++){
+                literal += "::" + synSet.getSynonym().getLiteral(i).getName();
+            }
+            return literal + " (" + synSet.getDefinition() + ")";
         }
 
         public SynSet getSynSet(){
@@ -111,6 +116,9 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
         toolBar.addSeparator();
         JButton delete = new DrawingButton(WordNetEditorFrame.class, this, "delete", DELETE, "Delete");
         toolBar.add(delete);
+        toolBar.addSeparator();
+        JButton merge = new DrawingButton(WordNetEditorFrame.class, this, "random", MERGE, "Merge Two SynSets");
+        toolBar.add(merge);
         showMoved = new JCheckBox("Show Moved");
         toolBar.add(showMoved);
     }
@@ -119,6 +127,16 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
         TreePath treePath = new TreePath(noun.treeModel.getPathToRoot(treeNode));
         noun.tree.setSelectionPath(treePath);
         noun.tree.scrollPathToVisible(treePath);
+    }
+
+    private void replaceAllRelationsWithNewSynSet(String oldId, String newId){
+        for (SynSet synSet : domainWordNet.synSetList()){
+            for (int i = 0; i < synSet.relationSize(); i++){
+                if (synSet.getRelation(i).getName().equals(oldId)){
+                    synSet.getRelation(i).setName(newId);
+                }
+            }
+        }
     }
 
     @Override
@@ -158,13 +176,7 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
                     String newSynSetId = prefix + "" + finalId;
                     DefaultMutableTreeNode node = noun.nodeList.get(selectedSynSet);
                     noun.nodeList.remove(selectedSynSet);
-                    for (SynSet synSet1 : domainWordNet.synSetList()){
-                        for (int i = 0; i < synSet1.relationSize(); i++){
-                            if (synSet1.getRelation(i).getName().equals(selectedSynSet.getId())){
-                                synSet1.getRelation(i).setName(newSynSetId);
-                            }
-                        }
-                    }
+                    replaceAllRelationsWithNewSynSet(selectedSynSet.getId(), newSynSetId);
                     selectedSynSet.setId(newSynSetId);
                     selectedSynSet.setDefinition(" ");
                     noun.nodeList.put(selectedSynSet, node);
@@ -286,6 +298,31 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
                     JOptionPane.showMessageDialog(this, "No Synset Selected!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
                 break;
+            case MERGE:
+                if (noun.tree.getSelectionPaths() != null){
+                    if (noun.tree.getSelectionPaths().length == 2){
+                        DefaultMutableTreeNode selectedTreeNode1 = (DefaultMutableTreeNode) noun.tree.getSelectionPaths()[0].getLastPathComponent();
+                        DefaultMutableTreeNode selectedTreeNode2 = (DefaultMutableTreeNode) noun.tree.getSelectionPaths()[1].getLastPathComponent();
+                        SynSetObject synSetObject1 = (SynSetObject) selectedTreeNode1.getUserObject();
+                        SynSetObject synSetObject2 = (SynSetObject) selectedTreeNode2.getUserObject();
+                        SynSet synSet1 = synSetObject1.synSet;
+                        SynSet synSet2 = synSetObject2.synSet;
+                        synSet1.mergeSynSet(synSet2);
+                        domainWordNet.removeSynSet(synSet2);
+                        replaceAllRelationsWithNewSynSet(synSet2.getId(), synSet1.getId());
+                        DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) selectedTreeNode2.getParent();
+                        for (int i = 0; i < selectedTreeNode2.getChildCount(); i++){
+                            insertIntoCorrectPosition(selectedTreeNode1, (DefaultMutableTreeNode) selectedTreeNode2.getChildAt(i));
+                        }
+                        parentNode.remove(selectedTreeNode2);
+                        noun.treeModel.reload(parentNode);
+                    } else {
+                        JOptionPane.showMessageDialog(this, "More Than 2 Synsets Selected!", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "No Synset Selected!", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                break;
         }
     }
 
@@ -379,7 +416,11 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
                 }
             }
         });
-        tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+        if (partOfSpeech == Pos.NOUN){
+            tree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
+        } else {
+            tree.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+        }
         ToolTipManager.sharedInstance().registerComponent(tree);
         return partOfSpeechTree;
     }
