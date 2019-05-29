@@ -23,7 +23,7 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
     private DefaultMutableTreeNode selectedTreeNode = null;
     private SynSet selectedSynSet = null;
     private JComboBox alternatives;
-    private JCheckBox showMoved;
+    private JCheckBox showMoved, automaticSelection;
     private boolean completed = false;
 
     private static final String SAVE = "save";
@@ -121,6 +121,8 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
         toolBar.add(merge);
         showMoved = new JCheckBox("Show Moved");
         toolBar.add(showMoved);
+        automaticSelection = new JCheckBox("Automatic Selection");
+        toolBar.add(automaticSelection);
     }
 
     private void showPath(DefaultMutableTreeNode treeNode){
@@ -480,19 +482,19 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
         JPanel leftPanel = new JPanel(new BorderLayout());
         noun = constructTree(Pos.NOUN, true);
         JScrollPane nounPane = new JScrollPane(noun.tree);
-        nounPane.setMinimumSize(new Dimension(400, 400));
+        nounPane.setMinimumSize(new Dimension(400, 100));
         PartOfSpeechTree adjective = constructTree(Pos.ADJECTIVE, false);
         JScrollPane adjectivePane = new JScrollPane(adjective.tree);
-        adjectivePane.setMinimumSize(new Dimension(400, 200));
+        adjectivePane.setMinimumSize(new Dimension(400, 100));
         JSplitPane leftSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, nounPane, adjectivePane);
         leftPanel.add(leftSplitPane, BorderLayout.CENTER);
         PartOfSpeechTree verb = constructTree(Pos.VERB, true);
         JScrollPane verbPane = new JScrollPane(verb.tree);
-        verbPane.setMinimumSize(new Dimension(400, 400));
+        verbPane.setMinimumSize(new Dimension(400, 100));
         JPanel rightPanel = new JPanel(new BorderLayout());
         PartOfSpeechTree adverb = constructTree(Pos.ADVERB, false);
         JScrollPane adverbPane = new JScrollPane(adverb.tree);
-        adverbPane.setMinimumSize(new Dimension(400, 200));
+        adverbPane.setMinimumSize(new Dimension(400, 100));
         JSplitPane rightSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, verbPane, adverbPane);
         rightPanel.add(rightSplitPane, BorderLayout.CENTER);
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, rightPanel);
@@ -506,7 +508,9 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
     }
 
     private void selectTree(String searchKey){
-        noun.tree.clearSelection();
+        if (!automaticSelection.isSelected()){
+            noun.tree.clearSelection();
+        }
         for (Map.Entry<SynSet, DefaultMutableTreeNode> entry : noun.nodeList.entrySet()){
             if (entry.getKey().getSynonym().containsLiteral(searchKey)){
                 TreePath treePath = new TreePath(noun.treeModel.getPathToRoot(entry.getValue()));
