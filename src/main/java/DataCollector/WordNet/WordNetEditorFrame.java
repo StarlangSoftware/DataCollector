@@ -1,6 +1,7 @@
 package DataCollector.WordNet;
 
-import Dictionary.Pos;
+import Dictionary.*;
+import MorphologicalAnalysis.Transition;
 import Util.DrawingButton;
 import WordNet.*;
 
@@ -16,14 +17,16 @@ import java.util.Locale;
 import java.util.Map;
 
 public class WordNetEditorFrame extends JFrame implements ActionListener {
-    private PartOfSpeechTree noun;
+    private PartOfSpeechTree noun, adjective, verb, adverb;
     private PartOfSpeechTree selectedPartOfSpeechTree;
     private JTextField leftSearch, id, literal, sense, definition;
     private WordNet turkish, domainWordNet;
+    private TxtDictionary dictionary;
     private DefaultMutableTreeNode selectedTreeNode = null;
     private SynSet selectedSynSet = null;
     private JComboBox alternatives;
     private JCheckBox showMoved, automaticSelection;
+    private JList dictionaryList, wordNetList;
     private boolean completed = false;
 
     private static final String SAVE = "save";
@@ -35,10 +38,14 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
     private static final String DELETE = "delete";
     private static final String REPLACE = "replace with new synset";
     private static final String MERGE = "merge two synsets";
+    private static final String ADD_WORDNET = "add to wordnet";
+    private static final String ADD_DICTIONARY = "add to dictionary";
 
     //private final String domainWordNetFileName = "estate_wordnet.xml";
+    //private final String domainDictionaryFileName = "estate_dictionary.txt";
     //private final String prefix = "EST01-";
     private final String domainWordNetFileName = "tourism_wordnet.xml";
+    private final String domainDictionaryFileName = "tourism_dictionary.txt";
     private final String prefix = "TOU01-";
     private int finalId;
 
@@ -82,6 +89,36 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
         }
     }
 
+    public class LiteralObject{
+        private Literal literal;
+        private Pos pos;
+
+        LiteralObject(Literal literal, Pos pos){
+            this.literal = literal;
+            this.pos = pos;
+        }
+
+        public String toString(){
+            return literal.getName() + " (" + pos + ")";
+        }
+
+    }
+
+    public class WordObject{
+        private Word word;
+        private Pos pos;
+
+        WordObject(Word word, Pos pos){
+            this.word = word;
+            this.pos = pos;
+        }
+
+        public String toString(){
+            return word.getName() + " (" + pos + ")";
+        }
+
+    }
+
     private int getFinalId(){
         int max = 0;
         for (SynSet synSet : domainWordNet.synSetList()){
@@ -101,9 +138,9 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
         JButton edit = new DrawingButton(WordNetEditorFrame.class, this, "edit", EDIT, "Edit");
         toolBar.add(edit);
         toolBar.addSeparator();
-        JButton addNew = new DrawingButton(WordNetEditorFrame.class, this, "addparent", ADD_NEW, "Add New SynSet");
+        JButton addNew = new DrawingButton(WordNetEditorFrame.class, this, "addparent", ADD_NEW, "Add New Noun SynSet");
         toolBar.add(addNew);
-        JButton insertFromWordNet = new DrawingButton(WordNetEditorFrame.class, this, "merge", INSERT_FROM_WORDNET, "Insert From Turkish WordNet");
+        JButton insertFromWordNet = new DrawingButton(WordNetEditorFrame.class, this, "merge", INSERT_FROM_WORDNET, "Insert Noun From Turkish WordNet");
         toolBar.add(insertFromWordNet);
         toolBar.addSeparator();
         JButton insertChild = new DrawingButton(WordNetEditorFrame.class, this, "semanticrelation", INSERT_CHILD, "Insert Child");
@@ -119,16 +156,21 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
         toolBar.addSeparator();
         JButton merge = new DrawingButton(WordNetEditorFrame.class, this, "random", MERGE, "Merge Two SynSets");
         toolBar.add(merge);
+        toolBar.addSeparator();
+        JButton addWordnet = new DrawingButton(WordNetEditorFrame.class, this, "moveleft", ADD_WORDNET, "Add to WordNet from Dictionary");
+        toolBar.add(addWordnet);
+        JButton addDictionary = new DrawingButton(WordNetEditorFrame.class, this, "moveright", ADD_DICTIONARY, "Add to Dictionary from WordNet");
+        toolBar.add(addDictionary);
         showMoved = new JCheckBox("Show Moved");
         toolBar.add(showMoved);
         automaticSelection = new JCheckBox("Automatic Selection");
         toolBar.add(automaticSelection);
     }
 
-    private void showPath(DefaultMutableTreeNode treeNode){
-        TreePath treePath = new TreePath(noun.treeModel.getPathToRoot(treeNode));
-        noun.tree.setSelectionPath(treePath);
-        noun.tree.scrollPathToVisible(treePath);
+    private void showPath(PartOfSpeechTree partOfSpeechTree, DefaultMutableTreeNode treeNode){
+        TreePath treePath = new TreePath(partOfSpeechTree.treeModel.getPathToRoot(treeNode));
+        partOfSpeechTree.tree.setSelectionPath(treePath);
+        partOfSpeechTree.tree.scrollPathToVisible(treePath);
     }
 
     private void replaceAllRelationsWithNewSynSet(String oldId, String newId){
@@ -179,7 +221,7 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
                     DefaultMutableTreeNode node = noun.nodeList.get(selectedSynSet);
                     noun.nodeList.remove(selectedSynSet);
                     replaceAllRelationsWithNewSynSet(selectedSynSet.getId(), newSynSetId);
-                    selectedSynSet.setId(newSynSetId);
+                    domainWordNet.changeSynSetId(selectedSynSet, newSynSetId);
                     selectedSynSet.setDefinition(" ");
                     noun.nodeList.put(selectedSynSet, node);
                     node.setUserObject(new SynSetObject(selectedSynSet));
@@ -196,14 +238,7 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
                                 SynSet newSynSet = new SynSet(id.getText());
                                 newSynSet.addLiteral(new Literal(literal.getText(), Integer.parseInt(sense.getText()), id.getText()));
                                 newSynSet.setDefinition(definition.getText());
-                                newSynSet.setPos(Pos.NOUN);
-                                domainWordNet.addSynSet(newSynSet);
-                                DefaultMutableTreeNode newChild = new DefaultMutableTreeNode(new SynSetObject(newSynSet));
-                                noun.nodeList.put(newSynSet, newChild);
-                                DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode)noun.tree.getModel().getRoot();
-                                insertIntoCorrectPosition(rootNode, newChild);
-                                noun.treeModel.reload(rootNode);
-                                showPath(newChild);
+                                addNewSynSet(newSynSet, Pos.NOUN, noun);
                             } else {
                                 JOptionPane.showMessageDialog(this, "SynSet with Same Literal and Same Sense Already Exists!", "Error", JOptionPane.ERROR_MESSAGE);
                             }
@@ -229,7 +264,7 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
                             definition.setText(synSet.getLongDefinition());
                         } else {
                             DefaultMutableTreeNode node = noun.nodeList.get(domainWordNet.getSynSetWithId(synsetId));
-                            showPath(node);
+                            showPath(noun, node);
                             JOptionPane.showMessageDialog(this, "Synset Does Exist In Domain WordNet!", "Error", JOptionPane.ERROR_MESSAGE);
                         }
                     } else {
@@ -250,7 +285,7 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
                             DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode)noun.tree.getModel().getRoot();
                             noun.treeModel.reload(rootNode);
                             if (showMoved.isSelected()){
-                                showPath(selectedTreeNode);
+                                showPath(noun, selectedTreeNode);
                             }
                             selectedSynSet.addRelation(new SemanticRelation(synSet.getId(), SemanticRelationType.HYPERNYM));
                             synSet.addRelation(new SemanticRelation(selectedSynSet.getId(), SemanticRelationType.HYPONYM));
@@ -287,9 +322,9 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
                                     insertIntoCorrectPosition(rootNode, selectedTreeNode);
                                     noun.treeModel.reload(rootNode);
                                     if (showMoved.isSelected()){
-                                        showPath(selectedTreeNode);
+                                        showPath(noun, selectedTreeNode);
                                     } else {
-                                        showPath(parentNode);
+                                        showPath(noun, parentNode);
                                     }
                                 }
                                 break;
@@ -325,7 +360,78 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
                     JOptionPane.showMessageDialog(this, "No Synset Selected!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
                 break;
+            case ADD_WORDNET:
+                if (!dictionaryList.isSelectionEmpty()){
+                    WordObject selectedWord = (WordObject) dictionaryList.getSelectedValue();
+                    finalId += 10;
+                    String newSynSetId = prefix + "" + finalId;
+                    SynSet newSynSet = new SynSet(newSynSetId);
+                    String wordForm = selectedWord.word.getName();
+                    if (selectedWord.pos.equals(Pos.VERB)){
+                        Transition verbTransition = new Transition("mAk");
+                        TxtWord word = (TxtWord) dictionary.getWord(wordForm);
+                        String verbForm = verbTransition.makeTransition(word, word.getName());
+                        newSynSet.addLiteral(new Literal(verbForm, 1, newSynSetId));
+                    } else {
+                        newSynSet.addLiteral(new Literal(wordForm, 1, newSynSetId));
+                    }
+                    newSynSet.setDefinition(" ");
+                    switch (selectedWord.pos){
+                        case NOUN:
+                            addNewSynSet(newSynSet, selectedWord.pos, noun);
+                            break;
+                        case ADJECTIVE:
+                            addNewSynSet(newSynSet, selectedWord.pos, adjective);
+                            break;
+                        case VERB:
+                            addNewSynSet(newSynSet, selectedWord.pos, verb);
+                            break;
+                        case ADVERB:
+                            addNewSynSet(newSynSet, selectedWord.pos, adverb);
+                            break;
+                    }
+                    domainWordNet.addSynSet(newSynSet);
+                    ((DefaultListModel) dictionaryList.getModel()).remove(dictionaryList.getSelectedIndex());
+                } else {
+                    JOptionPane.showMessageDialog(this, "No Word Selected!", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                break;
+            case ADD_DICTIONARY:
+                if (!wordNetList.isSelectionEmpty()){
+                    LiteralObject selectedLiteral = (LiteralObject) wordNetList.getSelectedValue();
+                    String word = selectedLiteral.literal.getName();
+                    switch (selectedLiteral.pos){
+                        case NOUN:
+                            dictionary.addWithFlag(word, "CL_ISIM");
+                            break;
+                        case ADJECTIVE:
+                            dictionary.addWithFlag(word, "IS_ADJ");
+                            break;
+                        case VERB:
+                            dictionary.addWithFlag(word.substring(0, word.length() - 3), "CL_VERB");
+                            break;
+                        case ADVERB:
+                            dictionary.addWithFlag(word, "IS_ADVERB");
+                            break;
+                    }
+                    dictionary.saveAsTxt(domainDictionaryFileName);
+                    ((DefaultListModel) wordNetList.getModel()).remove(wordNetList.getSelectedIndex());
+                } else {
+                    JOptionPane.showMessageDialog(this, "No Literal Selected!", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                break;
         }
+    }
+
+    private void addNewSynSet(SynSet newSynSet, Pos pos, PartOfSpeechTree partOfSpeechTree){
+        newSynSet.setPos(pos);
+        domainWordNet.addSynSet(newSynSet);
+        DefaultMutableTreeNode newChild = new DefaultMutableTreeNode(new SynSetObject(newSynSet));
+        partOfSpeechTree.nodeList.put(newSynSet, newChild);
+        DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode)partOfSpeechTree.tree.getModel().getRoot();
+        insertIntoCorrectPosition(rootNode, newChild);
+        partOfSpeechTree.treeModel.reload(rootNode);
+        showPath(partOfSpeechTree, newChild);
     }
 
     private void insertIntoCorrectPosition(DefaultMutableTreeNode parent, DefaultMutableTreeNode newChild) {
@@ -429,8 +535,8 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
 
     private void replaceWithNewSynSet(SynSet newSynSet){
         if (newSynSet != null && selectedSynSet != null){
-            DefaultMutableTreeNode node = noun.nodeList.get(selectedSynSet);
-            noun.nodeList.remove(selectedSynSet);
+            DefaultMutableTreeNode node = selectedPartOfSpeechTree.nodeList.get(selectedSynSet);
+            selectedPartOfSpeechTree.nodeList.remove(selectedSynSet);
             for (SynSet synSet1 : domainWordNet.synSetList()){
                 for (int i = 0; i < synSet1.relationSize(); i++){
                     if (synSet1.getRelation(i).getName().equals(selectedSynSet.getId())){
@@ -438,15 +544,83 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
                     }
                 }
             }
-            noun.nodeList.put(newSynSet, node);
+            selectedPartOfSpeechTree.nodeList.put(newSynSet, node);
             node.setUserObject(new SynSetObject(newSynSet));
-            noun.treeModel.reload(node);
+            selectedPartOfSpeechTree.treeModel.reload(node);
             domainWordNet.removeSynSet(selectedSynSet);
             domainWordNet.addSynSet(newSynSet);
         }
     }
 
+
+    private void addToListModel(DefaultListModel<WordObject> listModel, Word word, Pos pos, ArrayList<SynSet> synSets){
+        boolean found = false;
+        for (SynSet synSet : synSets){
+            if (synSet.getPos().equals(pos)){
+                found = true;
+                break;
+            }
+        }
+        if (!found){
+            listModel.addElement(new WordObject(word, pos));
+        }
+    }
+
+    private JList<WordObject> createDictionaryList(){
+        Transition verbTransition = new Transition("mAk");
+        JList<WordObject> list = new JList<>();
+        DefaultListModel<WordObject> listModel = new DefaultListModel<>();
+        for (int i = 0; i < dictionary.size(); i++){
+            TxtWord word = (TxtWord) dictionary.getWord(i);
+            String verbForm = verbTransition.makeTransition(word, word.getName());
+            ArrayList<SynSet> synSets = domainWordNet.getSynSetsWithLiteral(word.getName());
+            synSets.addAll(domainWordNet.getSynSetsWithLiteral(verbForm));
+            if (word.isNominal()){
+                addToListModel(listModel, word, Pos.NOUN, synSets);
+            }
+            if (word.isAdjective()){
+                addToListModel(listModel, word, Pos.ADJECTIVE, synSets);
+            }
+            if (word.isVerb()){
+                addToListModel(listModel, word, Pos.VERB, synSets);
+            }
+            if (word.isAdverb()){
+                addToListModel(listModel, word, Pos.ADVERB, synSets);
+            }
+        }
+        list.setModel(listModel);
+        return list;
+    }
+
+    private JList<LiteralObject> createWordNetList(){
+        JList<LiteralObject> list = new JList<>();
+        DefaultListModel<LiteralObject> listModel = new DefaultListModel<>();
+        for (SynSet synSet : domainWordNet.synSetList()){
+            if (synSet.getPos() != null){
+                for (int i = 0; i < synSet.getSynonym().literalSize(); i++){
+                    String word = synSet.getSynonym().getLiteral(i).getName().toLowerCase(new Locale("tr"));
+                    if (!word.contains(" ") && !word.startsWith(".") && !word.startsWith(",")){
+                        if (synSet.getPos().equals(Pos.VERB)){
+                            if (dictionary.getWord(word.substring(0, word.length() - 3)) == null){
+                                listModel.addElement(new LiteralObject(synSet.getSynonym().getLiteral(i), synSet.getPos()));
+                                break;
+                            }
+                        } else {
+                            if (dictionary.getWord(word) == null){
+                                listModel.addElement(new LiteralObject(synSet.getSynonym().getLiteral(i), synSet.getPos()));
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        list.setModel(listModel);
+        return list;
+    }
+
     WordNetEditorFrame(){
+        dictionary = new TxtDictionary(domainDictionaryFileName, new TurkishWordComparator());
         domainWordNet = new WordNet(domainWordNetFileName, new Locale("tr"));
         finalId = getFinalId();
         turkish = new WordNet();
@@ -479,26 +653,43 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
                 }
             }
         });
-        JPanel leftPanel = new JPanel(new BorderLayout());
+        JPanel nounAdjectivePanel = new JPanel(new BorderLayout());
         noun = constructTree(Pos.NOUN, true);
         JScrollPane nounPane = new JScrollPane(noun.tree);
         nounPane.setMinimumSize(new Dimension(400, 100));
-        PartOfSpeechTree adjective = constructTree(Pos.ADJECTIVE, false);
+        adjective = constructTree(Pos.ADJECTIVE, false);
         JScrollPane adjectivePane = new JScrollPane(adjective.tree);
         adjectivePane.setMinimumSize(new Dimension(400, 100));
-        JSplitPane leftSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, nounPane, adjectivePane);
-        leftPanel.add(leftSplitPane, BorderLayout.CENTER);
-        PartOfSpeechTree verb = constructTree(Pos.VERB, true);
+        JSplitPane nounAdjectivePane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, nounPane, adjectivePane);
+        nounAdjectivePanel.add(nounAdjectivePane, BorderLayout.CENTER);
+        verb = constructTree(Pos.VERB, true);
         JScrollPane verbPane = new JScrollPane(verb.tree);
         verbPane.setMinimumSize(new Dimension(400, 100));
-        JPanel rightPanel = new JPanel(new BorderLayout());
-        PartOfSpeechTree adverb = constructTree(Pos.ADVERB, false);
+        JPanel verbAdverbPanel = new JPanel(new BorderLayout());
+        adverb = constructTree(Pos.ADVERB, false);
         JScrollPane adverbPane = new JScrollPane(adverb.tree);
         adverbPane.setMinimumSize(new Dimension(400, 100));
-        JSplitPane rightSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, verbPane, adverbPane);
-        rightPanel.add(rightSplitPane, BorderLayout.CENTER);
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, rightPanel);
-        JSplitPane allPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, topPanel, splitPane);
+        JSplitPane verbAdverbPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, verbPane, adverbPane);
+        verbAdverbPanel.add(verbAdverbPane, BorderLayout.CENTER);
+        JSplitPane posPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, nounAdjectivePanel, verbAdverbPanel);
+        JPanel dictionaryPanel = new JPanel(new BorderLayout());
+        dictionaryPanel.setMinimumSize(new Dimension(50, 100));
+        dictionaryList = createDictionaryList();
+        JScrollPane dictionaryPane = new JScrollPane(dictionaryList);
+        JLabel dictionaryHeader = new JLabel("Words that are in the dictionary but not in the wordnet");
+        dictionaryHeader.setHorizontalAlignment(SwingConstants.CENTER);
+        dictionaryHeader.setForeground(Color.BLUE);
+        dictionaryPane.setColumnHeaderView(dictionaryHeader);
+        wordNetList = createWordNetList();
+        JScrollPane wordNetPane = new JScrollPane(wordNetList);
+        JLabel wordNetHeader = new JLabel("Words that are in the wordnet but not in the dictionary");
+        wordNetHeader.setHorizontalAlignment(SwingConstants.CENTER);
+        wordNetHeader.setForeground(Color.BLUE);
+        wordNetPane.setColumnHeaderView(wordNetHeader);
+        JSplitPane dictionaryWordNetPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, dictionaryPane, wordNetPane);
+        dictionaryPanel.add(dictionaryWordNetPane, BorderLayout.CENTER);
+        JSplitPane bottomPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, posPane, dictionaryPanel);
+        JSplitPane allPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, topPanel, bottomPane);
         add(allPane, BorderLayout.CENTER);
         setLocationRelativeTo(null);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
@@ -520,6 +711,5 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
             }
         }
     }
-
 
 }

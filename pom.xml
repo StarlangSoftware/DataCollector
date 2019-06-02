@@ -6,7 +6,7 @@
 
     <groupId>NlpToolkit</groupId>
     <artifactId>DataCollector</artifactId>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -61,7 +61,7 @@
         <dependency>
             <groupId>NlpToolkit</groupId>
             <artifactId>Dictionary</artifactId>
-            <version>1.0.2</version>
+            <version>1.0.5</version>
         </dependency>
         <dependency>
             <groupId>NlpToolkit</groupId>
@@ -86,7 +86,7 @@
         <dependency>
             <groupId>NlpToolkit</groupId>
             <artifactId>WordNet</artifactId>
-            <version>1.0.9</version>
+            <version>1.0.10</version>
         </dependency>
         <dependency>
             <groupId>NlpToolkit</groupId>
