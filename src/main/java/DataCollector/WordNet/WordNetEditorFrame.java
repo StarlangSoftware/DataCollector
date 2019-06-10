@@ -16,12 +16,10 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class WordNetEditorFrame extends JFrame implements ActionListener {
+public class WordNetEditorFrame extends DomainEditorFrame implements ActionListener {
     private PartOfSpeechTree noun, adjective, verb, adverb;
     private PartOfSpeechTree selectedPartOfSpeechTree;
     private JTextField leftSearch, id, literal, sense, definition;
-    private WordNet turkish, domainWordNet;
-    private TxtDictionary dictionary;
     private DefaultMutableTreeNode selectedTreeNode = null;
     private SynSet selectedSynSet = null;
     private JComboBox alternatives;
@@ -29,7 +27,6 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
     private JList dictionaryList, wordNetList;
     private boolean completed = false;
 
-    private static final String SAVE = "save";
     private static final String EDIT = "edit";
     private static final String ADD_NEW = "add new";
     private static final String INSERT_FROM_WORDNET = "insert from wordnet";
@@ -40,14 +37,6 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
     private static final String MERGE = "merge two synsets";
     private static final String ADD_WORDNET = "add to wordnet";
     private static final String ADD_DICTIONARY = "add to dictionary";
-
-    //private final String domainWordNetFileName = "estate_wordnet.xml";
-    //private final String domainDictionaryFileName = "estate_dictionary.txt";
-    //private final String prefix = "EST01-";
-    private final String domainWordNetFileName = "tourism_wordnet.xml";
-    private final String domainDictionaryFileName = "tourism_dictionary.txt";
-    private final String prefix = "TOU01-";
-    private int finalId;
 
     public class PartOfSpeechTree{
         private JTree tree;
@@ -119,22 +108,7 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
 
     }
 
-    private int getFinalId(){
-        int max = 0;
-        for (SynSet synSet : domainWordNet.synSetList()){
-            if (synSet.getId().startsWith(prefix)){
-                int id = Integer.parseInt(synSet.getId().substring(prefix.length()));
-                if (id > max){
-                    max = id;
-                }
-            }
-        }
-        return max;
-    }
-
-    private void addButtons(JToolBar toolBar) {
-        JButton save = new DrawingButton(WordNetEditorFrame.class, this, "save", SAVE, "Save");
-        toolBar.add(save);
+    private void addButtons() {
         JButton edit = new DrawingButton(WordNetEditorFrame.class, this, "edit", EDIT, "Edit");
         toolBar.add(edit);
         toolBar.addSeparator();
@@ -185,12 +159,10 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
+        super.actionPerformed(e);
         String synsetId;
         SynSet synSet;
         switch (e.getActionCommand()){
-            case SAVE:
-                domainWordNet.saveAsXml(domainWordNetFileName);
-                break;
             case DELETE:
                 if (selectedSynSet != null){
                     domainWordNet.removeSynSet(selectedSynSet);
@@ -414,7 +386,6 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
                             dictionary.addWithFlag(word, "IS_ADVERB");
                             break;
                     }
-                    dictionary.saveAsTxt(domainDictionaryFileName);
                     ((DefaultListModel) wordNetList.getModel()).remove(wordNetList.getSelectedIndex());
                 } else {
                     JOptionPane.showMessageDialog(this, "No Literal Selected!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -619,15 +590,8 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
         return list;
     }
 
-    WordNetEditorFrame(){
-        dictionary = new TxtDictionary(domainDictionaryFileName, new TurkishWordComparator());
-        domainWordNet = new WordNet(domainWordNetFileName, new Locale("tr"));
-        finalId = getFinalId();
-        turkish = new WordNet();
-        JToolBar toolBar = new JToolBar("ToolBox");
-        addButtons(toolBar);
-        add(toolBar, BorderLayout.PAGE_START);
-        toolBar.setVisible(true);
+    public void loadContents(){
+        addButtons();
         JPanel topPanel = new JPanel(new GridLayout(3, 4));
         topPanel.add(new JLabel("Id"));
         id = new JTextField();
@@ -691,10 +655,6 @@ public class WordNetEditorFrame extends JFrame implements ActionListener {
         JSplitPane bottomPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, posPane, dictionaryPanel);
         JSplitPane allPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, topPanel, bottomPane);
         add(allPane, BorderLayout.CENTER);
-        setLocationRelativeTo(null);
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setVisible(true);
         setName("WordNet Editor");
     }
 
