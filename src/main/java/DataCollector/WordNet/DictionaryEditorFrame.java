@@ -18,7 +18,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Scanner;
 
 public class DictionaryEditorFrame extends DomainEditorFrame implements ActionListener {
     private ArrayList<String> data;
@@ -32,6 +31,25 @@ public class DictionaryEditorFrame extends DomainEditorFrame implements ActionLi
     @Override
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
+        switch (e.getActionCommand()) {
+            case SAVE:
+                saveData();
+                break;
+        }
+    }
+
+    public void saveData(){
+        BufferedWriter outfile;
+        try {
+            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(domainDataFileName), "UTF-8");
+            outfile = new BufferedWriter(writer);
+            for (String root : data) {
+                outfile.write(root + "\n");
+            }
+            outfile.close();
+        } catch (IOException ioException) {
+            System.out.println("Output file can not be opened");
+        }
     }
 
     public class FlagObject{
@@ -274,12 +292,12 @@ public class DictionaryEditorFrame extends DomainEditorFrame implements ActionLi
                                 domainWordNet.addLiteralToLiteralList(addedLiteral);
                             } else {
                                 addedSynSet = synSetObject.extraSynSets.get(synSetChooser.getSelectedIndex() - extraRows);
-                                domainWordNet.addSynSet(addedSynSet);
-                                for (int i = 0; i < addedSynSet.getSynonym().literalSize(); i++){
-                                    if (addedSynSet.getSynonym().getLiteral(i).getName().startsWith(root)){
-                                        domainWordNet.addLiteralToLiteralList(addedSynSet.getSynonym().getLiteral(i));
-                                        break;
-                                    }
+                                if (addedSynSet.getPos().equals(Pos.VERB)){
+                                    Transition verbTransition = new Transition("mAk");
+                                    String verbForm = verbTransition.makeTransition(word, word.getName());
+                                    addSynSet(addedSynSet, verbForm);
+                                } else {
+                                    addSynSet(addedSynSet, root);
                                 }
                             }
                             PanelObject panelObject = new PanelObject(root, row);
@@ -473,12 +491,13 @@ public class DictionaryEditorFrame extends DomainEditorFrame implements ActionLi
         display = new HashMap<>();
         data = new ArrayList<>();
         try {
-            Scanner input = new Scanner(new File(domainDataFileName));
-            while (input.hasNext()){
-                String root = input.next();
-                data.add(root);
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(domainDataFileName), "UTF8"));
+            String line = br.readLine();
+            while (line != null) {
+                data.add(line);
+                line = br.readLine();
             }
-        } catch (FileNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
         String imgLocation = "/icons/addparent.png";

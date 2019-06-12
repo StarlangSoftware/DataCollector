@@ -362,7 +362,6 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
                             addNewSynSet(newSynSet, selectedWord.pos, adverb);
                             break;
                     }
-                    domainWordNet.addSynSet(newSynSet);
                     ((DefaultListModel) dictionaryList.getModel()).remove(dictionaryList.getSelectedIndex());
                 } else {
                     JOptionPane.showMessageDialog(this, "No Word Selected!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -504,22 +503,22 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
         return partOfSpeechTree;
     }
 
-    private void replaceWithNewSynSet(SynSet newSynSet){
-        if (newSynSet != null && selectedSynSet != null){
+    private void replaceWithNewSynSet(SynSet synSetInTurkishWordNet){
+        if (synSetInTurkishWordNet != null && selectedSynSet != null){
             DefaultMutableTreeNode node = selectedPartOfSpeechTree.nodeList.get(selectedSynSet);
             selectedPartOfSpeechTree.nodeList.remove(selectedSynSet);
             for (SynSet synSet1 : domainWordNet.synSetList()){
                 for (int i = 0; i < synSet1.relationSize(); i++){
                     if (synSet1.getRelation(i).getName().equals(selectedSynSet.getId())){
-                        synSet1.getRelation(i).setName(newSynSet.getId());
+                        synSet1.getRelation(i).setName(synSetInTurkishWordNet.getId());
                     }
                 }
             }
-            selectedPartOfSpeechTree.nodeList.put(newSynSet, node);
-            node.setUserObject(new SynSetObject(newSynSet));
-            selectedPartOfSpeechTree.treeModel.reload(node);
             domainWordNet.removeSynSet(selectedSynSet);
-            domainWordNet.addSynSet(newSynSet);
+            SynSet addedSynSet = addSynSet(synSetInTurkishWordNet, literal.getText());
+            selectedPartOfSpeechTree.nodeList.put(addedSynSet, node);
+            node.setUserObject(new SynSetObject(addedSynSet));
+            selectedPartOfSpeechTree.treeModel.reload(node);
         }
     }
 

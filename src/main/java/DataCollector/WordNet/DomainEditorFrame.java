@@ -37,6 +37,21 @@ public abstract class DomainEditorFrame extends JFrame implements ActionListener
         }
     }
 
+    protected SynSet addSynSet(SynSet addedSynSet, String root){
+        SynSet newSynSet = new SynSet(addedSynSet.getId());
+        newSynSet.setPos(addedSynSet.getPos());
+        newSynSet.setDefinition(addedSynSet.getLongDefinition());
+        for (int i = 0; i < addedSynSet.getSynonym().literalSize(); i++){
+            if (addedSynSet.getSynonym().getLiteral(i).getName().startsWith(root)){
+                domainWordNet.addLiteralToLiteralList(addedSynSet.getSynonym().getLiteral(i));
+                newSynSet.addLiteral(addedSynSet.getSynonym().getLiteral(i));
+                break;
+            }
+        }
+        domainWordNet.addSynSet(newSynSet);
+        return newSynSet;
+    }
+
     protected int getFinalId(){
         int max = 0;
         for (SynSet synSet : domainWordNet.synSetList()){
