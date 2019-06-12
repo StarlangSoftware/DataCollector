@@ -11,10 +11,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.Collator;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 public class WordNetEditorFrame extends DomainEditorFrame implements ActionListener {
     private PartOfSpeechTree noun, adjective, verb, adverb;
@@ -37,6 +34,8 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
     private static final String MERGE = "merge two synsets";
     private static final String ADD_WORDNET = "add to wordnet";
     private static final String ADD_DICTIONARY = "add to dictionary";
+    private static final String EXPAND_ALL = "expand all";
+    private static final String COLLAPSE_ALL = "collapse all";
 
     public class PartOfSpeechTree{
         private JTree tree;
@@ -135,6 +134,11 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
         toolBar.add(addWordnet);
         JButton addDictionary = new DrawingButton(WordNetEditorFrame.class, this, "moveright", ADD_DICTIONARY, "Add to Dictionary from WordNet");
         toolBar.add(addDictionary);
+        toolBar.addSeparator();
+        JButton expandAll = new DrawingButton(WordNetEditorFrame.class, this, "fastforward", EXPAND_ALL, "Expand All");
+        toolBar.add(expandAll);
+        JButton collapseAll = new DrawingButton(WordNetEditorFrame.class, this, "fastbackward", COLLAPSE_ALL, "Collapse All");
+        toolBar.add(collapseAll);
         showMoved = new JCheckBox("Show Moved");
         toolBar.add(showMoved);
         automaticSelection = new JCheckBox("Automatic Selection");
@@ -390,7 +394,39 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
                     JOptionPane.showMessageDialog(this, "No Literal Selected!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
                 break;
+            case EXPAND_ALL:
+                if (selectedSynSet != null){
+                    expandAll(selectedTreeNode);
+                } else {
+                    JOptionPane.showMessageDialog(this, "No Synset Selected!", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                break;
+            case COLLAPSE_ALL:
+                if (selectedSynSet != null){
+                    collapseAll(selectedTreeNode);
+                } else {
+                    JOptionPane.showMessageDialog(this, "No Synset Selected!", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                break;
         }
+    }
+
+    private void expandAll(DefaultMutableTreeNode node) {
+        ArrayList<DefaultMutableTreeNode> list = Collections.list(node.children());
+        for (DefaultMutableTreeNode treeNode : list) {
+            expandAll(treeNode);
+        }
+        TreePath path = new TreePath(node.getPath());
+        noun.tree.expandPath(path);
+    }
+
+    private void collapseAll(DefaultMutableTreeNode node) {
+        ArrayList<DefaultMutableTreeNode> list = Collections.list(node.children());
+        for (DefaultMutableTreeNode treeNode : list) {
+            collapseAll(treeNode);
+        }
+        TreePath path = new TreePath(node.getPath());
+        noun.tree.collapsePath(path);
     }
 
     private void addNewSynSet(SynSet newSynSet, Pos pos, PartOfSpeechTree partOfSpeechTree){

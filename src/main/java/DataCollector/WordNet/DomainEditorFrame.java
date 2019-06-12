@@ -42,7 +42,7 @@ public abstract class DomainEditorFrame extends JFrame implements ActionListener
         newSynSet.setPos(addedSynSet.getPos());
         newSynSet.setDefinition(addedSynSet.getLongDefinition());
         for (int i = 0; i < addedSynSet.getSynonym().literalSize(); i++){
-            if (addedSynSet.getSynonym().getLiteral(i).getName().startsWith(root)){
+            if (addedSynSet.getSynonym().getLiteral(i).getName().toLowerCase(new Locale("tr")).startsWith(root.toLowerCase(new Locale("tr")))){
                 domainWordNet.addLiteralToLiteralList(addedSynSet.getSynonym().getLiteral(i));
                 newSynSet.addLiteral(addedSynSet.getSynonym().getLiteral(i));
                 break;
