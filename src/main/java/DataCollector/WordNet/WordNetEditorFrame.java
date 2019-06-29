@@ -441,16 +441,27 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
     }
 
     private void insertIntoCorrectPosition(DefaultMutableTreeNode parent, DefaultMutableTreeNode newChild) {
+        if (parent.getChildCount() == 0){
+            parent.add(newChild);
+            return;
+        }
         Locale locale = new Locale("tr");
         Collator collator = Collator.getInstance(locale);
-        for (int i = 0; i < parent.getChildCount(); i++) {
-            DefaultMutableTreeNode child = (DefaultMutableTreeNode) parent.getChildAt(i);
+        int lower = 0, upper = parent.getChildCount(), middle = (lower + upper) / 2;
+        while (lower < upper - 1){
+            DefaultMutableTreeNode child = (DefaultMutableTreeNode) parent.getChildAt(middle);
             if (collator.compare(child.getUserObject().toString(), newChild.getUserObject().toString()) > 0){
-                parent.insert(newChild, i);
-                return;
+                upper = middle;
+            } else {
+                lower = middle;
             }
+            middle = (lower + upper) / 2;
         }
-        parent.add(newChild);
+        if (collator.compare(((DefaultMutableTreeNode) parent.getChildAt(lower)).getUserObject().toString(), newChild.getUserObject().toString()) > 0) {
+            parent.insert(newChild, lower);
+        } else {
+            parent.insert(newChild, lower + 1);
+        }
     }
 
     private PartOfSpeechTree constructTree(Pos partOfSpeech, boolean hypernym){
@@ -562,7 +573,7 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
     private void addToListModel(DefaultListModel<WordObject> listModel, Word word, Pos pos, ArrayList<SynSet> synSets){
         boolean found = false;
         for (SynSet synSet : synSets){
-            if (synSet.getPos().equals(pos)){
+            if (synSet.getPos() != null && synSet.getPos().equals(pos)){
                 found = true;
                 break;
             }

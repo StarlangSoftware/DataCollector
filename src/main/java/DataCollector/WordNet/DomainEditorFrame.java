@@ -24,6 +24,9 @@ public abstract class DomainEditorFrame extends JFrame implements ActionListener
     protected final String domainWordNetFileName = "tourism_wordnet.xml";
     protected final String domainDictionaryFileName = "tourism_dictionary.txt";
     protected final String prefix = "TOU01-";
+    //protected final String domainWordNetFileName = "turkish_wordnet.xml";
+    //protected final String domainDictionaryFileName = "turkish_dictionary.txt";
+    //protected final String prefix = "TUR01-";
     protected int finalId;
     abstract void loadContents();
 
