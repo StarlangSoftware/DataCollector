@@ -1,6 +1,6 @@
 # DataCollector
 
-## Tree Translation
+## English-Turkish Tree Translation
 
 In translating an English syntactic tree, we confine ourselves to two operations. We can permute the children of a node and we can replace the English word token at a leaf node. No other modification of the tree is allowed. In particular, we use the same set of tags and predicate labels in the non-leaf nodes and do not use new tags for the Turkish trees. Adding or deleting nodes are not allowed either. We use the \*NONE\* tag when we can not use any direct gloss for an English token. In itself, this operation corresponds to effectively mapping an English token to a null token.
 
@@ -30,6 +30,33 @@ The proper nouns are translated with their common Turkish gloss if there is one.
 Subordinating conjunctions, marked as “IN” in English sentences, are transformed to \*NONE\* and the appropriate participle morpheme is appended to the stem in the Turkish translation.
 
 A multiword expression may correspond to a single English word. Conversely, more than one words in English may correspond to a single word in Turkish. In the first case, we use the multiword expression as the gloss. In the latter case, we replace some English words with \*NONE\*.
+
+## English-Persian Tree Translation
+
+Persian language is a member of Indo-European family that uses a modified Arabic script and is written from right to left. As a result of this, processing Persian language becomes difficult. Beside this, tokenization is also difficult since delineating spaces are not consistently used. Persian has a flexible word order. Most commonly, sentences follow a subject-object-verb ordering. However, the ordering may change according to the emphasis. For example, if the emphasis is on the subject, one can use object-subject- verb ordering.
+
+Forming question sentences is also different than English, in the sense that the structure of the sentence does not necessarily change. In Persian, affixes can come before or after word roots. Like English, verb form changes according to tense.
+
+### Constituent order and \*NONE\* cases
+Majority of Persian sentences have the SOV order. Based on this fact, when translating English trees, we permute its subtrees to reflect change of constituent order in Persian.
+
+It is obvious that some English words will not have a corresponding form in the Persian side, so in these cases, we replace the English constituent leaf with \*NONE\*. In some cases, the personal pronouns acting as subjects (sometimes also objects) are naturally embedded in the verb. In those cases, pronoun in the original tree is replaced with \*NONE\* and its subtree is moved after the verb phrase.
+
+### Case markers
+Persian uses case marker “ra” to denote the syntactic functions of nouns and noun groups. For example, accusative case may be used to mark the direct object of a transitive verb and locative case may be used to mark the head of a prepositional phrase. In English, there are no tokens corresponding to “ra”. When the direct object is definite it is always followed by “ra”; when the direct object is indefinite but individuated it may or may not be followed by “ra” under certain conditions. We add this token after direct object. Also, in translation from English to Persian, the prepositions are sometimes replaced with \*NONE\*. 
+
+### Plural in nouns and verb inflection
+Subject-Verb number agreement is optional in Persian. In translation, we used the case that sounds more natural. Also, plural nouns under NNS tag in the English tree are sometimes translated as singular.
+
+### Tense and Auxiliary Verb ambiguity
+In general, tenses in English are different than tenses in Persian. We translate English tenses to corresponding tenses in Persian. If there is no corresponding tense in Persian, we translate in to the closest semantic class in Persian.
+
+When a compound verb comes with an auxiliary verb, another difficult case arises. In that case, auxiliary verb comes between head of compound verb and light verb. Al- though auxiliary verb(s) have corresponding verb(s) in Persian, we did not translate them and bring them under VB with the main verb.
+
+### WH- Questions
+There are significant differences between English question sentences and Persian question sentences. For this case, we benefit from Penn Treebank II annotation where the movement leaves a trace and is associated with wh-constituent with a numeric marker. For example, “WHNP-1” and “\*T\*-1” are associated.
+
+During translation, wh-constituent is replaced with *NONE* and its trace is replaced with related question pronoun in Persian.
 
 For Developers
 ============
