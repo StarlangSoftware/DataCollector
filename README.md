@@ -56,7 +56,7 @@ When a compound verb comes with an auxiliary verb, another difficult case arises
 ### WH- Questions
 There are significant differences between English question sentences and Persian question sentences. For this case, we benefit from Penn Treebank II annotation where the movement leaves a trace and is associated with wh-constituent with a numeric marker. For example, “WHNP-1” and “\*T\*-1” are associated.
 
-During translation, wh-constituent is replaced with *NONE* and its trace is replaced with related question pronoun in Persian.
+During translation, wh-constituent is replaced with \*NONE\* and its trace is replaced with related question pronoun in Persian.
 
 For Developers
 ============
