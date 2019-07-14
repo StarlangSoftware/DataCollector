@@ -1,4 +1,36 @@
 # DataCollector
+
+## Tree Translation
+
+In translating an English syntactic tree, we confine ourselves to two operations. We can permute the children of a node and we can replace the English word token at a leaf node. No other modification of the tree is allowed. In particular, we use the same set of tags and predicate labels in the non-leaf nodes and do not use new tags for the Turkish trees. Adding or deleting nodes are not allowed either. We use the \*NONE\* tag when we can not use any direct gloss for an English token. In itself, this operation corresponds to effectively mapping an English token to a null token.
+
+### Constituent and morpheme order
+Majority of unmarked Turkish sentences have the SOV order. When translating English trees, we permute its shallow subtrees to reflect the change of constituent order in Turkish. Also, the agglutinative suffixes of Turkish words dictate the order when permuting the constituents which correspond to prepositions and particles.
+
+### The determiner “the”
+There is no definite article in Turkish corresponding to “the”. Depending on the context, “the” is translated either as \*NONE\* or one of the demonstrative adjectives in Turkish.
+
+### Case markers
+Turkish, being a fairly scrambling language, uses case markers to denote the syntactic functions of nouns and noun groups. For example, accusative case may be used to mark the direct object of a transitive verb and locative case may be used to mark the head of a prepositional phrase. In translation from English to Turkish, the prepositions are usually replaced with \*NONE\* and their corresponding case is attached to the nominal head of the phrase.
+
+### Plural in nouns and verb inflection
+Number agreement between the verb in the predicate and the subject is somewhat loose in Turkish. We preserved this freedom in translation and chose the number inflection that sounds more natural. Also, plural nouns under NNS tag in the English tree are sometimes translated as singular. In those cases, we kept the original POS tag NNS intact but used the singular gloss.
+
+### Tense ambiguity
+It is in general not possible to find an exact mapping among the tense classes in a pair of languages. When translating the trees, we mapped the English verb tenses to their closest semantic classes in Turkish while trying to keep the overall flow of the Turkish sentence natural. In many cases, we mapped the perfective tense in English to the past tense in Turkish. Similarly, we sometimes mapped the present tense to present continuous.
+
+### WH- Questions
+Question sentences require special attention dur- ing transformation. As opposed to movement in English question sentences, any constituent in Turkish can be questioned by replacing it with an inflected question word. In the Penn Treebank II annotation, the movement leaves a trace and is associated with wh- constituent with a numeric marker. For example, “WHNP-17” and “\*T\*-17” are associated. When we translate the tree for a question sentence, we replace the wh- constituent with \*NONE\* and replace its trace with the appropriate question pronoun in Turkish.
+
+### Miscellany
+In the translation of nominal clauses, the copula marker “-dIr” corresponding to verb “be” is often dropped.
+
+The proper nouns are translated with their common Turkish gloss if there is one. So, “London” becomes “Londra”.
+
+Subordinating conjunctions, marked as “IN” in English sentences, are transformed to \*NONE\* and the appropriate participle morpheme is appended to the stem in the Turkish translation.
+
+A multiword expression may correspond to a single English word. Conversely, more than one words in English may correspond to a single word in Turkish. In the first case, we use the multiword expression as the gloss. In the latter case, we replace some English words with \*NONE\*.
+
 For Developers
 ============
 
