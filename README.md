@@ -8,6 +8,22 @@ In this work, human annotators selected the correct morphological parsing among 
 ### Word Sense Disambiguation
 In the annotation screen, there are some possible meanings under each word of each sentence. For tagging the words, the person (tagger) needs to choose the appropriate meaning for each word considering the items from combobox. When the tagger presses the 'next' button, his/her annotation is saved and the tagger can pass to the next one to annotate it. 
 
+### Named Entity Annotation
+In the entity annotation, the annotators annotate named entities in a sentence. Possible named entities are listed. If a word is not a named entity (a regular word, a punctuation, etc.), the user selects the tag “NONE”.
+
+### Shallow Parsing Annotation
+In the shallow parsing step, the annotators choose the correct shallow parse tag for each word in a sentence. Possible shallow parse tags are listed. If a word does not fall into one of the established categories of parse tags, the user selects the tag “HİÇBİRİ”. If there are multiple subsentences connected via conjunctions, such as ’ve’ (and) or ’veya’ (or), the user analyses these subsentences independently.
+
+### Predicate Selection
+In the verbal predicate selection, the annotators choose the verbal predicate in each sentence. If the predicate is a multi- word expression, the user needs to select all constituents of this expression with the tag “PREDICATE”.
+
+Similar to the shallow parsing step, if there are multiple subsentences in a sentence, verbal predicates of all those sub- sentences are annotated “PREDICATE”.
+
+If there is no verbal predicate in the sentence, the annotator leaves the sentence unmarked.
+
+### Semantic Role Labeling
+Given the verbal predicate(s) in a sentence, the annotators annotate semantic roles of words. The list of semantic roles are determined with respect to the frameset of the selected verbal predicate for that sentence.
+
 ## Parse Tree Tasks
 
 ### English-Turkish Tree Translation
