@@ -25,6 +25,15 @@ If there is no verbal predicate in the sentence, the annotator leaves the senten
 Given the verbal predicate(s) in a sentence, the annotators annotate semantic roles of words. The list of semantic roles are determined with respect to the frameset of the selected verbal predicate for that sentence.
 
 ## Parse Tree Tasks
+The current implementation of the application is designed for the import of text files that adhere to our Penn Treebank style data format. Once a pre-processed sentence has been imported into the editor, the human annotator is presented with the visualized syntactic parse tree of that sentence.
+
+### Morphological Disambiguation
+In this work, human annotators selected the correct morphological parse from multiple possible analyses returned from the automatic parser. The tag set and morphological representation were quoted from the study. Each output of the parser comprises the root of the word, its part-of-speech tag and a set of morphemes, each separated with a + sign.
+
+### Word-Sense Disambiguation
+Annotators can click on leaf nodes (words), but they are not allowed to make any changes such as rotating or deleting nodes. When a word is selected, a drop-down list is displayed, in which all available TDK entries of the selected lemma are listed. In all-words annotation tasks, list of words to be tagged, and therefore also the candidate senses, are unpredictable. Our application handles sense extraction on behalf of the annotators.
+
+Each sense result shown to the annotators is populated with its POS and a sample sentence (which are already available in the TDK dictionary). This becomes a considerable aid for the annotators in deciding which sense to assign to a target word. Moreover, sense options whose POS do not agree with the word's POS, are disabled (are shown but not selectable) to facilitate the task. Just after the selection of the most appropriate sense, the drop-down list is hidden and the ID of the submitted synset is displayed under the word.
 
 ### English-Turkish Tree Translation
 
