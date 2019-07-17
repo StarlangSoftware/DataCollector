@@ -193,7 +193,7 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
             case REPLACE:
                 if (selectedSynSet != null){
                     finalId += 10;
-                    String newSynSetId = prefix + "" + finalId;
+                    String newSynSetId = wordNetPrefix + "" + finalId;
                     DefaultMutableTreeNode node = noun.nodeList.get(selectedSynSet);
                     noun.nodeList.remove(selectedSynSet);
                     replaceAllRelationsWithNewSynSet(selectedSynSet.getId(), newSynSetId);
@@ -340,7 +340,7 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
                 if (!dictionaryList.isSelectionEmpty()){
                     WordObject selectedWord = (WordObject) dictionaryList.getSelectedValue();
                     finalId += 10;
-                    String newSynSetId = prefix + "" + finalId;
+                    String newSynSetId = wordNetPrefix + "" + finalId;
                     SynSet newSynSet = new SynSet(newSynSetId);
                     String wordForm = selectedWord.word.getName();
                     if (selectedWord.pos.equals(Pos.VERB)){

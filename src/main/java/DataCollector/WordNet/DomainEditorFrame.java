@@ -9,7 +9,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
 import java.util.Locale;
+import java.util.Properties;
 
 public abstract class DomainEditorFrame extends JFrame implements ActionListener {
     protected WordNet turkish, domainWordNet;
@@ -18,15 +20,10 @@ public abstract class DomainEditorFrame extends JFrame implements ActionListener
 
     protected static final String SAVE = "save";
 
-    //protected final String domainWordNetFileName = "estate_wordnet.xml";
-    //protected final String domainDictionaryFileName = "estate_dictionary.txt";
-    //protected final String prefix = "EST01-";
-    protected final String domainWordNetFileName = "tourism_wordnet.xml";
-    protected final String domainDictionaryFileName = "tourism_dictionary.txt";
-    protected final String prefix = "TOU01-";
-    //protected final String domainWordNetFileName = "turkish_wordnet.xml";
-    //protected final String domainDictionaryFileName = "turkish_dictionary.txt";
-    //protected final String prefix = "TUR01-";
+    protected String domainWordNetFileName;
+    protected String domainDictionaryFileName;
+    protected String domainPrefix = "turkish";
+    protected String wordNetPrefix = "TUR10-";
     protected int finalId;
     abstract void loadContents();
 
@@ -58,8 +55,8 @@ public abstract class DomainEditorFrame extends JFrame implements ActionListener
     protected int getFinalId(){
         int max = 0;
         for (SynSet synSet : domainWordNet.synSetList()){
-            if (synSet.getId().startsWith(prefix)){
-                int id = Integer.parseInt(synSet.getId().substring(prefix.length()));
+            if (synSet.getId().startsWith(wordNetPrefix)){
+                int id = Integer.parseInt(synSet.getId().substring(wordNetPrefix.length()));
                 if (id > max){
                     max = id;
                 }
@@ -74,6 +71,16 @@ public abstract class DomainEditorFrame extends JFrame implements ActionListener
     }
 
     public DomainEditorFrame(){
+        Properties properties = new Properties();
+        try {
+            properties.load(new FileInputStream(new File("config.properties")));
+            wordNetPrefix = properties.getProperty("wordNetPrefix");
+            domainPrefix = properties.getProperty("domainPrefix");
+            domainWordNetFileName = domainPrefix + "_wordnet.xml";
+            domainDictionaryFileName = domainPrefix + "_dictionary.txt";
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         dictionary = new TxtDictionary(domainDictionaryFileName, new TurkishWordComparator());
         domainWordNet = new WordNet(domainWordNetFileName, new Locale("tr"));
         finalId = getFinalId();

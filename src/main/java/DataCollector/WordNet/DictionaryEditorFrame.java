@@ -25,8 +25,7 @@ public class DictionaryEditorFrame extends DomainEditorFrame implements ActionLi
     private ImageIcon addIcon, deleteIcon;
     private HashMap<String, PanelObject> display;
 
-    //protected final String domainDataFileName = "estate_data.txt";
-    protected final String domainDataFileName = "tourism_data.txt";
+    protected String domainDataFileName;
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -264,7 +263,7 @@ public class DictionaryEditorFrame extends DomainEditorFrame implements ActionLi
                             Pos pos;
                             if (synSetChooser.getSelectedIndex() < extraRows){
                                 finalId += 10;
-                                String newSynSetId = prefix + "" + finalId;
+                                String newSynSetId = wordNetPrefix + "" + finalId;
                                 String selectedText = (String) synSetChooser.getSelectedItem();
                                 if (selectedText.contains("NOUN")){
                                     addedLiteral = new Literal(root, 1, newSynSetId);
@@ -488,6 +487,7 @@ public class DictionaryEditorFrame extends DomainEditorFrame implements ActionLi
 
     public void loadContents(){
         setName("Dictionary Editor");
+        domainDataFileName = domainPrefix + "_data.txt";
         display = new HashMap<>();
         data = new ArrayList<>();
         try {
