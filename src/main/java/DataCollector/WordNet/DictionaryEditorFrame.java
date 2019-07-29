@@ -145,30 +145,6 @@ public class DictionaryEditorFrame extends DomainEditorFrame implements ActionLi
             flagComboBox.addItem("IS_BILEŞ");
             flagComboBox.addItem("IS_POSTP");
             flagComboBox.addItem("IS_CA");
-            flagComboBox.addItem("F1P1-NO-REF");
-            flagComboBox.addItem("F2P1-NO-REF");
-            flagComboBox.addItem("F3P1-NO-REF");
-            flagComboBox.addItem("F4P1-NO-REF");
-            flagComboBox.addItem("F4PR-NO-REF");
-            flagComboBox.addItem("F4PL-NO-REF");
-            flagComboBox.addItem("F4PW-NO-REF");
-            flagComboBox.addItem("F5PL-NO-REF");
-            flagComboBox.addItem("F5PR-NO-REF");
-            flagComboBox.addItem("F5PW-NO-REF");
-            flagComboBox.addItem("F1P1");
-            flagComboBox.addItem("F2P1");
-            flagComboBox.addItem("F2PL");
-            flagComboBox.addItem("F3P1");
-            flagComboBox.addItem("F4P1");
-            flagComboBox.addItem("F4PR");
-            flagComboBox.addItem("F4PL");
-            flagComboBox.addItem("F4PW");
-            flagComboBox.addItem("F5P1");
-            flagComboBox.addItem("F5PL");
-            flagComboBox.addItem("F5PR");
-            flagComboBox.addItem("F5PW");
-            flagComboBox.addItem("F6P1");
-            flagComboBox.addItem("PASSIVE-HN");
             JButton add = new JButton();
             add.setIcon(addIcon);
             c.gridx = 0;
@@ -273,14 +249,14 @@ public class DictionaryEditorFrame extends DomainEditorFrame implements ActionLi
                                         addedLiteral = new Literal(root, 1, newSynSetId);
                                         pos = Pos.ADJECTIVE;
                                     } else {
-                                        if (selectedText.contains("VERB")){
+                                        if (selectedText.contains("ADVERB")){
+                                            addedLiteral = new Literal(root, 1, newSynSetId);
+                                            pos = Pos.ADVERB;
+                                        } else {
                                             Transition verbTransition = new Transition("mAk");
                                             String verbForm = verbTransition.makeTransition(word, word.getName());
                                             addedLiteral = new Literal(verbForm, 1, newSynSetId);
                                             pos = Pos.VERB;
-                                        } else {
-                                            addedLiteral = new Literal(root, 1, newSynSetId);
-                                            pos = Pos.ADVERB;
                                         }
                                     }
                                 }
