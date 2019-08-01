@@ -66,7 +66,7 @@ public class DictionaryEditorFrame extends DomainEditorFrame implements ActionLi
         ArrayList<SynSet> synSets = new ArrayList<>();
         ArrayList<SynSet> extraSynSets = new ArrayList<>();
 
-        public SynSetObject(TxtWord word){
+        public SynSetObject(String root, TxtWord word){
             Transition verbTransition = new Transition("mAk");
             if (word != null){
                 String verbForm = verbTransition.makeTransition(word, word.getName());
@@ -79,6 +79,14 @@ public class DictionaryEditorFrame extends DomainEditorFrame implements ActionLi
                     }
                 }
                 candidates = turkish.getSynSetsWithLiteral(verbForm);
+                for (SynSet synSet : candidates){
+                    if (!synSets.contains(synSet)){
+                        extraSynSets.add(synSet);
+                    }
+                }
+            } else {
+                synSets = domainWordNet.getSynSetsWithLiteral(root);
+                ArrayList<SynSet> candidates = turkish.getSynSetsWithLiteral(root);
                 for (SynSet synSet : candidates){
                     if (!synSets.contains(synSet)){
                         extraSynSets.add(synSet);
@@ -213,6 +221,10 @@ public class DictionaryEditorFrame extends DomainEditorFrame implements ActionLi
                     if (word.isAdverb()){
                         synSetChooser.addItem("New SynSet (ADVERB)");
                     }
+                } else {
+                    if (root.contains(" ")){
+                        synSetChooser.addItem("New SynSet (NOUN)");
+                    }
                 }
                 for (SynSet  synSet : synSetObject.extraSynSets){
                     if (synSet.getDefinition() != null && synSet.getDefinition().length()  > 70){
@@ -301,7 +313,7 @@ public class DictionaryEditorFrame extends DomainEditorFrame implements ActionLi
             this.root = root;
             word = (TxtWord) dictionary.getWord(root);
             flagObject = new FlagObject(word);
-            synSetObject = new SynSetObject(word);
+            synSetObject = new SynSetObject(root, word);
             createFlagPanel(row);
             createSynSetPanel(1, row);
             createSynSetPanel(2, row);

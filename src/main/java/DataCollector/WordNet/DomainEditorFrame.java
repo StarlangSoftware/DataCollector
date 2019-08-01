@@ -38,9 +38,14 @@ public abstract class DomainEditorFrame extends JFrame implements ActionListener
     }
 
     protected SynSet addSynSet(SynSet addedSynSet, String root){
-        SynSet newSynSet = new SynSet(addedSynSet.getId());
-        newSynSet.setPos(addedSynSet.getPos());
-        newSynSet.setDefinition(addedSynSet.getLongDefinition());
+        boolean newOne = false;
+        SynSet newSynSet = domainWordNet.getSynSetWithId(addedSynSet.getId());
+        if (newSynSet == null){
+            newOne = true;
+            newSynSet = new SynSet(addedSynSet.getId());
+            newSynSet.setPos(addedSynSet.getPos());
+            newSynSet.setDefinition(addedSynSet.getLongDefinition());
+        }
         for (int i = 0; i < addedSynSet.getSynonym().literalSize(); i++){
             if (addedSynSet.getSynonym().getLiteral(i).getName().toLowerCase(new Locale("tr")).startsWith(root.toLowerCase(new Locale("tr")))){
                 domainWordNet.addLiteralToLiteralList(addedSynSet.getSynonym().getLiteral(i));
@@ -48,7 +53,9 @@ public abstract class DomainEditorFrame extends JFrame implements ActionListener
                 break;
             }
         }
-        domainWordNet.addSynSet(newSynSet);
+        if (newOne){
+            domainWordNet.addSynSet(newSynSet);
+        }
         return newSynSet;
     }
 
