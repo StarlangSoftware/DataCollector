@@ -3,6 +3,7 @@ package DataCollector.WordNet;
 import Dictionary.Pos;
 import Dictionary.TxtWord;
 import MorphologicalAnalysis.Transition;
+import Util.DrawingButton;
 import WordNet.Literal;
 import WordNet.SynSet;
 
@@ -15,15 +16,17 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.text.Collator;
+import java.util.*;
 
 public class DictionaryEditorFrame extends DomainEditorFrame implements ActionListener {
     private ArrayList<String> data;
     private JTable dataTable;
     private ImageIcon addIcon, deleteIcon;
     private HashMap<String, PanelObject> display;
+
+    protected static final String ID_SORT = "sortnumbers";
+    protected static final String TEXT_SORT = "sorttext";
 
     protected String domainDataFileName;
 
@@ -34,7 +37,45 @@ public class DictionaryEditorFrame extends DomainEditorFrame implements ActionLi
             case SAVE:
                 saveData();
                 break;
+            case ID_SORT:
+                Transition verbTransition = new Transition("mAk");
+                Collections.sort(data, (o1, o2) -> {
+                    TxtWord word1 = (TxtWord) dictionary.getWord(o1);
+                    TxtWord word2 = (TxtWord) dictionary.getWord(o2);
+                    ArrayList<SynSet> synSets1 = domainWordNet.getSynSetsWithLiteral(o1);
+                    ArrayList<SynSet> synSets2 = domainWordNet.getSynSetsWithLiteral(o2);
+                    if (word1 != null){
+                        String verbForm1 = verbTransition.makeTransition(word1, word1.getName());
+                        synSets1.addAll(domainWordNet.getSynSetsWithLiteral(verbForm1));
+                    }
+                    if (word2 != null){
+                        String verbForm2 = verbTransition.makeTransition(word2, word2.getName());
+                        synSets2.addAll(domainWordNet.getSynSetsWithLiteral(verbForm2));
+                    }
+                    if (synSets1.size() != 0){
+                        if (synSets2.size() == 0){
+                            return 1;
+                        } else {
+                            return synSets1.get(0).getId().compareTo(synSets2.get(0).getId());
+                        }
+                    } else {
+                        if (synSets2.size() == 0){
+                            return 0;
+                        } else {
+                            return -1;
+                        }
+                    }
+                });
+                JOptionPane.showMessageDialog(this, "Words Sorted!", "Sorting Complete", JOptionPane.INFORMATION_MESSAGE);
+                break;
+            case TEXT_SORT:
+                Locale locale = new Locale("tr");
+                Collator collator = Collator.getInstance(locale);
+                Collections.sort(data, (o1, o2) -> collator.compare(o1, o2));
+                JOptionPane.showMessageDialog(this, "Words Sorted!", "Sorting Complete", JOptionPane.INFORMATION_MESSAGE);
+                break;
         }
+        dataTable.invalidate();
     }
 
     public void saveData(){
@@ -63,7 +104,7 @@ public class DictionaryEditorFrame extends DomainEditorFrame implements ActionLi
     }
 
     public class SynSetObject{
-        ArrayList<SynSet> synSets = new ArrayList<>();
+        ArrayList<SynSet> synSets;
         ArrayList<SynSet> extraSynSets = new ArrayList<>();
 
         public SynSetObject(String root, TxtWord word){
@@ -226,7 +267,7 @@ public class DictionaryEditorFrame extends DomainEditorFrame implements ActionLi
                         synSetChooser.addItem("New SynSet (NOUN)");
                     }
                 }
-                for (SynSet  synSet : synSetObject.extraSynSets){
+                for (SynSet synSet : synSetObject.extraSynSets){
                     if (synSet.getDefinition() != null && synSet.getDefinition().length()  > 70){
                         synSetChooser.addItem(synSet.getDefinition().substring(0, 69) + "...");
                     } else {
@@ -474,6 +515,10 @@ public class DictionaryEditorFrame extends DomainEditorFrame implements ActionLi
     }
 
     public void loadContents(){
+        JButton idSort = new DrawingButton(DictionaryEditorFrame.class, this, "sortnumbers", ID_SORT, "Sort by WordNet Id");
+        toolBar.add(idSort);
+        JButton textSort = new DrawingButton(DictionaryEditorFrame.class, this, "sorttext", TEXT_SORT, "Sort by Word");
+        toolBar.add(textSort);
         setName("Dictionary Editor");
         domainDataFileName = domainPrefix + "_data.txt";
         display = new HashMap<>();
