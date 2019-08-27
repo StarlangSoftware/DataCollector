@@ -86,7 +86,7 @@
         <dependency>
             <groupId>NlpToolkit</groupId>
             <artifactId>WordNet</artifactId>
-            <version>1.0.12</version>
+            <version>1.0.15</version>
         </dependency>
         <dependency>
             <groupId>NlpToolkit</groupId>
