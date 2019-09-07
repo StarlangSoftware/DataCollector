@@ -182,7 +182,11 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
                 if (selectedSynSet != null){
                     selectedSynSet.getSynonym().getLiteral(0).setName(literal.getText());
                     selectedSynSet.getSynonym().getLiteral(0).setSense(Integer.parseInt(sense.getText()));
-                    selectedSynSet.setDefinition(definition.getText());
+                    if (definition.getText().length() > 0){
+                        selectedSynSet.setDefinition(definition.getText());
+                    } else {
+                        selectedSynSet.setDefinition(" ");
+                    }
                     DefaultMutableTreeNode parent = (DefaultMutableTreeNode) selectedTreeNode.getParent();
                     selectedPartOfSpeechTree.treeModel.reload(parent);
                     selectedSynSet = null;
@@ -213,7 +217,11 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
                             if (domainWordNet.getSynSetWithLiteral(literal.getText(), Integer.parseInt(sense.getText())) == null){
                                 SynSet newSynSet = new SynSet(id.getText());
                                 newSynSet.addLiteral(new Literal(literal.getText(), Integer.parseInt(sense.getText()), id.getText()));
-                                newSynSet.setDefinition(definition.getText());
+                                if (definition.getText().length() > 0){
+                                    newSynSet.setDefinition(definition.getText());
+                                } else {
+                                    newSynSet.setDefinition(" ");
+                                }
                                 addNewSynSet(newSynSet, Pos.NOUN, noun);
                             } else {
                                 JOptionPane.showMessageDialog(this, "SynSet with Same Literal and Same Sense Already Exists!", "Error", JOptionPane.ERROR_MESSAGE);
