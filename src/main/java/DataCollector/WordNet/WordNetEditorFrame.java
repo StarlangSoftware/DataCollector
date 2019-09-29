@@ -532,15 +532,29 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
                     alternatives.removeAllItems();
                     alternatives.setSelectedIndex(-1);
                     for (SynSet synSet : alternativeList){
-                        alternatives.addItem(synSet);
-                        if (synSet.equals(selectedSynSet)){
-                            alternatives.setSelectedItem(synSet);
+                        if (synSet.getPos().equals(partOfSpeech)){
+                            alternatives.addItem(synSet);
+                            if (synSet.equals(selectedSynSet)){
+                                alternatives.setSelectedItem(synSet);
+                            }
                         }
                     }
-                    if (alternatives.getItemCount() <= 1){
+                    if (alternatives.getItemCount() == 0){
                         alternatives.setEnabled(false);
                     } else {
-                        alternatives.setEnabled(true);
+                        if (selectedSynSet.getId().startsWith(wordNetPrefix) && selectedSynSet.getDefinition() != null){
+                            alternatives.setEnabled(false);
+                        } else {
+                            if (selectedSynSet.getId().startsWith(wordNetPrefix) && selectedSynSet.getDefinition() == null){
+                                alternatives.setEnabled(true);
+                            } else {
+                                if (alternatives.getItemCount() > 1 && !selectedSynSet.getId().startsWith(wordNetPrefix)){
+                                    alternatives.setEnabled(true);
+                                } else {
+                                    alternatives.setEnabled(false);
+                                }
+                            }
+                        }
                     }
                     completed = true;
                 } else {
@@ -674,19 +688,19 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
         JPanel nounAdjectivePanel = new JPanel(new BorderLayout());
         noun = constructTree(Pos.NOUN, true);
         JScrollPane nounPane = new JScrollPane(noun.tree);
-        nounPane.setMinimumSize(new Dimension(400, 100));
+        nounPane.setMinimumSize(new Dimension(100, 100));
         adjective = constructTree(Pos.ADJECTIVE, false);
         JScrollPane adjectivePane = new JScrollPane(adjective.tree);
-        adjectivePane.setMinimumSize(new Dimension(400, 100));
+        adjectivePane.setMinimumSize(new Dimension(100, 100));
         JSplitPane nounAdjectivePane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, nounPane, adjectivePane);
         nounAdjectivePanel.add(nounAdjectivePane, BorderLayout.CENTER);
         verb = constructTree(Pos.VERB, true);
         JScrollPane verbPane = new JScrollPane(verb.tree);
-        verbPane.setMinimumSize(new Dimension(400, 100));
+        verbPane.setMinimumSize(new Dimension(100, 100));
         JPanel verbAdverbPanel = new JPanel(new BorderLayout());
         adverb = constructTree(Pos.ADVERB, false);
         JScrollPane adverbPane = new JScrollPane(adverb.tree);
-        adverbPane.setMinimumSize(new Dimension(400, 100));
+        adverbPane.setMinimumSize(new Dimension(100, 100));
         JSplitPane verbAdverbPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, verbPane, adverbPane);
         verbAdverbPanel.add(verbAdverbPane, BorderLayout.CENTER);
         JSplitPane posPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, nounAdjectivePanel, verbAdverbPanel);
