@@ -166,6 +166,21 @@
                             <finalName>dictionary-editor</finalName>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>syntactic-editor</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <archive>
+                                <manifest>
+                                    <mainClass>DataCollector.ParseTree.TestSyntacticFrame</mainClass>
+                                </manifest>
+                            </archive>
+                            <finalName>syntactic-editor</finalName>
+                        </configuration>
+                    </execution>
                 </executions>
                 <configuration>
                     <descriptorRefs>

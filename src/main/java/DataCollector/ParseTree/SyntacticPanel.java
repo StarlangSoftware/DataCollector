@@ -111,4 +111,21 @@ public class SyntacticPanel extends StructureEditorPanel{
         }
     }
 
+    public void mouseClicked(MouseEvent mouseEvent) {
+        ParseNodeDrawable node = currentTree.getLeafNodeAt(mouseEvent.getX(), mouseEvent.getY());
+        if (node == null){
+            node = currentTree.getNodeAt(mouseEvent.getX(), mouseEvent.getY());
+            if (node != null){
+                if (editableNode != null)
+                    editableNode.setEditable(false);
+                editableNode = node;
+                editableNode.setEditable(true);
+                editText.setVisible(false);
+                isEditing = false;
+                this.repaint();
+                this.setFocusable(true);
+            }
+        }
+    }
+
 }
