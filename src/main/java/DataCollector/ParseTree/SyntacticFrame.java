@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 public class SyntacticFrame extends StructureEditorFrame{
     static final protected String ADDPARENT = "addparent";
     static final protected String EDITSYMBOL = "editsymbol";
+    static final protected String DELETESYMBOL = "deletesymbol";
 
     public SyntacticFrame(){
         this.setTitle("Syntactic");
@@ -23,11 +24,17 @@ public class SyntacticFrame extends StructureEditorFrame{
         button = new DrawingButton(DataCollector.class, this, "edit", EDITSYMBOL, "Edit Symbol");
         button.setVisible(true);
         toolBar.add(button);
+        toolBar.addSeparator();
+        button = new DrawingButton(DataCollector.class, this, "delete", DELETESYMBOL, "Delete Symbol");
+        button.setVisible(true);
+        toolBar.add(button);
         treeMenu.addSeparator();
         JMenuItem itemAddParent = addMenuItem(treeMenu, "Add Parent", KeyStroke.getKeyStroke('p'));
         JMenuItem itemEditSymbol = addMenuItem(treeMenu, "Edit Symbol", KeyStroke.getKeyStroke('e'));
+        JMenuItem itemDeleteSymbol = addMenuItem(treeMenu, "Delete Symbol", KeyStroke.getKeyStroke('d'));
         itemAddParent.addActionListener(e -> addParent());
         itemEditSymbol.addActionListener(e -> editSymbol());
+        itemDeleteSymbol.addActionListener(e -> deleteSymbol());
     }
 
     @Override
@@ -49,6 +56,13 @@ public class SyntacticFrame extends StructureEditorFrame{
         }
     }
 
+    protected void deleteSymbol(){
+        SyntacticPanel current = (SyntacticPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
+        if (current != null){
+            current.deleteSymbol();
+        }
+    }
+
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
         switch (e.getActionCommand()){
@@ -57,6 +71,9 @@ public class SyntacticFrame extends StructureEditorFrame{
                 break;
             case EDITSYMBOL:
                 editSymbol();
+                break;
+            case DELETESYMBOL:
+                deleteSymbol();
                 break;
         }
     }

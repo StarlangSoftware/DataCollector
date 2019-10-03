@@ -2,6 +2,7 @@ package DataCollector.ParseTree;
 
 import AnnotatedSentence.ViewLayerType;
 import DataCollector.ParseTree.TreeAction.AddParentAction;
+import DataCollector.ParseTree.TreeAction.DeleteNodeAction;
 import DataCollector.ParseTree.TreeAction.EditSymbolAction;
 import DataCollector.ParseTree.TreeAction.MoveSubtreeAction;
 import ParseTree.ParseNode;
@@ -55,6 +56,15 @@ public class SyntacticPanel extends StructureEditorPanel{
             editText.setBounds(rect.x - 20, rect.y - 4, rect.width + 40, rect.height + 8);
             editText.setVisible(true);
             editText.requestFocus();
+        }
+    }
+
+    public void deleteSymbol(){
+        if (editableNode != null && (editableNode.numberOfChildren() != 1 || !editableNode.getChild(0).isLeaf())){
+            DeleteNodeAction action = new DeleteNodeAction(this, editableNode);
+            action.execute();
+            actionList.add(action);
+            repaint();
         }
     }
 
