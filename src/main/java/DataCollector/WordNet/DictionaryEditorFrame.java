@@ -198,9 +198,11 @@ public class DictionaryEditorFrame extends DomainEditorFrame implements ActionLi
             add.setIcon(addIcon);
             c.gridx = 0;
             add.addActionListener(e -> {
-                dictionary.addWithFlag(root, (String) flagComboBox.getSelectedItem());
-                PanelObject panelObject = new PanelObject(root, row);
-                display.put(root, panelObject);
+                if (!root.contains(" ")){
+                    dictionary.addWithFlag(root, (String) flagComboBox.getSelectedItem());
+                    PanelObject panelObject = new PanelObject(root, row);
+                    display.put(root, panelObject);
+                }
             });
             flagPanel.add(add, c);
             c.gridx = 1;

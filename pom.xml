@@ -136,7 +136,6 @@
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
-<!--
                    <execution>
                         <id>wordnet-editor</id>
                         <phase>package</phase>
@@ -167,37 +166,38 @@
                             <finalName>dictionary-editor</finalName>
                         </configuration>
                     </execution>
-                    <execution>
-                        <id>syntactic-editor</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <archive>
-                                <manifest>
-                                    <mainClass>DataCollector.ParseTree.TestSyntacticFrame</mainClass>
-                                </manifest>
-                            </archive>
-                            <finalName>syntactic-editor</finalName>
-                        </configuration>
-                    </execution>
--->
-                    <execution>
-                        <id>tree-translation</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <archive>
-                                <manifest>
-                                    <mainClass>DataCollector.ParseTree.TestTranslatorFrame</mainClass>
-                                </manifest>
-                            </archive>
-                            <finalName>tree-translation</finalName>
-                        </configuration>
-                    </execution>
+                    <!--
+                                        <execution>
+                                            <id>syntactic-editor</id>
+                                            <phase>package</phase>
+                                            <goals>
+                                                <goal>single</goal>
+                                            </goals>
+                                            <configuration>
+                                                <archive>
+                                                    <manifest>
+                                                        <mainClass>DataCollector.ParseTree.TestSyntacticFrame</mainClass>
+                                                    </manifest>
+                                                </archive>
+                                                <finalName>syntactic-editor</finalName>
+                                            </configuration>
+                                        </execution>
+                                        <execution>
+                                            <id>tree-translation</id>
+                                            <phase>package</phase>
+                                            <goals>
+                                                <goal>single</goal>
+                                            </goals>
+                                            <configuration>
+                                                <archive>
+                                                    <manifest>
+                                                        <mainClass>DataCollector.ParseTree.TestTranslatorFrame</mainClass>
+                                                    </manifest>
+                                                </archive>
+                                                <finalName>tree-translation</finalName>
+                                            </configuration>
+                                        </execution>
+                    -->
                 </executions>
                 <configuration>
                     <descriptorRefs>

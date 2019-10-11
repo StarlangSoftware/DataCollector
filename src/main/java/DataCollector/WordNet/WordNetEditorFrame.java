@@ -35,6 +35,7 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
     private static final String ADD_WORDNET = "add to wordnet";
     private static final String ADD_DICTIONARY = "add to dictionary";
     private static final String EXPAND_ALL = "expand all";
+    private static final String EXPAND_EVERYTHING = "expand everything";
     private static final String COLLAPSE_ALL = "collapse all";
 
     public class PartOfSpeechTree{
@@ -139,6 +140,9 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
         toolBar.add(expandAll);
         JButton collapseAll = new DrawingButton(WordNetEditorFrame.class, this, "fastbackward", COLLAPSE_ALL, "Collapse All");
         toolBar.add(collapseAll);
+        toolBar.addSeparator();
+        JButton expandEverything = new DrawingButton(WordNetEditorFrame.class, this, "fastfastforward", EXPAND_EVERYTHING, "Expand Everything");
+        toolBar.add(expandEverything);
         showMoved = new JCheckBox("Show Moved");
         toolBar.add(showMoved);
         automaticSelection = new JCheckBox("Automatic Selection");
@@ -408,6 +412,9 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
                 } else {
                     JOptionPane.showMessageDialog(this, "No Synset Selected!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
+                break;
+            case EXPAND_EVERYTHING:
+                expandAll((DefaultMutableTreeNode)noun.tree.getModel().getRoot());
                 break;
             case COLLAPSE_ALL:
                 if (selectedSynSet != null){
