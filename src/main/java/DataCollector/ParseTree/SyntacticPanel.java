@@ -84,6 +84,7 @@ public class SyntacticPanel extends StructureEditorPanel{
             actionList.add(action);
             this.repaint();
             fromNode = null;
+            draggedNode = null;
             dragged = false;
         }
     }
