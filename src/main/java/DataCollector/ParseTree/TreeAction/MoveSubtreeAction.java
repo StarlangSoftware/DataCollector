@@ -9,6 +9,7 @@ public class MoveSubtreeAction extends TreeEditAction{
     private ParseNodeDrawable fromNode;
     private ParseNodeDrawable toNode;
     private ParseNodeDrawable oldParent;
+    private int oldChildIndex;
 
     public MoveSubtreeAction(EditorPanel associatedPanel, ParseTreeDrawable tree, ParseNodeDrawable fromNode, ParseNodeDrawable toNode){
         this.associatedPanel = associatedPanel;
@@ -19,12 +20,18 @@ public class MoveSubtreeAction extends TreeEditAction{
 
     public void execute() {
         oldParent = (ParseNodeDrawable)fromNode.getParent();
+        for (int i = 0; i < oldParent.numberOfChildren(); i++){
+            if (oldParent.getChild(i).equals(fromNode)){
+                oldChildIndex = i;
+                break;
+            }
+        }
         tree.moveNode(fromNode, toNode);
         associatedPanel.save();
     }
 
     public void undo() {
-        tree.moveNode(fromNode, oldParent);
+        tree.moveNode(fromNode, oldParent, oldChildIndex);
         associatedPanel.save();
     }
 }

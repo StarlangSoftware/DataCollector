@@ -32,6 +32,7 @@ public class SyntacticPanel extends StructureEditorPanel{
             actionList.add(action);
             action.execute();
             editText.setVisible(false);
+            editableNode.setEditable(false);
             repaint();
         });
         add(editText);
@@ -44,6 +45,7 @@ public class SyntacticPanel extends StructureEditorPanel{
             AddParentAction action = new AddParentAction(this, editableNode);
             action.execute();
             actionList.add(action);
+            editableNode.setEditable(false);
             repaint();
         }
     }
@@ -64,6 +66,7 @@ public class SyntacticPanel extends StructureEditorPanel{
             DeleteNodeAction action = new DeleteNodeAction(this, editableNode);
             action.execute();
             actionList.add(action);
+            editableNode.setEditable(false);
             repaint();
         }
     }
@@ -76,17 +79,24 @@ public class SyntacticPanel extends StructureEditorPanel{
     }
 
     public void mouseReleased(MouseEvent mouseEvent) {
-        ParseNodeDrawable node = currentTree.getNodeAt(mouseEvent.getX(), mouseEvent.getY());
-        if (fromNode != null && node != null && draggedNode != null && fromNode != node && dragged && fromNode.numberOfChildren() > 0){
+        if (fromNode != null){
+            fromNode.setSelected(false);
+            fromNode.setEditable(false);
+        }
+        if (draggedNode != null){
             draggedNode.setDragged(false);
-            MoveSubtreeAction action = new MoveSubtreeAction(this, currentTree, fromNode, node);
+            draggedNode.setSelected(false);
+            draggedNode.setEditable(false);
+        }
+        if (fromNode != null && draggedNode != null && fromNode != draggedNode && dragged && fromNode.numberOfChildren() > 0){
+            MoveSubtreeAction action = new MoveSubtreeAction(this, currentTree, fromNode, draggedNode);
             action.execute();
             actionList.add(action);
-            this.repaint();
-            fromNode = null;
-            draggedNode = null;
-            dragged = false;
         }
+        fromNode = null;
+        draggedNode = null;
+        dragged = false;
+        this.repaint();
     }
 
     public void mouseDragged(MouseEvent mouseEvent) {
