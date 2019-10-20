@@ -17,6 +17,7 @@ public class SyntacticPanel extends StructureEditorPanel{
     private ParseNodeDrawable draggedNode = null;
     private ParseNodeDrawable fromNode = null;
     private boolean dragged = false;
+    private int draggedIndex = -1;
 
     private JTextField editText;
 
@@ -88,8 +89,8 @@ public class SyntacticPanel extends StructureEditorPanel{
             draggedNode.setSelected(false);
             draggedNode.setEditable(false);
         }
-        if (fromNode != null && draggedNode != null && fromNode != draggedNode && dragged && fromNode.numberOfChildren() > 0){
-            MoveSubtreeAction action = new MoveSubtreeAction(this, currentTree, fromNode, draggedNode);
+        if (fromNode != null && draggedNode != null && fromNode != draggedNode && dragged && fromNode.numberOfChildren() > 0 && !fromNode.isDescendant(draggedNode)){
+            MoveSubtreeAction action = new MoveSubtreeAction(this, currentTree, fromNode, draggedNode, draggedIndex);
             action.execute();
             actionList.add(action);
         }
@@ -102,9 +103,10 @@ public class SyntacticPanel extends StructureEditorPanel{
     public void mouseDragged(MouseEvent mouseEvent) {
         ParseNodeDrawable node = currentTree.getNodeAt(mouseEvent.getX(), mouseEvent.getY());
         dragged = true;
-        if (node != null && node != previousNode && node.numberOfChildren() > 0){
+        if (node != null && node != previousNode && node.numberOfChildren() > 0 && !fromNode.isDescendant(node)){
             draggedNode = node;
-            draggedNode.setDragged(true);
+            draggedIndex = (int) (((draggedNode.numberOfChildren() + 1) * (mouseEvent.getX() - node.getArea().x)) / (node.getArea().width + 0.0));
+            draggedNode.setDragged(true, draggedIndex);
             this.repaint();
         } else {
             if (node == null && draggedNode != null){
@@ -136,9 +138,10 @@ public class SyntacticPanel extends StructureEditorPanel{
         ParseNodeDrawable node = currentTree.getLeafNodeAt(mouseEvent.getX(), mouseEvent.getY());
         if (node == null){
             node = currentTree.getNodeAt(mouseEvent.getX(), mouseEvent.getY());
+            if (editableNode != null) {
+                editableNode.setEditable(false);
+            }
             if (node != null){
-                if (editableNode != null)
-                    editableNode.setEditable(false);
                 editableNode = node;
                 editableNode.setEditable(true);
                 editText.setVisible(false);

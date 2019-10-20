@@ -10,23 +10,20 @@ public class MoveSubtreeAction extends TreeEditAction{
     private ParseNodeDrawable toNode;
     private ParseNodeDrawable oldParent;
     private int oldChildIndex;
+    private int newChildIndex;
 
-    public MoveSubtreeAction(EditorPanel associatedPanel, ParseTreeDrawable tree, ParseNodeDrawable fromNode, ParseNodeDrawable toNode){
+    public MoveSubtreeAction(EditorPanel associatedPanel, ParseTreeDrawable tree, ParseNodeDrawable fromNode, ParseNodeDrawable toNode, int draggedIndex){
         this.associatedPanel = associatedPanel;
         this.tree = tree;
         this.fromNode = fromNode;
         this.toNode = toNode;
+        this.newChildIndex = draggedIndex;
     }
 
     public void execute() {
         oldParent = (ParseNodeDrawable)fromNode.getParent();
-        for (int i = 0; i < oldParent.numberOfChildren(); i++){
-            if (oldParent.getChild(i).equals(fromNode)){
-                oldChildIndex = i;
-                break;
-            }
-        }
-        tree.moveNode(fromNode, toNode);
+        oldChildIndex = oldParent.getChildIndex(fromNode);
+        tree.moveNode(fromNode, toNode, newChildIndex);
         associatedPanel.save();
     }
 
