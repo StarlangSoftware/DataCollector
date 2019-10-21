@@ -89,7 +89,7 @@ public class SyntacticPanel extends StructureEditorPanel{
             draggedNode.setSelected(false);
             draggedNode.setEditable(false);
         }
-        if (fromNode != null && draggedNode != null && fromNode != draggedNode && dragged && fromNode.numberOfChildren() > 0 && !fromNode.isDescendant(draggedNode)){
+        if (fromNode != null && draggedNode != null && dragged){
             MoveSubtreeAction action = new MoveSubtreeAction(this, currentTree, fromNode, draggedNode, draggedIndex);
             action.execute();
             actionList.add(action);
@@ -103,7 +103,7 @@ public class SyntacticPanel extends StructureEditorPanel{
     public void mouseDragged(MouseEvent mouseEvent) {
         ParseNodeDrawable node = currentTree.getNodeAt(mouseEvent.getX(), mouseEvent.getY());
         dragged = true;
-        if (node != null && node != previousNode && node.numberOfChildren() > 0 && !fromNode.isDescendant(node)){
+        if (node != null && node != previousNode && node.numberOfChildren() > 0 && !node.getChild(0).isLeaf() && !fromNode.isDescendant(node)){
             draggedNode = node;
             draggedIndex = (int) (((draggedNode.numberOfChildren() + 1) * (mouseEvent.getX() - node.getArea().x)) / (node.getArea().width + 0.0));
             draggedNode.setDragged(true, draggedIndex);
