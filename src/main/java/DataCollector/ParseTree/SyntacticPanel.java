@@ -52,7 +52,7 @@ public class SyntacticPanel extends StructureEditorPanel{
     }
 
     public void editSymbol(){
-        if (editableNode != null){
+        if (editableNode != null && !editableNode.getChild(0).isLeaf()){
             isEditing = true;
             editText.setText(editableNode.getData().getName());
             Rectangle rect = editableNode.getArea();
@@ -119,7 +119,7 @@ public class SyntacticPanel extends StructureEditorPanel{
 
     public void mouseMoved(MouseEvent mouseEvent) {
         ParseNodeDrawable node = currentTree.getNodeAt(mouseEvent.getX(), mouseEvent.getY());
-        if (node != null && node != previousNode && !dragged && !isEditing){
+        if (node != null && node != previousNode && !dragged && !isEditing && !node.isLeaf()){
             if (previousNode != null)
                 previousNode.setSelected(false);
             node.setSelected(true);
@@ -141,7 +141,7 @@ public class SyntacticPanel extends StructureEditorPanel{
             if (editableNode != null) {
                 editableNode.setEditable(false);
             }
-            if (node != null){
+            if (node != null && !node.isLeaf()){
                 editableNode = node;
                 editableNode.setEditable(true);
                 editText.setVisible(false);
