@@ -28,10 +28,12 @@ public class SyntacticPanel extends StructureEditorPanel{
         editText.setVisible(false);
         editText.addActionListener(actionEvent -> {
             isEditing = false;
-            EditSymbolAction action = new EditSymbolAction(SyntacticPanel.this, editableNode,
-                    new Symbol(editText.getText()));
-            actionList.add(action);
-            action.execute();
+            if (!editText.getText().contains("(") && !editText.getText().contains(")") && !editText.getText().contains("{") && !editText.getText().contains("}")){
+                EditSymbolAction action = new EditSymbolAction(SyntacticPanel.this, editableNode,
+                        new Symbol(editText.getText()));
+                actionList.add(action);
+                action.execute();
+            }
             editText.setVisible(false);
             editableNode.setEditable(false);
             repaint();
