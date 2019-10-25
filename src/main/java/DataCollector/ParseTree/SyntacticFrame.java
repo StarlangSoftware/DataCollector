@@ -12,6 +12,7 @@ public class SyntacticFrame extends StructureEditorFrame{
     static final protected String ADDPARENT = "addparent";
     static final protected String EDITSYMBOL = "editsymbol";
     static final protected String DELETESYMBOL = "deletesymbol";
+    static final protected String SPLITNODE = "splitnode";
 
     public SyntacticFrame(){
         this.setTitle("Syntactic");
@@ -29,12 +30,18 @@ public class SyntacticFrame extends StructureEditorFrame{
         button.setVisible(true);
         toolBar.add(button);
         treeMenu.addSeparator();
+        button = new DrawingButton(DataCollector.class, this, "split", SPLITNODE, "Split Node");
+        button.setVisible(true);
+        toolBar.add(button);
+        treeMenu.addSeparator();
         JMenuItem itemAddParent = addMenuItem(treeMenu, "Add Parent", KeyStroke.getKeyStroke('p'));
         JMenuItem itemEditSymbol = addMenuItem(treeMenu, "Edit Symbol", KeyStroke.getKeyStroke('e'));
-        JMenuItem itemDeleteSymbol = addMenuItem(treeMenu, "Delete Symbol", KeyStroke.getKeyStroke('d'));
+        JMenuItem itemDeleteSymbol = addMenuItem(treeMenu, "Delete Symbol", KeyStroke.getKeyStroke('l'));
+        JMenuItem itemSplitNode = addMenuItem(treeMenu, "Split Node", KeyStroke.getKeyStroke('t'));
         itemAddParent.addActionListener(e -> addParent());
         itemEditSymbol.addActionListener(e -> editSymbol());
         itemDeleteSymbol.addActionListener(e -> deleteSymbol());
+        itemSplitNode.addActionListener(e -> splitNode());
     }
 
     @Override
@@ -63,6 +70,13 @@ public class SyntacticFrame extends StructureEditorFrame{
         }
     }
 
+    protected void splitNode(){
+        SyntacticPanel current = (SyntacticPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
+        if (current != null){
+            current.splitNode();
+        }
+    }
+
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
         switch (e.getActionCommand()){
@@ -74,6 +88,9 @@ public class SyntacticFrame extends StructureEditorFrame{
                 break;
             case DELETESYMBOL:
                 deleteSymbol();
+                break;
+            case SPLITNODE:
+                splitNode();
                 break;
         }
     }
