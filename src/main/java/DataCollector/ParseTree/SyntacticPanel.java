@@ -72,6 +72,16 @@ public class SyntacticPanel extends StructureEditorPanel{
         }
     }
 
+    public void deleteSubtree(){
+        if (editableNode != null && !editableNode.isLeaf()){
+            DeleteSubtreeAction action = new DeleteSubtreeAction(this, editableNode);
+            action.execute();
+            actionList.add(action);
+            editableNode.setEditable(false);
+            repaint();
+        }
+    }
+
     public void splitNode(){
         if (editableNode != null && editableNode.numberOfChildren() == 0){
             SplitNodeAction action = new SplitNodeAction(this, currentTree, editableNode);

@@ -13,6 +13,7 @@ public class SyntacticFrame extends StructureEditorFrame{
     static final protected String EDITSYMBOL = "editsymbol";
     static final protected String DELETESYMBOL = "deletesymbol";
     static final protected String SPLITNODE = "splitnode";
+    static final protected String DELETESUBTREE = "deletesubtree";
 
     public SyntacticFrame(){
         this.setTitle("Syntactic");
@@ -26,22 +27,27 @@ public class SyntacticFrame extends StructureEditorFrame{
         button.setVisible(true);
         toolBar.add(button);
         toolBar.addSeparator();
-        button = new DrawingButton(DataCollector.class, this, "delete", DELETESYMBOL, "Delete Symbol");
-        button.setVisible(true);
-        toolBar.add(button);
-        treeMenu.addSeparator();
         button = new DrawingButton(DataCollector.class, this, "split", SPLITNODE, "Split Node");
         button.setVisible(true);
         toolBar.add(button);
-        treeMenu.addSeparator();
+        toolBar.addSeparator();
+        button = new DrawingButton(DataCollector.class, this, "delete", DELETESYMBOL, "Delete Symbol");
+        button.setVisible(true);
+        toolBar.add(button);
+        button = new DrawingButton(DataCollector.class, this, "clear", DELETESUBTREE, "Delete Subtree");
+        button.setVisible(true);
+        toolBar.add(button);
+        toolBar.addSeparator();
         JMenuItem itemAddParent = addMenuItem(treeMenu, "Add Parent", KeyStroke.getKeyStroke('p'));
         JMenuItem itemEditSymbol = addMenuItem(treeMenu, "Edit Symbol", KeyStroke.getKeyStroke('e'));
         JMenuItem itemDeleteSymbol = addMenuItem(treeMenu, "Delete Symbol", KeyStroke.getKeyStroke('l'));
         JMenuItem itemSplitNode = addMenuItem(treeMenu, "Split Node", KeyStroke.getKeyStroke('t'));
+        JMenuItem itemDeleteSubtree = addMenuItem(treeMenu, "Delete Subtree", KeyStroke.getKeyStroke('b'));
         itemAddParent.addActionListener(e -> addParent());
         itemEditSymbol.addActionListener(e -> editSymbol());
         itemDeleteSymbol.addActionListener(e -> deleteSymbol());
         itemSplitNode.addActionListener(e -> splitNode());
+        itemDeleteSubtree.addActionListener(e -> deleteSubtree());
     }
 
     @Override
@@ -77,6 +83,13 @@ public class SyntacticFrame extends StructureEditorFrame{
         }
     }
 
+    protected void deleteSubtree(){
+        SyntacticPanel current = (SyntacticPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
+        if (current != null){
+            current.deleteSubtree();
+        }
+    }
+
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
         switch (e.getActionCommand()){
@@ -91,6 +104,9 @@ public class SyntacticFrame extends StructureEditorFrame{
                 break;
             case SPLITNODE:
                 splitNode();
+                break;
+            case DELETESUBTREE:
+                deleteSubtree();
                 break;
         }
     }
