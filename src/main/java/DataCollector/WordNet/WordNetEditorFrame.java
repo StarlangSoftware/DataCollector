@@ -168,7 +168,7 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
     @Override
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
-        String synsetId;
+        String synsetId, newSynSetId;
         SynSet synSet;
         switch (e.getActionCommand()){
             case DELETE:
@@ -201,7 +201,7 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
             case REPLACE:
                 if (selectedSynSet != null){
                     finalId += 10;
-                    String newSynSetId = wordNetPrefix + "" + finalId;
+                    newSynSetId = wordNetPrefix + "" + finalId;
                     DefaultMutableTreeNode node = noun.nodeList.get(selectedSynSet);
                     noun.nodeList.remove(selectedSynSet);
                     replaceAllRelationsWithNewSynSet(selectedSynSet.getId(), newSynSetId);
@@ -215,30 +215,18 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
                 }
                 break;
             case ADD_NEW:
-                if (id.getText().length() == 13 && id.getText().charAt(5) == '-'){
-                    if (domainWordNet.getSynSetWithId(id.getText()) == null){
-                        if (definition.getText().length() != 0){
-                            if (domainWordNet.getSynSetWithLiteral(literal.getText(), Integer.parseInt(sense.getText())) == null){
-                                SynSet newSynSet = new SynSet(id.getText());
-                                newSynSet.addLiteral(new Literal(literal.getText(), Integer.parseInt(sense.getText()), id.getText()));
-                                if (definition.getText().length() > 0){
-                                    newSynSet.setDefinition(definition.getText());
-                                } else {
-                                    newSynSet.setDefinition(" ");
-                                }
-                                addNewSynSet(newSynSet, Pos.NOUN, noun);
-                            } else {
-                                JOptionPane.showMessageDialog(this, "SynSet with Same Literal and Same Sense Already Exists!", "Error", JOptionPane.ERROR_MESSAGE);
-                            }
-                        } else {
-                            JOptionPane.showMessageDialog(this, "No Definition Given!", "Error", JOptionPane.ERROR_MESSAGE);
-                        }
-                    } else {
-                        JOptionPane.showMessageDialog(this, "Synset Does Exist!", "Error", JOptionPane.ERROR_MESSAGE);
-                    }
+                finalId += 10;
+                newSynSetId = wordNetPrefix + "" + finalId;
+                id.setText(newSynSetId);
+                definition.setText(" ");
+                SynSet newSynSet = new SynSet(id.getText());
+                newSynSet.addLiteral(new Literal(literal.getText(), Integer.parseInt(sense.getText()) + 1, id.getText()));
+                if (definition.getText().length() > 0){
+                    newSynSet.setDefinition(definition.getText());
                 } else {
-                    JOptionPane.showMessageDialog(this, "Invalid Synset Id!", "Error", JOptionPane.ERROR_MESSAGE);
+                    newSynSet.setDefinition(" ");
                 }
+                addNewSynSet(newSynSet, Pos.NOUN, noun);
                 break;
             case INSERT_FROM_WORDNET:
                 synsetId = JOptionPane.showInputDialog("Enter synset id");
@@ -352,8 +340,8 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
                 if (!dictionaryList.isSelectionEmpty()){
                     WordObject selectedWord = (WordObject) dictionaryList.getSelectedValue();
                     finalId += 10;
-                    String newSynSetId = wordNetPrefix + "" + finalId;
-                    SynSet newSynSet = new SynSet(newSynSetId);
+                    newSynSetId = wordNetPrefix + "" + finalId;
+                    newSynSet = new SynSet(newSynSetId);
                     String wordForm = selectedWord.word.getName();
                     if (selectedWord.pos.equals(Pos.VERB)){
                         Transition verbTransition = new Transition("mAk");
