@@ -22,6 +22,7 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
     private JComboBox alternatives;
     private JCheckBox showMoved, automaticSelection;
     private JList dictionaryList, wordNetList;
+    private WordNet english;
     private boolean completed = false;
 
     private static final String EDIT = "edit";
@@ -534,6 +535,18 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
                             }
                         }
                     }
+                    ArrayList<SynSet> englishAlternativeList = english.getSynSetsWithLiteral(selectedSynSet.getSynonym().getLiteral(0).getName());
+                    for (SynSet synSet : englishAlternativeList){
+                        if (synSet.getPos().equals(partOfSpeech)){
+                            ArrayList<SynSet> turkishAlternativeList = turkish.getInterlingual(synSet.getId());
+                            for (SynSet synSet1 : turkishAlternativeList){
+                                alternatives.addItem(synSet1);
+                                if (synSet1.equals(selectedSynSet)){
+                                    alternatives.setSelectedItem(synSet1);
+                                }
+                            }
+                        }
+                    }
                     if (alternatives.getItemCount() == 0){
                         alternatives.setEnabled(false);
                     } else {
@@ -654,6 +667,7 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
     }
 
     public void loadContents(){
+        english = new WordNet("english_wordnet_version_31.xml");
         addButtons();
         JPanel topPanel = new JPanel(new GridLayout(3, 4));
         topPanel.add(new JLabel("Id"));
