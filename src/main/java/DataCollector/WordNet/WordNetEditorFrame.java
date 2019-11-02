@@ -384,7 +384,7 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
                             dictionary.addWithFlag(word, "IS_ADJ");
                             break;
                         case VERB:
-                            dictionary.addWithFlag(word.substring(0, word.length() - 3), "CL_VERB");
+                            dictionary.addWithFlag(word.substring(0, word.length() - 3), "CL_FIIL");
                             break;
                         case ADVERB:
                             dictionary.addWithFlag(word, "IS_ADVERB");
@@ -535,14 +535,16 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
                             }
                         }
                     }
-                    ArrayList<SynSet> englishAlternativeList = english.getSynSetsWithLiteral(selectedSynSet.getSynonym().getLiteral(0).getName());
-                    for (SynSet synSet : englishAlternativeList){
-                        if (synSet.getPos().equals(partOfSpeech)){
-                            ArrayList<SynSet> turkishAlternativeList = turkish.getInterlingual(synSet.getId());
-                            for (SynSet synSet1 : turkishAlternativeList){
-                                alternatives.addItem(synSet1);
-                                if (synSet1.equals(selectedSynSet)){
-                                    alternatives.setSelectedItem(synSet1);
+                    if (english != null){
+                        ArrayList<SynSet> englishAlternativeList = english.getSynSetsWithLiteral(selectedSynSet.getSynonym().getLiteral(0).getName());
+                        for (SynSet synSet : englishAlternativeList){
+                            if (synSet.getPos().equals(partOfSpeech)){
+                                ArrayList<SynSet> turkishAlternativeList = turkish.getInterlingual(synSet.getId());
+                                for (SynSet synSet1 : turkishAlternativeList){
+                                    alternatives.addItem(synSet1);
+                                    if (synSet1.equals(selectedSynSet)){
+                                        alternatives.setSelectedItem(synSet1);
+                                    }
                                 }
                             }
                         }
@@ -667,7 +669,11 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
     }
 
     public void loadContents(){
-        english = new WordNet("english_wordnet_version_31.xml");
+        if (domainPrefix.equals("turkish")){
+            english = null;
+        } else {
+            english = new WordNet("english_wordnet_version_31.xml");
+        }
         addButtons();
         JPanel topPanel = new JPanel(new GridLayout(3, 4));
         topPanel.add(new JLabel("Id"));
