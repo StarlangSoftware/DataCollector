@@ -652,7 +652,7 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
             if (synSet.getPos() != null){
                 for (int i = 0; i < synSet.getSynonym().literalSize(); i++){
                     String word = synSet.getSynonym().getLiteral(i).getName().toLowerCase(new Locale("tr"));
-                    if (!word.contains(" ") && !word.startsWith(".") && !word.startsWith(",")){
+                    if (!word.contains(" ") && !word.startsWith(".") && !word.startsWith(",") && !word.startsWith("(") && !word.matches(".*[0-9]+.*")){
                         if (synSet.getPos().equals(Pos.VERB)){
                             if (dictionary.getWord(word.substring(0, word.length() - 3)) == null){
                                 listModel.addElement(new LiteralObject(synSet.getSynonym().getLiteral(i), synSet.getPos()));
