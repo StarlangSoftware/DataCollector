@@ -339,58 +339,62 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
                 break;
             case ADD_WORDNET:
                 if (!dictionaryList.isSelectionEmpty()){
-                    WordObject selectedWord = (WordObject) dictionaryList.getSelectedValue();
-                    finalId += 10;
-                    newSynSetId = wordNetPrefix + "" + finalId;
-                    newSynSet = new SynSet(newSynSetId);
-                    String wordForm = selectedWord.word.getName();
-                    if (selectedWord.pos.equals(Pos.VERB)){
-                        Transition verbTransition = new Transition("mAk");
-                        TxtWord word = (TxtWord) dictionary.getWord(wordForm);
-                        String verbForm = verbTransition.makeTransition(word, word.getName());
-                        newSynSet.addLiteral(new Literal(verbForm, 1, newSynSetId));
-                    } else {
-                        newSynSet.addLiteral(new Literal(wordForm, 1, newSynSetId));
+                    for (Object object : dictionaryList.getSelectedValuesList()){
+                        WordObject selectedWord = (WordObject) object;
+                        finalId += 10;
+                        newSynSetId = wordNetPrefix + "" + finalId;
+                        newSynSet = new SynSet(newSynSetId);
+                        String wordForm = selectedWord.word.getName();
+                        if (selectedWord.pos.equals(Pos.VERB)){
+                            Transition verbTransition = new Transition("mAk");
+                            TxtWord word = (TxtWord) dictionary.getWord(wordForm);
+                            String verbForm = verbTransition.makeTransition(word, word.getName());
+                            newSynSet.addLiteral(new Literal(verbForm, 1, newSynSetId));
+                        } else {
+                            newSynSet.addLiteral(new Literal(wordForm, 1, newSynSetId));
+                        }
+                        newSynSet.setDefinition(" ");
+                        switch (selectedWord.pos){
+                            case NOUN:
+                                addNewSynSet(newSynSet, selectedWord.pos, noun);
+                                break;
+                            case ADJECTIVE:
+                                addNewSynSet(newSynSet, selectedWord.pos, adjective);
+                                break;
+                            case VERB:
+                                addNewSynSet(newSynSet, selectedWord.pos, verb);
+                                break;
+                            case ADVERB:
+                                addNewSynSet(newSynSet, selectedWord.pos, adverb);
+                                break;
+                        }
+                        ((DefaultListModel) dictionaryList.getModel()).removeElement(object);
                     }
-                    newSynSet.setDefinition(" ");
-                    switch (selectedWord.pos){
-                        case NOUN:
-                            addNewSynSet(newSynSet, selectedWord.pos, noun);
-                            break;
-                        case ADJECTIVE:
-                            addNewSynSet(newSynSet, selectedWord.pos, adjective);
-                            break;
-                        case VERB:
-                            addNewSynSet(newSynSet, selectedWord.pos, verb);
-                            break;
-                        case ADVERB:
-                            addNewSynSet(newSynSet, selectedWord.pos, adverb);
-                            break;
-                    }
-                    ((DefaultListModel) dictionaryList.getModel()).remove(dictionaryList.getSelectedIndex());
                 } else {
                     JOptionPane.showMessageDialog(this, "No Word Selected!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
                 break;
             case ADD_DICTIONARY:
                 if (!wordNetList.isSelectionEmpty()){
-                    LiteralObject selectedLiteral = (LiteralObject) wordNetList.getSelectedValue();
-                    String word = selectedLiteral.literal.getName();
-                    switch (selectedLiteral.pos){
-                        case NOUN:
-                            dictionary.addWithFlag(word, "CL_ISIM");
-                            break;
-                        case ADJECTIVE:
-                            dictionary.addWithFlag(word, "IS_ADJ");
-                            break;
-                        case VERB:
-                            dictionary.addWithFlag(word.substring(0, word.length() - 3), "CL_FIIL");
-                            break;
-                        case ADVERB:
-                            dictionary.addWithFlag(word, "IS_ADVERB");
-                            break;
+                    for (Object object : wordNetList.getSelectedValuesList()){
+                        LiteralObject selectedLiteral = (LiteralObject) object;
+                        String word = selectedLiteral.literal.getName();
+                        switch (selectedLiteral.pos){
+                            case NOUN:
+                                dictionary.addWithFlag(word, "CL_ISIM");
+                                break;
+                            case ADJECTIVE:
+                                dictionary.addWithFlag(word, "IS_ADJ");
+                                break;
+                            case VERB:
+                                dictionary.addWithFlag(word.substring(0, word.length() - 3), "CL_FIIL");
+                                break;
+                            case ADVERB:
+                                dictionary.addWithFlag(word, "IS_ADVERB");
+                                break;
+                        }
+                        ((DefaultListModel) wordNetList.getModel()).removeElement(object);
                     }
-                    ((DefaultListModel) wordNetList.getModel()).remove(wordNetList.getSelectedIndex());
                 } else {
                     JOptionPane.showMessageDialog(this, "No Literal Selected!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
