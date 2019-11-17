@@ -39,7 +39,7 @@ public abstract class SynSetProcessorFrame extends JFrame implements ActionListe
 
     public SynSetProcessorFrame(){
         this.pos = Pos.NOUN;
-        turkish = new WordNet();
+        turkish = new WordNet("turkish_wordnet.xml", new Locale("tr"));
         oldTurkish00 = new WordNet("turkish_wordnet_version_00.xml");
         oldTurkish01 = new WordNet("turkish_wordnet_version_01.xml");
         JToolBar toolBar = new JToolBar("ToolBox");
@@ -47,6 +47,7 @@ public abstract class SynSetProcessorFrame extends JFrame implements ActionListe
         add(toolBar, BorderLayout.PAGE_START);
         toolBar.setVisible(true);
         buildInitialTree();
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     protected void addSynSetsToTree(){
@@ -82,7 +83,7 @@ public abstract class SynSetProcessorFrame extends JFrame implements ActionListe
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()){
             case SAVE:
-                turkish.saveAsXml("Data/Wordnet/turkish_wordnet.xml");
+                turkish.saveAsXml("turkish_wordnet.xml");
                 break;
         }
     }

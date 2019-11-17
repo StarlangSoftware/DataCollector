@@ -6,46 +6,93 @@ import WordNet.*;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.Locale;
 
 public class SynSetSplitterFrame extends SynSetProcessorFrame {
-    private IdMapping mapping;
     static final protected String SPLIT = "split";
     private SynSet selectedRootSynSet = null;
+    private JList relationList;
+    private WordNet english;
     private DefaultMutableTreeNode selectedRootTreeNode = null;
+
+    public class RelationObject {
+        public Relation relation;
+
+        public RelationObject(Relation relation) {
+            this.relation = relation;
+        }
+
+        public String toString() {
+            SynSet synSet;
+            if (relation instanceof InterlingualRelation) {
+                synSet = english.getSynSetWithId(relation.getName());
+                return "ILR->(" + synSet.getSynonym().getLiteral(0).getName() + ") " + synSet.getDefinition();
+            } else {
+                if (relation instanceof SemanticRelation) {
+                    synSet = turkish.getSynSetWithId(relation.getName());
+                    return ((SemanticRelation) relation).getRelationType() + "->(" + synSet.getSynonym().getLiteral(0).getName() + ") " + synSet.getDefinition();
+                }
+            }
+            return relation.toString();
+        }
+    }
 
     protected void addButtons(JToolBar toolBar){
         super.addButtons(toolBar);
         JButton split = new DrawingButton(SynSetSplitterFrame.class, this, "split", SPLIT, "Split");
         toolBar.add(split);
+        JLabel definitionLabel = new JLabel("New Definition");
+        toolBar.add(definitionLabel);
         definition = new JTextField();
         definition.addActionListener(e -> {
             selectedRootSynSet.setDefinition(definition.getText());
             treeModel.reload(selectedRootTreeNode);
         });
         toolBar.add(definition);
+        JLabel searchLabel = new JLabel("Search");
+        toolBar.add(searchLabel);
+        JTextField search = new JTextField();
+        search.addActionListener(e -> {
+            DefaultMutableTreeNode root = ((DefaultMutableTreeNode) tree.getModel().getRoot());
+            for (int i = 0; i < root.getChildCount(); i++){
+                SynSet synSet = (SynSet) ((DefaultMutableTreeNode) root.getChildAt(i)).getUserObject();
+                if (synSet.getId().equals(search.getText())){
+                    TreePath treePath = new TreePath(((DefaultMutableTreeNode) root.getChildAt(i)).getPath());
+                    tree.setSelectionPath(treePath);
+                    tree.scrollPathToVisible(treePath);
+                    selectedRootSynSet = synSet;
+                    break;
+                }
+            }
+        });
+        toolBar.add(search);
     }
 
     public SynSetSplitterFrame(){
-        mapping = new IdMapping("Data/Wordnet/mapping.txt");
-        JPanel leftPanel = new JPanel(new BorderLayout());
-        JScrollPane leftPane = new JScrollPane(tree);
+        english = new WordNet("english_wordnet_version_31.xml");
+        JPanel panel = new JPanel(new BorderLayout());
+        JScrollPane treePane = new JScrollPane(tree);
+        treePane.setMinimumSize(new Dimension(1000, 100));
         tree.addTreeSelectionListener(e -> {
             if (tree.getSelectionPath() != null && tree.getSelectionPath().getLastPathComponent() instanceof DefaultMutableTreeNode && ((DefaultMutableTreeNode) tree.getSelectionPath().getLastPathComponent()).getUserObject() instanceof SynSet){
                 selectedRootTreeNode = (DefaultMutableTreeNode) tree.getSelectionPath().getLastPathComponent();
                 if (selectedRootTreeNode.getUserObject() instanceof SynSet){
                     selectedRootSynSet = (SynSet) selectedRootTreeNode.getUserObject();
+                    buildRelationList();
                     definition.setText(selectedRootSynSet.getLongDefinition());
                 }
             }
         });
-        leftPanel.add(leftPane, BorderLayout.CENTER);
-        add(leftPanel, BorderLayout.CENTER);
+        relationList = new JList();
+        JScrollPane listPane = new JScrollPane(relationList);
+        listPane.setMinimumSize(new Dimension(100, 100));
+        JSplitPane synSetPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, treePane, listPane);
+        panel.add(synSetPane);
+        add(panel, BorderLayout.CENTER);
         setLocationRelativeTo(null);
         setExtendedState(MAXIMIZED_BOTH);
         setVisible(true);
@@ -73,53 +120,22 @@ public class SynSetSplitterFrame extends SynSetProcessorFrame {
     }
 
     private void buildMergeTree(DefaultMutableTreeNode synSetTreeNode, SynSet synSet){
-        DefaultMutableTreeNode parent, child;
-        String oldParentId;
-        Literal middleLiteral;
-        SynSet oldSynSet;
-        LinkedHashMap<String, DefaultMutableTreeNode> treeNodeMapping = new LinkedHashMap<>();
-        if (mapping == null){
-            return;
-        }
+        DefaultMutableTreeNode child;
         for (int i = 0; i < synSet.getSynonym().literalSize(); i++){
             Literal literal = synSet.getSynonym().getLiteral(i);
             child = new DefaultMutableTreeNode(literal);
-            oldSynSet = getOldSynSet(literal);
-            if (oldSynSet != null){
-                oldParentId = mapping.singleMap(oldSynSet.getId());
-                if (oldParentId != null  && !oldParentId.equals(synSet.getId())){
-                    if (treeNodeMapping.containsKey(oldParentId)){
-                        parent = treeNodeMapping.get(oldParentId);
-                    } else {
-                        middleLiteral = new Literal(oldParentId, 0, oldParentId);
-                        parent = new DefaultMutableTreeNode(middleLiteral);
-                        treeNodeMapping.put(oldParentId, parent);
-                    }
-                    parent.add(child);
-                } else {
-                    synSetTreeNode.add(child);
-                }
-            }
+            synSetTreeNode.add(child);
         }
-        while (!treeNodeMapping.isEmpty()){
-            DefaultMutableTreeNode nextNode;
-            String nextId = treeNodeMapping.keySet().iterator().next();
-            oldParentId = mapping.singleMap(nextId);
-            if (oldParentId != null && !oldParentId.equals(synSet.getId())){
-                middleLiteral = new Literal(oldParentId, 0, oldParentId);
-                parent = new DefaultMutableTreeNode(middleLiteral);
-                treeNodeMapping.put(oldParentId, parent);
-                nextNode = treeNodeMapping.get(nextId);
-                if (nextNode.getChildCount() == 1){
-                    parent.add((DefaultMutableTreeNode) nextNode.getFirstChild());
-                } else {
-                    parent.add(nextNode);
-                }
-            } else {
-                synSetTreeNode.add(treeNodeMapping.get(nextId));
-            }
-            treeNodeMapping.remove(nextId);
+    }
+
+    private void buildRelationList(){
+        DefaultListModel<RelationObject> listModel = new DefaultListModel<>();
+        for (int i = 0; i < selectedRootSynSet.relationSize(); i++){
+            Relation relation = selectedRootSynSet.getRelation(i);
+            listModel.addElement(new RelationObject(relation));
         }
+        relationList.setModel(listModel);
+        relationList.invalidate();
     }
 
     protected void addSynSetsToTree(){
@@ -137,9 +153,6 @@ public class SynSetSplitterFrame extends SynSetProcessorFrame {
         super.actionPerformed(e);
         DefaultMutableTreeNode selectedTreeNode;
         switch (e.getActionCommand()){
-            case SAVE:
-                mapping.save("Data/Wordnet/mapping.txt");
-                break;
             case SPLIT:
                 if (tree.getSelectionPaths() != null){
                     SynSet newSynSet = null;
@@ -150,7 +163,12 @@ public class SynSetSplitterFrame extends SynSetProcessorFrame {
                             SynSet selectedSynSet = getOldSynSet(literal);
                             if (selectedSynSet != null && turkish.getSynSetWithId(selectedSynSet.getId()) == null){
                                 newSynSet = new SynSet(selectedSynSet.getId());
-                                mapping.remove(selectedSynSet.getId());
+                                for (Object object : relationList.getSelectedValuesList()){
+                                    Relation selectedRelation = ((RelationObject) object).relation;
+                                    newSynSet.addRelation(selectedRelation);
+                                    selectedRootSynSet.removeRelation(selectedRelation);
+                                    ((DefaultListModel) relationList.getModel()).removeElement(object);
+                                }
                                 newSynSet.setPos(pos);
                                 break;
                             }
@@ -159,7 +177,6 @@ public class SynSetSplitterFrame extends SynSetProcessorFrame {
                     if (newSynSet != null){
                         HashSet<DefaultMutableTreeNode> parents = new HashSet<>();
                         ArrayList<DefaultMutableTreeNode> children = new ArrayList<>();
-                        String definition = "";
                         for (int i = 0; i < tree.getSelectionPaths().length; i++){
                             selectedTreeNode = (DefaultMutableTreeNode) tree.getSelectionPaths()[i].getLastPathComponent();
                             if (selectedTreeNode.getUserObject() instanceof Literal){
@@ -168,22 +185,13 @@ public class SynSetSplitterFrame extends SynSetProcessorFrame {
                                 SynSet currentSynSet = turkish.getSynSetWithLiteral(literal.getName(), literal.getSense());
                                 if (selectedSynSet != null){
                                     newSynSet.addLiteral(literal);
-                                    if (selectedSynSet.getLongDefinition() != null){
-                                        if (definition.length() != 0){
-                                            definition = definition + "|" + selectedSynSet.getLongDefinition();
-                                        } else {
-                                            definition = selectedSynSet.getLongDefinition();
-                                        }
-                                    }
-                                    currentSynSet.removeDefinition(selectedSynSet.getLongDefinition());
                                     currentSynSet.getSynonym().removeLiteral(literal);
                                     children.add(selectedTreeNode);
                                     parents.add((DefaultMutableTreeNode) selectedTreeNode.getParent());
                                 }
                             }
                         }
-                        newSynSet.setDefinition(definition);
-                        newSynSet.removeSameDefinitions(new Locale("tr"));
+                        newSynSet.setDefinition(definition.getText());
                         turkish.addSynSet(newSynSet);
                         for (DefaultMutableTreeNode child : children){
                             treeModel.removeNodeFromParent(child);

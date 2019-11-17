@@ -315,8 +315,8 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
             case MERGE:
                 if (noun.tree.getSelectionPaths() != null){
                     if (noun.tree.getSelectionPaths().length == 2){
-                        DefaultMutableTreeNode selectedTreeNode1 = (DefaultMutableTreeNode) noun.tree.getSelectionPaths()[0].getLastPathComponent();
-                        DefaultMutableTreeNode selectedTreeNode2 = (DefaultMutableTreeNode) noun.tree.getSelectionPaths()[1].getLastPathComponent();
+                        DefaultMutableTreeNode selectedTreeNode1 = (DefaultMutableTreeNode) noun.tree.getSelectionPaths()[1].getLastPathComponent();
+                        DefaultMutableTreeNode selectedTreeNode2 = (DefaultMutableTreeNode) noun.tree.getSelectionPaths()[0].getLastPathComponent();
                         SynSetObject synSetObject1 = (SynSetObject) selectedTreeNode1.getUserObject();
                         SynSetObject synSetObject2 = (SynSetObject) selectedTreeNode2.getUserObject();
                         SynSet synSet1 = synSetObject1.synSet;
