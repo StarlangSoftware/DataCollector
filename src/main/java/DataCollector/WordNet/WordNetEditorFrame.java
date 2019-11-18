@@ -6,6 +6,8 @@ import Util.DrawingButton;
 import WordNet.*;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -34,6 +36,7 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
     private static final String REPLACE = "replace with new synset";
     private static final String MERGE = "merge two synsets";
     private static final String ADD_WORDNET = "add to wordnet";
+    private static final String INSERT_INTO_WORDNET = "insert into wordnet";
     private static final String ADD_DICTIONARY = "add to dictionary";
     private static final String EXPAND_ALL = "expand all";
     private static final String EXPAND_EVERYTHING = "expand everything";
@@ -134,6 +137,8 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
         toolBar.addSeparator();
         JButton addWordnet = new DrawingButton(WordNetEditorFrame.class, this, "moveleft", ADD_WORDNET, "Add to WordNet from Dictionary");
         toolBar.add(addWordnet);
+        JButton insertIntoWordnet = new DrawingButton(WordNetEditorFrame.class, this, "insertinto", INSERT_INTO_WORDNET, "Insert into WordNet from Dictionary");
+        toolBar.add(insertIntoWordnet);
         JButton addDictionary = new DrawingButton(WordNetEditorFrame.class, this, "moveright", ADD_DICTIONARY, "Add to Dictionary from WordNet");
         toolBar.add(addDictionary);
         toolBar.addSeparator();
@@ -339,36 +344,61 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
                 break;
             case ADD_WORDNET:
                 if (!dictionaryList.isSelectionEmpty()){
-                    for (Object object : dictionaryList.getSelectedValuesList()){
-                        WordObject selectedWord = (WordObject) object;
-                        finalId += 10;
-                        newSynSetId = wordNetPrefix + "" + finalId;
-                        newSynSet = new SynSet(newSynSetId);
-                        String wordForm = selectedWord.word.getName();
-                        if (selectedWord.pos.equals(Pos.VERB)){
-                            Transition verbTransition = new Transition("mAk");
-                            TxtWord word = (TxtWord) dictionary.getWord(wordForm);
-                            String verbForm = verbTransition.makeTransition(word, word.getName());
-                            newSynSet.addLiteral(new Literal(verbForm, 1, newSynSetId));
+                    WordObject selectedWord = (WordObject) dictionaryList.getSelectedValue();
+                    finalId += 10;
+                    newSynSetId = wordNetPrefix + "" + finalId;
+                    newSynSet = new SynSet(newSynSetId);
+                    String wordForm = selectedWord.word.getName();
+                    if (selectedWord.pos.equals(Pos.VERB)){
+                        Transition verbTransition = new Transition("mAk");
+                        TxtWord word = (TxtWord) dictionary.getWord(wordForm);
+                        String verbForm = verbTransition.makeTransition(word, word.getName());
+                        newSynSet.addLiteral(new Literal(verbForm, 1, newSynSetId));
+                    } else {
+                        newSynSet.addLiteral(new Literal(wordForm, 1, newSynSetId));
+                    }
+                    newSynSet.setDefinition(" ");
+                    switch (selectedWord.pos){
+                        case NOUN:
+                            addNewSynSet(newSynSet, selectedWord.pos, noun);
+                            break;
+                        case ADJECTIVE:
+                            addNewSynSet(newSynSet, selectedWord.pos, adjective);
+                            break;
+                        case VERB:
+                            addNewSynSet(newSynSet, selectedWord.pos, verb);
+                            break;
+                        case ADVERB:
+                            addNewSynSet(newSynSet, selectedWord.pos, adverb);
+                            break;
+                    }
+                    ((DefaultListModel) dictionaryList.getModel()).removeElement(dictionaryList.getSelectedValue());
+                } else {
+                    JOptionPane.showMessageDialog(this, "No Word Selected!", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+                break;
+            case INSERT_INTO_WORDNET:
+                if (!dictionaryList.isSelectionEmpty()){
+                    if (selectedSynSet != null){
+                        if (selectedSynSet.getPos().equals(((WordObject) dictionaryList.getSelectedValue()).pos)){
+                            WordObject selectedWord = (WordObject) dictionaryList.getSelectedValue();
+                            String wordForm = selectedWord.word.getName();
+                            if (selectedWord.pos.equals(Pos.VERB)){
+                                Transition verbTransition = new Transition("mAk");
+                                TxtWord word = (TxtWord) dictionary.getWord(wordForm);
+                                String verbForm = verbTransition.makeTransition(word, word.getName());
+                                selectedSynSet.addLiteral(new Literal(verbForm, 1, selectedSynSet.getId()));
+                            } else {
+                                selectedSynSet.addLiteral(new Literal(wordForm, 1, selectedSynSet.getId()));
+                            }
+                            ((DefaultListModel) dictionaryList.getModel()).removeElement(dictionaryList.getSelectedValue());
+                            selectedPartOfSpeechTree.treeModel.reload(selectedTreeNode);
+                            selectedSynSet = null;
                         } else {
-                            newSynSet.addLiteral(new Literal(wordForm, 1, newSynSetId));
+                            JOptionPane.showMessageDialog(this, "Selected SynSet Pos is not equal to word pos!", "Error", JOptionPane.ERROR_MESSAGE);
                         }
-                        newSynSet.setDefinition(" ");
-                        switch (selectedWord.pos){
-                            case NOUN:
-                                addNewSynSet(newSynSet, selectedWord.pos, noun);
-                                break;
-                            case ADJECTIVE:
-                                addNewSynSet(newSynSet, selectedWord.pos, adjective);
-                                break;
-                            case VERB:
-                                addNewSynSet(newSynSet, selectedWord.pos, verb);
-                                break;
-                            case ADVERB:
-                                addNewSynSet(newSynSet, selectedWord.pos, adverb);
-                                break;
-                        }
-                        ((DefaultListModel) dictionaryList.getModel()).removeElement(object);
+                    } else {
+                        JOptionPane.showMessageDialog(this, "No SynSet Selected!", "Error", JOptionPane.ERROR_MESSAGE);
                     }
                 } else {
                     JOptionPane.showMessageDialog(this, "No Word Selected!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -672,6 +702,23 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
         return list;
     }
 
+    private void selectPossibleCandidate(ArrayList<SynSet> candidates){
+        if (candidates.size() == 1){
+            selectedSynSet = candidates.get(0);
+            switch (selectedSynSet.getPos()){
+                case NOUN:
+                    showPath(noun, noun.nodeList.get(selectedSynSet));
+                    break;
+                case ADJECTIVE:
+                    showPath(adjective, adjective.nodeList.get(selectedSynSet));
+                    break;
+                case ADVERB:
+                    showPath(adverb, adverb.nodeList.get(selectedSynSet));
+                    break;
+            }
+        }
+    }
+
     public void loadContents(){
         if (domainPrefix.equals("turkish")){
             english = null;
@@ -726,6 +773,27 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
         JPanel dictionaryPanel = new JPanel(new BorderLayout());
         dictionaryPanel.setMinimumSize(new Dimension(50, 100));
         dictionaryList = createDictionaryList();
+        dictionaryList.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!dictionaryList.isSelectionEmpty()){
+                    WordObject selectedWord = (WordObject) dictionaryList.getSelectedValue();
+                    String wordForm = selectedWord.word.getName();
+                    if (wordForm.contains("â") || wordForm.contains("û") || wordForm.contains("î")){
+                        wordForm = wordForm.replaceAll("â", "a").replaceAll("û", "ü").replaceAll("î", "i");
+                        ArrayList<SynSet> candidates = domainWordNet.getSynSetsWithLiteral(wordForm);
+                        selectPossibleCandidate(candidates);
+                    } else {
+                        for (int i = 2; i < wordForm.length() - 2; i++){
+                            String form1 = wordForm.substring(0, i);
+                            String form2 = wordForm.substring(i);
+                            ArrayList<SynSet> candidates = domainWordNet.getSynSetsWithLiteral(form1 + " " + form2);
+                            selectPossibleCandidate(candidates);
+                        }
+                    }
+                }
+            }
+        });
         JScrollPane dictionaryPane = new JScrollPane(dictionaryList);
         JLabel dictionaryHeader = new JLabel("Words that are in the dictionary but not in the wordnet");
         dictionaryHeader.setHorizontalAlignment(SwingConstants.CENTER);
