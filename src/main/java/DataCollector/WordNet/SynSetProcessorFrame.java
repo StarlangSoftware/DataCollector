@@ -25,7 +25,7 @@ public abstract class SynSetProcessorFrame extends JFrame implements ActionListe
     protected abstract ArrayList<SynSet> extractSynSets();
 
     protected void addButtons(JToolBar toolBar){
-        JButton save = new DrawingButton(SynSetMergerFrame.class, this, "save", SAVE, "Save");
+        JButton save = new DrawingButton(SynSetProcessorFrame.class, this, "save", SAVE, "Save");
         toolBar.add(save);
         posComboBox = new JComboBox<>(new Pos[]{Pos.NOUN, Pos.VERB, Pos.ADJECTIVE, Pos.ADVERB});
         posComboBox.setMaximumSize(new Dimension(150, 20));
