@@ -24,7 +24,6 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
     private JComboBox alternatives;
     private JCheckBox showMoved, automaticSelection;
     private JList dictionaryList, wordNetList;
-    private WordNet english;
     private boolean completed = false;
 
     private static final String EDIT = "edit";
@@ -185,7 +184,14 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
                     selectedPartOfSpeechTree.treeModel.reload(parent);
                     selectedSynSet = null;
                 } else {
-                    JOptionPane.showMessageDialog(this, "No Synset Selected!", "Error", JOptionPane.ERROR_MESSAGE);
+                    if (!dictionaryList.isSelectionEmpty()){
+                        WordObject selectedWord = (WordObject) dictionaryList.getSelectedValue();
+                        TxtWord word = (TxtWord) dictionary.getWord(selectedWord.word.getName());
+                        dictionary.removeWord(word.getName());
+                        ((DefaultListModel) dictionaryList.getModel()).removeElement(dictionaryList.getSelectedValue());
+                    } else {
+                        JOptionPane.showMessageDialog(this, "No Synset or Word Selected!", "Error", JOptionPane.ERROR_MESSAGE);
+                    }
                 }
                 break;
             case EDIT:
@@ -569,20 +575,6 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
                             }
                         }
                     }
-                    if (english != null){
-                        ArrayList<SynSet> englishAlternativeList = english.getSynSetsWithLiteral(selectedSynSet.getSynonym().getLiteral(0).getName());
-                        for (SynSet synSet : englishAlternativeList){
-                            if (synSet.getPos().equals(partOfSpeech)){
-                                ArrayList<SynSet> turkishAlternativeList = turkish.getInterlingual(synSet.getId());
-                                for (SynSet synSet1 : turkishAlternativeList){
-                                    alternatives.addItem(synSet1);
-                                    if (synSet1.equals(selectedSynSet)){
-                                        alternatives.setSelectedItem(synSet1);
-                                    }
-                                }
-                            }
-                        }
-                    }
                     if (alternatives.getItemCount() == 0){
                         alternatives.setEnabled(false);
                     } else {
@@ -702,29 +694,26 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
         return list;
     }
 
-    private void selectPossibleCandidate(ArrayList<SynSet> candidates){
-        if (candidates.size() == 1){
-            selectedSynSet = candidates.get(0);
-            switch (selectedSynSet.getPos()){
-                case NOUN:
-                    showPath(noun, noun.nodeList.get(selectedSynSet));
-                    break;
-                case ADJECTIVE:
-                    showPath(adjective, adjective.nodeList.get(selectedSynSet));
-                    break;
-                case ADVERB:
-                    showPath(adverb, adverb.nodeList.get(selectedSynSet));
-                    break;
+    private void selectPossibleCandidate(ArrayList<SynSet> candidates, Pos selectedPos){
+        for (SynSet candidate : candidates){
+            if (candidate.getPos().equals(selectedPos)){
+                selectedSynSet = candidate;
+                switch (selectedSynSet.getPos()){
+                    case NOUN:
+                        showPath(noun, noun.nodeList.get(selectedSynSet));
+                        break;
+                    case ADJECTIVE:
+                        showPath(adjective, adjective.nodeList.get(selectedSynSet));
+                        break;
+                    case ADVERB:
+                        showPath(adverb, adverb.nodeList.get(selectedSynSet));
+                        break;
+                }
             }
         }
     }
 
     public void loadContents(){
-        if (domainPrefix.equals("turkish")){
-            english = null;
-        } else {
-            english = new WordNet("english_wordnet_version_31.xml");
-        }
         addButtons();
         JPanel topPanel = new JPanel(new GridLayout(3, 4));
         topPanel.add(new JLabel("Id"));
@@ -782,13 +771,13 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
                     if (wordForm.contains("â") || wordForm.contains("û") || wordForm.contains("î")){
                         wordForm = wordForm.replaceAll("â", "a").replaceAll("û", "ü").replaceAll("î", "i");
                         ArrayList<SynSet> candidates = domainWordNet.getSynSetsWithLiteral(wordForm);
-                        selectPossibleCandidate(candidates);
+                        selectPossibleCandidate(candidates, selectedWord.pos);
                     } else {
                         for (int i = 2; i < wordForm.length() - 2; i++){
                             String form1 = wordForm.substring(0, i);
                             String form2 = wordForm.substring(i);
                             ArrayList<SynSet> candidates = domainWordNet.getSynSetsWithLiteral(form1 + " " + form2);
-                            selectPossibleCandidate(candidates);
+                            selectPossibleCandidate(candidates, selectedWord.pos);
                         }
                     }
                 }
