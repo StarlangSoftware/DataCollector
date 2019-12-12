@@ -7,7 +7,11 @@ import WordNet.WordNet;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Locale;
+import java.util.Properties;
 
 public class SentenceSemanticFrame extends AnnotatorFrame {
     private JCheckBox autoSemanticDetectionOption;
@@ -18,14 +22,22 @@ public class SentenceSemanticFrame extends AnnotatorFrame {
         super("semantic");
         JMenuItem itemUpdateDictionary = addMenuItem(projectMenu, "Update Wordnet", KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
         itemUpdateDictionary.addActionListener(e -> {
-            this.fsm = new FsmMorphologicalAnalyzer("tourism_dictionary.txt");
-            this.wordNet = new WordNet("tourism_wordnet.xml", new Locale("tr"));
-            TurkishSentenceAutoSemantic turkishSentenceAutoSemantic = new TurkishSentenceAutoSemantic(this.wordNet, this.fsm);
-            for (int i = 0; i < projectPane.getTabCount(); i++){
-                SentenceSemanticPanel current = (SentenceSemanticPanel) ((JScrollPane) projectPane.getComponentAt(i)).getViewport().getView();
-                current.setFsm(this.fsm);
-                current.setWordnet(this.wordNet);
-                current.setTurkishSentenceAutoSemantic(turkishSentenceAutoSemantic);
+            Properties properties = new Properties();
+            try {
+                properties.load(new FileInputStream(new File("config.properties")));
+                String domainPrefix = properties.getProperty("domainPrefix");
+                String domainWordNetFileName = domainPrefix + "_wordnet.xml";
+                String domainDictionaryFileName = domainPrefix + "_dictionary.txt";
+                this.fsm = new FsmMorphologicalAnalyzer(domainDictionaryFileName);
+                this.wordNet = new WordNet(domainWordNetFileName, new Locale("tr"));
+                TurkishSentenceAutoSemantic turkishSentenceAutoSemantic = new TurkishSentenceAutoSemantic(this.wordNet, this.fsm);
+                for (int i = 0; i < projectPane.getTabCount(); i++){
+                    SentenceSemanticPanel current = (SentenceSemanticPanel) ((JScrollPane) projectPane.getComponentAt(i)).getViewport().getView();
+                    current.setFsm(this.fsm);
+                    current.setWordnet(this.wordNet);
+                    current.setTurkishSentenceAutoSemantic(turkishSentenceAutoSemantic);
+                }
+            } catch (IOException f) {
             }
         });
         this.fsm = fsm;

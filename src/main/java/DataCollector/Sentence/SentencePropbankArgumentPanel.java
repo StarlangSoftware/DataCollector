@@ -28,7 +28,7 @@ public class SentencePropbankArgumentPanel extends AnnotatorPanel{
     private TurkishSentenceAutoArgument turkishSentenceAutoArgument;
 
     public SentencePropbankArgumentPanel(String currentPath, String fileName, WordNet wordNet, FramesetList xmlParser){
-        super(currentPath, fileName, ViewLayerType.PROPBANK, null);
+        super(currentPath, fileName, ViewLayerType.PROPBANK);
         this.wordNet = wordNet;
         setLayout(new BorderLayout());
         this.xmlParser = xmlParser;

@@ -17,8 +17,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public abstract class AnnotatorFrame extends DataCollector {
-    protected JComboBox modelComboBox;
-    protected ArrayList<Model> models;
 
     protected abstract AnnotatorPanel generatePanel(String currentPath, String rawFileName);
 
@@ -49,41 +47,6 @@ public abstract class AnnotatorFrame extends DataCollector {
         toolBar.addSeparator();
         File[] listOfFiles = new File(".").listFiles();
         Arrays.sort(listOfFiles);
-        ArrayList<String> modelNames = new ArrayList<String>();
-        models = new ArrayList<>();
-        models.add(null);
-        for (File file : listOfFiles) {
-            if (file.getName().endsWith(".bin") && file.getName().startsWith(prefix)) {
-                modelNames.add(file.getName().substring(prefix.length() + 1, file.getName().indexOf(".bin")));
-            }
-        }
-        String[] modelArray = new String[modelNames.size() + 1];
-        modelArray[0] = "None";
-        for (int i = 1; i <= modelNames.size(); i++) {
-            modelArray[i] = modelNames.get(i - 1);
-        }
-        modelComboBox = new JComboBox(modelArray);
-        modelComboBox.setMaximumSize(new Dimension(250, 35));
-        modelComboBox.setSelectedIndex(0);
-        modelComboBox.addActionListener(e -> {
-            if (modelComboBox.getSelectedIndex() < models.size()) {
-                for (int i = 0; i < projectPane.getTabCount(); i++) {
-                    AnnotatorPanel panel = (AnnotatorPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
-                    panel.classificationModel = models.get(modelComboBox.getSelectedIndex());
-                }
-            }
-        });
-        toolBar.add(modelComboBox);
-        for (File file : listOfFiles) {
-            if (file.getName().endsWith(".bin") && file.getName().startsWith(prefix)) {
-                try {
-                    inFile = new FileInputStream(file);
-                    inObject = new ObjectInputStream(inFile);
-                    models.add((Model) inObject.readObject());
-                } catch (ClassNotFoundException | IOException e) {
-                }
-            }
-        }
         projectPane.addChangeListener(e -> {
             AnnotatorPanel current;
             if (projectPane.getTabCount() > 0) {

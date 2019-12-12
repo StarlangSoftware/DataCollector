@@ -24,7 +24,7 @@ public class SentenceSemanticPanel extends AnnotatorPanel{
     private DefaultTreeModel treeModel;
 
     public SentenceSemanticPanel(String currentPath, String fileName, FsmMorphologicalAnalyzer fsm, WordNet wordNet){
-        super(currentPath, fileName, ViewLayerType.SEMANTICS, new FeaturedSemanticInstanceGenerator(fsm, wordNet, 1));
+        super(currentPath, fileName, ViewLayerType.SEMANTICS);
         this.fsm = fsm;
         this.wordNet = wordNet;
         turkishSentenceAutoSemantic = new TurkishSentenceAutoSemantic(wordNet, fsm);
@@ -195,7 +195,7 @@ public class SentenceSemanticPanel extends AnnotatorPanel{
         }
         tree.setVisible(true);
         pane.setVisible(true);
-        pane.setBounds(((AnnotatedWord)sentence.getWord(selectedWordIndex)).getArea().x, ((AnnotatedWord)sentence.getWord(selectedWordIndex)).getArea().y + 20, 240, 30 + Math.max(3, Math.min(15, ((DefaultMutableTreeNode) treeModel.getRoot()).getChildCount() + 1)) * 18);
+        pane.setBounds(((AnnotatedWord)sentence.getWord(selectedWordIndex)).getArea().x, ((AnnotatedWord)sentence.getWord(selectedWordIndex)).getArea().y + 20, 360, 30 + Math.max(3, Math.min(15, ((DefaultMutableTreeNode) treeModel.getRoot()).getChildCount() + 1)) * 18);
         return selectedIndex;
     }
 

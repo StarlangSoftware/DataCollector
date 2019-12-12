@@ -9,7 +9,7 @@ public class SentenceShallowParsePanel extends AnnotatorPanel{
     private String[] shallowParseList = {"YÜKLEM", "ÖZNE", "NESNE", "ZARF_TÜMLECİ", "DOLAYLI_TÜMLEÇ", "HİÇBİRİ"};
 
     public SentenceShallowParsePanel(String currentPath, String fileName){
-        super(currentPath, fileName, ViewLayerType.SHALLOW_PARSE, new FeaturedShallowParseInstanceGenerator(1));
+        super(currentPath, fileName, ViewLayerType.SHALLOW_PARSE);
         setLayout(new BorderLayout());
     }
 

@@ -1,16 +1,22 @@
 package DataCollector.Sentence;
 
 import AnnotatedSentence.AutoProcessor.AutoDisambiguation.TurkishSentenceAutoDisambiguator;
+import AnnotatedSentence.AutoProcessor.AutoSemantic.TurkishSentenceAutoSemantic;
 import Dictionary.TurkishWordComparator;
 import Dictionary.TxtDictionary;
 import MorphologicalAnalysis.FsmMorphologicalAnalyzer;
 import MorphologicalDisambiguation.RootWordStatistics;
+import WordNet.WordNet;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Locale;
+import java.util.Properties;
 
 public class SentenceMorphologicalAnalyzerFrame extends AnnotatorFrame{
     private JCheckBox autoAnalysisDetectionOption;
@@ -21,10 +27,15 @@ public class SentenceMorphologicalAnalyzerFrame extends AnnotatorFrame{
         super("mor");
         JMenuItem itemUpdateDictionary = addMenuItem(projectMenu, "Update Analyzer", KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
         itemUpdateDictionary.addActionListener(e -> {
-            this.fsm = new FsmMorphologicalAnalyzer("tourism_dictionary.txt");
+            Properties properties = new Properties();
             try {
-                turkishSentenceAutoDisambiguator = new TurkishSentenceAutoDisambiguator(this.fsm, new RootWordStatistics(new FileInputStream("tourism_statistics.bin")));
-            } catch (FileNotFoundException e1) {
+                properties.load(new FileInputStream(new File("config.properties")));
+                String domainPrefix = properties.getProperty("domainPrefix");
+                String domainDictionaryFileName = domainPrefix + "_dictionary.txt";
+                String rootWordStatisticsFileName = domainPrefix + "_statistics.bin";
+                this.fsm = new FsmMorphologicalAnalyzer(domainDictionaryFileName);
+                turkishSentenceAutoDisambiguator = new TurkishSentenceAutoDisambiguator(this.fsm, new RootWordStatistics(new FileInputStream(rootWordStatisticsFileName)));
+            } catch (IOException f) {
             }
             for (int i = 0; i < projectPane.getTabCount(); i++){
                 SentenceMorphologicalAnalyzerPanel current = (SentenceMorphologicalAnalyzerPanel) ((JScrollPane) projectPane.getComponentAt(i)).getViewport().getView();

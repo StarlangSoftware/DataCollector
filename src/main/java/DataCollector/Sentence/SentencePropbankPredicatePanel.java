@@ -14,7 +14,7 @@ public class SentencePropbankPredicatePanel extends AnnotatorPanel{
     private WordNet wordNet;
 
     public SentencePropbankPredicatePanel(String currentPath, String fileName, FramesetList xmlParser, WordNet wordNet){
-        super(currentPath, fileName, ViewLayerType.PROPBANK, null);
+        super(currentPath, fileName, ViewLayerType.PROPBANK);
         setLayout(new BorderLayout());
         this.wordNet = wordNet;
         turkishSentenceAutoPredicate = new TurkishSentenceAutoPredicate(xmlParser);

@@ -11,7 +11,7 @@ public class SentenceNERPanel extends AnnotatorPanel {
     private TurkishSentenceAutoNER turkishSentenceAutoNER;
 
     public SentenceNERPanel(String currentPath, String fileName){
-        super(currentPath, fileName, ViewLayerType.NER, new FeaturedNerInstanceGenerator(1));
+        super(currentPath, fileName, ViewLayerType.NER);
         turkishSentenceAutoNER = new TurkishSentenceAutoNER();
         setLayout(new BorderLayout());
     }

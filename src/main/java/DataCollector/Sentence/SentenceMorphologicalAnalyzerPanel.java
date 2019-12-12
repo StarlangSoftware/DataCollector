@@ -13,7 +13,7 @@ public class SentenceMorphologicalAnalyzerPanel extends AnnotatorPanel{
     private TurkishSentenceAutoDisambiguator turkishSentenceAutoDisambiguator;
 
     public SentenceMorphologicalAnalyzerPanel(String currentPath, String fileName, FsmMorphologicalAnalyzer fsm, TurkishSentenceAutoDisambiguator turkishSentenceAutoDisambiguator){
-        super(currentPath, fileName, ViewLayerType.INFLECTIONAL_GROUP, null);
+        super(currentPath, fileName, ViewLayerType.INFLECTIONAL_GROUP);
         this.fsm = fsm;
         this.turkishSentenceAutoDisambiguator = turkishSentenceAutoDisambiguator;
         setLayout(new BorderLayout());

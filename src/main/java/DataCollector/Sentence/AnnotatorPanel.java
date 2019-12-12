@@ -27,13 +27,10 @@ public abstract class AnnotatorPanel extends JPanel implements MouseListener, Mo
     protected JList list;
     protected DefaultListModel listModel;
     protected JScrollPane pane;
-    protected Model classificationModel;
-    protected InstanceGenerator instanceGenerator;
 
-    public AnnotatorPanel(String currentPath, String rawFileName, final ViewLayerType layerType, InstanceGenerator instanceGenerator){
+    public AnnotatorPanel(String currentPath, String rawFileName, final ViewLayerType layerType){
         this.fileDescription = new FileDescription(currentPath, rawFileName);
         this.layerType = layerType;
-        this.instanceGenerator = instanceGenerator;
         this.addMouseMotionListener(this);
         this.addMouseListener(this);
         setLayout(null);
@@ -207,15 +204,6 @@ public abstract class AnnotatorPanel extends JPanel implements MouseListener, Mo
             }
             word = (AnnotatedWord) sentence.getWord(i);
             prediction = null;
-            if (classificationModel != null && instanceGenerator != null){
-                try {
-                    Instance instance = instanceGenerator.generateInstanceFromSentence(sentence, i);
-                    if (instance != null){
-                        prediction = classificationModel.predict(instance);
-                    }
-                } catch (InstanceNotGenerated ignored) {
-                }
-            }
             int maxSize = maxLayerLength(word, g);
             int stringWidth = g.getFontMetrics().stringWidth(word.getName());
             int stringHeight = (int) g.getFontMetrics().getStringBounds(word.getName(), g).getHeight();
