@@ -1,8 +1,13 @@
 package DataCollector.Sentence;
 
+import AnnotatedSentence.AnnotatedCorpus;
+import AnnotatedSentence.AnnotatedSentence;
+import AnnotatedSentence.AnnotatedWord;
 import AnnotatedSentence.AutoProcessor.AutoSemantic.TurkishSentenceAutoSemantic;
+import DataCollector.ParseTree.EditorPanel;
 import MorphologicalAnalysis.FsmMorphologicalAnalyzer;
 import WordNet.WordNet;
+import WordNet.SynSet;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -10,16 +15,37 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Locale;
-import java.util.Properties;
+import java.util.*;
 
 public class SentenceSemanticFrame extends AnnotatorFrame {
     private JCheckBox autoSemanticDetectionOption;
     private FsmMorphologicalAnalyzer fsm;
     private WordNet wordNet;
+    private HashMap<String, HashSet<String>> exampleSentences;
 
     public SentenceSemanticFrame(final FsmMorphologicalAnalyzer fsm, final WordNet wordNet){
         super("semantic");
+        exampleSentences = new HashMap<>();
+        AnnotatedCorpus corpus = new AnnotatedCorpus(new File(EditorPanel.TURKISH_PHRASE_PATH));
+        for (int i = 0; i < corpus.sentenceCount(); i++){
+            AnnotatedSentence sentence = (AnnotatedSentence) corpus.getSentence(i);
+            for (int j = 0; j < sentence.wordCount(); j++){
+                AnnotatedWord word = (AnnotatedWord) sentence.getWord(j);
+                String semantic = word.getSemantic();
+                if (semantic != null){
+                    HashSet<String> sentences;
+                    if (exampleSentences.containsKey(semantic)){
+                        sentences = exampleSentences.get(semantic);
+                    } else {
+                        sentences = new HashSet<>();
+                    }
+                    if (sentences.size() < 20){
+                        sentences.add(sentence.toWords());
+                    }
+                    exampleSentences.put(semantic, sentences);
+                }
+            }
+        }
         JMenuItem itemUpdateDictionary = addMenuItem(projectMenu, "Update Wordnet", KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
         itemUpdateDictionary.addActionListener(e -> {
             Properties properties = new Properties();
@@ -47,7 +73,7 @@ public class SentenceSemanticFrame extends AnnotatorFrame {
     }
 
     protected AnnotatorPanel generatePanel(String currentPath, String rawFileName) {
-        return new SentenceSemanticPanel(currentPath, rawFileName, fsm, wordNet);
+        return new SentenceSemanticPanel(currentPath, rawFileName, fsm, wordNet, exampleSentences);
     }
 
     public void next(int count){

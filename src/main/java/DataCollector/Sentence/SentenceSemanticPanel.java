@@ -14,6 +14,8 @@ import javax.swing.tree.TreePath;
 import java.awt.*;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 
 public class SentenceSemanticPanel extends AnnotatorPanel{
 
@@ -23,7 +25,7 @@ public class SentenceSemanticPanel extends AnnotatorPanel{
     private JTree tree;
     private DefaultTreeModel treeModel;
 
-    public SentenceSemanticPanel(String currentPath, String fileName, FsmMorphologicalAnalyzer fsm, WordNet wordNet){
+    public SentenceSemanticPanel(String currentPath, String fileName, FsmMorphologicalAnalyzer fsm, WordNet wordNet, HashMap<String, HashSet<String>> exampleSentences){
         super(currentPath, fileName, ViewLayerType.SEMANTICS);
         this.fsm = fsm;
         this.wordNet = wordNet;
@@ -33,6 +35,8 @@ public class SentenceSemanticPanel extends AnnotatorPanel{
         treeModel = new DefaultTreeModel(rootNode);
         tree = new JTree(treeModel);
         tree.setVisible(false);
+        tree.setCellRenderer(new SemanticExampleTreeCellRenderer(exampleSentences));
+        ToolTipManager.sharedInstance().registerComponent(tree);
         tree.addTreeSelectionListener(e -> {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
             if (node != null && clickedWord != null) {
