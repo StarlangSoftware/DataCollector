@@ -6,8 +6,6 @@ import Util.DrawingButton;
 import WordNet.*;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.tree.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -21,7 +19,8 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
     private JTextField leftSearch, id, literal, sense, definition;
     private DefaultMutableTreeNode selectedTreeNode = null;
     private SynSet selectedSynSet = null;
-    private JComboBox alternatives;
+    private JComboBox<SynSet> leftSearchAlternatives;
+    private JComboBox<SynSet> alternatives;
     private JCheckBox showMoved, automaticSelection;
     private JList dictionaryList, wordNetList;
     private boolean completed = false;
@@ -183,11 +182,13 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
                     parent.remove(selectedTreeNode);
                     selectedPartOfSpeechTree.treeModel.reload(parent);
                     selectedSynSet = null;
+                    modified = true;
                 } else {
                     if (!dictionaryList.isSelectionEmpty()){
                         WordObject selectedWord = (WordObject) dictionaryList.getSelectedValue();
                         TxtWord word = (TxtWord) dictionary.getWord(selectedWord.word.getName());
                         dictionary.removeWord(word.getName());
+                        modified = true;
                         ((DefaultListModel) dictionaryList.getModel()).removeElement(dictionaryList.getSelectedValue());
                     } else {
                         JOptionPane.showMessageDialog(this, "No Synset or Word Selected!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -206,6 +207,7 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
                     DefaultMutableTreeNode parent = (DefaultMutableTreeNode) selectedTreeNode.getParent();
                     selectedPartOfSpeechTree.treeModel.reload(parent);
                     selectedSynSet = null;
+                    modified = true;
                 } else {
                     JOptionPane.showMessageDialog(this, "No Synset Selected!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
@@ -222,6 +224,7 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
                     noun.nodeList.put(selectedSynSet, node);
                     node.setUserObject(new SynSetObject(selectedSynSet));
                     noun.treeModel.reload(node);
+                    modified = true;
                 } else {
                     JOptionPane.showMessageDialog(this, "No Synset Selected!", "Error", JOptionPane.ERROR_MESSAGE);
                 }
@@ -239,6 +242,7 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
                     newSynSet.setDefinition(" ");
                 }
                 addNewSynSet(newSynSet, Pos.NOUN, noun);
+                modified = true;
                 break;
             case INSERT_FROM_WORDNET:
                 synsetId = JOptionPane.showInputDialog("Enter synset id");
@@ -250,6 +254,7 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
                             literal.setText(synSet.getSynonym().getLiteral(0).getName());
                             sense.setText("" + synSet.getSynonym().getLiteral(0).getSense());
                             definition.setText(synSet.getLongDefinition());
+                            modified = true;
                         } else {
                             DefaultMutableTreeNode node = noun.nodeList.get(domainWordNet.getSynSetWithId(synsetId));
                             showPath(noun, node);
@@ -277,6 +282,7 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
                             }
                             selectedSynSet.addRelation(new SemanticRelation(synSet.getId(), SemanticRelationType.HYPERNYM));
                             synSet.addRelation(new SemanticRelation(selectedSynSet.getId(), SemanticRelationType.HYPONYM));
+                            modified = true;
                         } else {
                             JOptionPane.showMessageDialog(this, "Parent Synset Is Not a Noun!", "Error", JOptionPane.ERROR_MESSAGE);
                         }
@@ -295,6 +301,7 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
                                 synsetId = selectedSynSet.getRelation(i).getName();
                                 synSet = domainWordNet.getSynSetWithId(synsetId);
                                 selectedSynSet.removeRelation(selectedSynSet.getRelation(i));
+                                modified = true;
                                 if (synSet != null){
                                     for (int j = 0; j < synSet.relationSize(); j++){
                                         if (synSet.getRelation(j) instanceof SemanticRelation){
@@ -334,6 +341,7 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
                         SynSet synSet2 = synSetObject2.synSet;
                         synSet1.mergeSynSet(synSet2);
                         domainWordNet.removeSynSet(synSet2);
+                        modified = true;
                         replaceAllRelationsWithNewSynSet(synSet2.getId(), synSet1.getId());
                         DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) selectedTreeNode2.getParent();
                         for (int i = 0; i < selectedTreeNode2.getChildCount(); i++){
@@ -378,6 +386,7 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
                             addNewSynSet(newSynSet, selectedWord.pos, adverb);
                             break;
                     }
+                    modified = true;
                     ((DefaultListModel) dictionaryList.getModel()).removeElement(dictionaryList.getSelectedValue());
                 } else {
                     JOptionPane.showMessageDialog(this, "No Word Selected!", "Error", JOptionPane.ERROR_MESSAGE);
@@ -397,6 +406,7 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
                             } else {
                                 selectedSynSet.addLiteral(new Literal(wordForm, 1, selectedSynSet.getId()));
                             }
+                            modified = true;
                             ((DefaultListModel) dictionaryList.getModel()).removeElement(dictionaryList.getSelectedValue());
                             selectedPartOfSpeechTree.treeModel.reload(selectedTreeNode);
                             selectedSynSet = null;
@@ -429,6 +439,7 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
                                 dictionary.addWithFlag(word, "IS_ADVERB");
                                 break;
                         }
+                        modified = true;
                         ((DefaultListModel) wordNetList.getModel()).removeElement(object);
                     }
                 } else {
@@ -715,7 +726,7 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
 
     public void loadContents(){
         addButtons();
-        JPanel topPanel = new JPanel(new GridLayout(3, 4));
+        JPanel topPanel = new JPanel(new GridLayout(4, 4));
         topPanel.add(new JLabel("Id"));
         id = new JTextField();
         topPanel.add(id);
@@ -731,15 +742,29 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
         leftSearch = new JTextField();
         leftSearch.addActionListener(e -> selectTree(leftSearch.getText()));
         topPanel.add(leftSearch);
-        alternatives = new JComboBox();
+        alternatives = new JComboBox<SynSet>();
         topPanel.add(alternatives);
-        alternatives.addActionListener (new ActionListener () {
-            public void actionPerformed(ActionEvent e) {
-                if (completed){
-                    replaceWithNewSynSet((SynSet) alternatives.getSelectedItem());
-                }
+        alternatives.addActionListener (e -> {
+            if (completed){
+                replaceWithNewSynSet((SynSet) alternatives.getSelectedItem());
             }
         });
+        JLabel dummy1 = new JLabel("");
+        topPanel.add(dummy1);
+        dummy1.setVisible(false);
+        JLabel dummy2 = new JLabel("");
+        topPanel.add(dummy2);
+        dummy2.setVisible(false);
+        leftSearchAlternatives = new JComboBox<SynSet>();
+        leftSearchAlternatives.addActionListener(e -> {
+            if (leftSearchAlternatives.getSelectedIndex() != -1){
+                TreePath treePath = new TreePath(noun.treeModel.getPathToRoot(noun.nodeList.get(leftSearchAlternatives.getSelectedItem())));
+                noun.tree.setSelectionPath(treePath);
+                noun.tree.scrollPathToVisible(treePath);
+            }
+        });
+        leftSearchAlternatives.setVisible(false);
+        topPanel.add(leftSearchAlternatives);
         JPanel nounAdjectivePanel = new JPanel(new BorderLayout());
         noun = constructTree(Pos.NOUN, true);
         JScrollPane nounPane = new JScrollPane(noun.tree);
@@ -762,23 +787,20 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
         JPanel dictionaryPanel = new JPanel(new BorderLayout());
         dictionaryPanel.setMinimumSize(new Dimension(50, 100));
         dictionaryList = createDictionaryList();
-        dictionaryList.addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                if (!dictionaryList.isSelectionEmpty()){
-                    WordObject selectedWord = (WordObject) dictionaryList.getSelectedValue();
-                    String wordForm = selectedWord.word.getName();
-                    if (wordForm.contains("â") || wordForm.contains("û") || wordForm.contains("î")){
-                        wordForm = wordForm.replaceAll("â", "a").replaceAll("û", "ü").replaceAll("î", "i");
-                        ArrayList<SynSet> candidates = domainWordNet.getSynSetsWithLiteral(wordForm);
+        dictionaryList.addListSelectionListener(e -> {
+            if (!dictionaryList.isSelectionEmpty()){
+                WordObject selectedWord = (WordObject) dictionaryList.getSelectedValue();
+                String wordForm = selectedWord.word.getName();
+                if (wordForm.contains("â") || wordForm.contains("û") || wordForm.contains("î")){
+                    wordForm = wordForm.replaceAll("â", "a").replaceAll("û", "ü").replaceAll("î", "i");
+                    ArrayList<SynSet> candidates = domainWordNet.getSynSetsWithLiteral(wordForm);
+                    selectPossibleCandidate(candidates, selectedWord.pos);
+                } else {
+                    for (int i = 2; i < wordForm.length() - 2; i++){
+                        String form1 = wordForm.substring(0, i);
+                        String form2 = wordForm.substring(i);
+                        ArrayList<SynSet> candidates = domainWordNet.getSynSetsWithLiteral(form1 + " " + form2);
                         selectPossibleCandidate(candidates, selectedWord.pos);
-                    } else {
-                        for (int i = 2; i < wordForm.length() - 2; i++){
-                            String form1 = wordForm.substring(0, i);
-                            String form2 = wordForm.substring(i);
-                            ArrayList<SynSet> candidates = domainWordNet.getSynSetsWithLiteral(form1 + " " + form2);
-                            selectPossibleCandidate(candidates, selectedWord.pos);
-                        }
                     }
                 }
             }
@@ -805,6 +827,17 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
     private void selectTree(String searchKey){
         if (!automaticSelection.isSelected()){
             noun.tree.clearSelection();
+        }
+        leftSearchAlternatives.removeAllItems();
+        for (Map.Entry<SynSet, DefaultMutableTreeNode> entry : noun.nodeList.entrySet()){
+            if (entry.getKey().getSynonym().containsLiteral(searchKey)){
+                leftSearchAlternatives.addItem(entry.getKey());
+            }
+        }
+        if (leftSearchAlternatives.getItemCount() > 1){
+            leftSearchAlternatives.setVisible(true);
+        } else {
+            leftSearchAlternatives.setVisible(false);
         }
         for (Map.Entry<SynSet, DefaultMutableTreeNode> entry : noun.nodeList.entrySet()){
             if (entry.getKey().getSynonym().containsLiteral(searchKey)){

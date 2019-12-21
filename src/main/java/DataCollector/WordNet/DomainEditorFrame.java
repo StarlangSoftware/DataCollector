@@ -7,8 +7,7 @@ import WordNet.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.io.*;
 import java.util.Locale;
 import java.util.Properties;
@@ -20,20 +19,20 @@ public abstract class DomainEditorFrame extends JFrame implements ActionListener
 
     protected static final String SAVE = "save";
 
-    protected String domainWordNetFileName;
-    protected String domainDictionaryFileName;
+    private String domainWordNetFileName;
+    private String domainDictionaryFileName;
     protected String domainPrefix = "turkish";
     protected String wordNetPrefix = "TUR10-";
     protected int finalId;
+    protected boolean modified = false;
     abstract void loadContents();
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        switch (e.getActionCommand()) {
-            case SAVE:
-                domainWordNet.saveAsXml(domainWordNetFileName);
-                dictionary.saveAsTxt(domainDictionaryFileName);
-                break;
+        if (SAVE.equals(e.getActionCommand())) {
+            domainWordNet.saveAsXml(domainWordNetFileName);
+            dictionary.saveAsTxt(domainDictionaryFileName);
+            modified = false;
         }
     }
 
@@ -64,7 +63,7 @@ public abstract class DomainEditorFrame extends JFrame implements ActionListener
         return newSynSet;
     }
 
-    protected int getFinalId(){
+    private int getFinalId(){
         int max = 0;
         for (SynSet synSet : domainWordNet.synSetList()){
             if (synSet.getId().startsWith(wordNetPrefix)){
@@ -104,7 +103,23 @@ public abstract class DomainEditorFrame extends JFrame implements ActionListener
         loadContents();
         setLocationRelativeTo(null);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new WindowAdapter(){
+            public void windowClosing(WindowEvent e) {
+                JFrame frame = (JFrame) e.getSource();
+                if (modified){
+                    int result = JOptionPane.showConfirmDialog(frame,
+                            "Are you sure you want to exit the application without saving?",
+                            frame.getName(),
+                            JOptionPane.YES_NO_OPTION);
+                    if (result == JOptionPane.YES_OPTION){
+                        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                    }
+                } else {
+                    frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                }
+            }
+        });
         setVisible(true);
     }
 

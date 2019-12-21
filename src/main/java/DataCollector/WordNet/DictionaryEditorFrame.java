@@ -16,6 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.text.Collator;
 import java.util.*;
 
@@ -25,10 +26,10 @@ public class DictionaryEditorFrame extends DomainEditorFrame implements ActionLi
     private ImageIcon addIcon, deleteIcon;
     private HashMap<String, PanelObject> display;
 
-    protected static final String ID_SORT = "sortnumbers";
-    protected static final String TEXT_SORT = "sorttext";
+    private static final String ID_SORT = "sortnumbers";
+    private static final String TEXT_SORT = "sorttext";
 
-    protected String domainDataFileName;
+    private String domainDataFileName;
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -39,27 +40,27 @@ public class DictionaryEditorFrame extends DomainEditorFrame implements ActionLi
                 break;
             case ID_SORT:
                 Transition verbTransition = new Transition("mAk");
-                Collections.sort(data, (o1, o2) -> {
+                data.sort((o1, o2) -> {
                     TxtWord word1 = (TxtWord) dictionary.getWord(o1);
                     TxtWord word2 = (TxtWord) dictionary.getWord(o2);
                     ArrayList<SynSet> synSets1 = domainWordNet.getSynSetsWithLiteral(o1);
                     ArrayList<SynSet> synSets2 = domainWordNet.getSynSetsWithLiteral(o2);
-                    if (word1 != null){
+                    if (word1 != null) {
                         String verbForm1 = verbTransition.makeTransition(word1, word1.getName());
                         synSets1.addAll(domainWordNet.getSynSetsWithLiteral(verbForm1));
                     }
-                    if (word2 != null){
+                    if (word2 != null) {
                         String verbForm2 = verbTransition.makeTransition(word2, word2.getName());
                         synSets2.addAll(domainWordNet.getSynSetsWithLiteral(verbForm2));
                     }
-                    if (synSets1.size() != 0){
-                        if (synSets2.size() == 0){
+                    if (synSets1.size() != 0) {
+                        if (synSets2.size() == 0) {
                             return 1;
                         } else {
                             return synSets1.get(0).getId().compareTo(synSets2.get(0).getId());
                         }
                     } else {
-                        if (synSets2.size() == 0){
+                        if (synSets2.size() == 0) {
                             return 0;
                         } else {
                             return -1;
@@ -71,17 +72,17 @@ public class DictionaryEditorFrame extends DomainEditorFrame implements ActionLi
             case TEXT_SORT:
                 Locale locale = new Locale("tr");
                 Collator collator = Collator.getInstance(locale);
-                Collections.sort(data, (o1, o2) -> collator.compare(o1, o2));
+                data.sort(collator::compare);
                 JOptionPane.showMessageDialog(this, "Words Sorted!", "Sorting Complete", JOptionPane.INFORMATION_MESSAGE);
                 break;
         }
         dataTable.invalidate();
     }
 
-    public void saveData(){
+    private void saveData(){
         BufferedWriter outfile;
         try {
-            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(domainDataFileName), "UTF-8");
+            OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(domainDataFileName), StandardCharsets.UTF_8);
             outfile = new BufferedWriter(writer);
             for (String root : data) {
                 outfile.write(root + "\n");
@@ -95,7 +96,7 @@ public class DictionaryEditorFrame extends DomainEditorFrame implements ActionLi
     public class FlagObject{
         String[] flags = null;
 
-        public FlagObject(TxtWord word){
+        private FlagObject(TxtWord word){
             if (word != null){
                 String[] items = word.toString().split(" ");
                 flags = Arrays.copyOfRange(items, 1, items.length);
@@ -107,7 +108,7 @@ public class DictionaryEditorFrame extends DomainEditorFrame implements ActionLi
         ArrayList<SynSet> synSets;
         ArrayList<SynSet> extraSynSets = new ArrayList<>();
 
-        public SynSetObject(String root, TxtWord word){
+        private SynSetObject(String root, TxtWord word){
             Transition verbTransition = new Transition("mAk");
             if (word != null){
                 String verbForm = verbTransition.makeTransition(word, word.getName());
@@ -137,7 +138,7 @@ public class DictionaryEditorFrame extends DomainEditorFrame implements ActionLi
         }
     }
 
-    public class PanelObject{
+    private class PanelObject{
         private FlagObject flagObject;
         private SynSetObject synSetObject;
         private TxtWord word;
@@ -170,7 +171,7 @@ public class DictionaryEditorFrame extends DomainEditorFrame implements ActionLi
             } else {
                 dataTable.setRowHeight(row, 35);
             }
-            JComboBox flagComboBox = new JComboBox();
+            JComboBox<String> flagComboBox = new JComboBox<>();
             flagComboBox.addItem("CL_ISIM");
             flagComboBox.addItem("IS_OA");
             flagComboBox.addItem("IS_HM");
@@ -200,6 +201,7 @@ public class DictionaryEditorFrame extends DomainEditorFrame implements ActionLi
             add.addActionListener(e -> {
                 if (!root.contains(" ")){
                     dictionary.addWithFlag(root, (String) flagComboBox.getSelectedItem());
+                    modified = true;
                     PanelObject panelObject = new PanelObject(root, row);
                     display.put(root, panelObject);
                 }
@@ -209,7 +211,7 @@ public class DictionaryEditorFrame extends DomainEditorFrame implements ActionLi
             flagPanel.add(flagComboBox, c);
         }
 
-        public void createSynSetPanel(int column, int row){
+        private void createSynSetPanel(int column, int row){
             JPanel newPanel = new JPanel(new GridBagLayout());
             GridBagConstraints c = new GridBagConstraints();
             c.gridy = 0;
@@ -229,6 +231,7 @@ public class DictionaryEditorFrame extends DomainEditorFrame implements ActionLi
                         delete.setIcon(deleteIcon);
                         delete.addActionListener(e -> {
                             domainWordNet.removeSynSet(synSet);
+                            modified = true;
                             PanelObject panelObject = new PanelObject(root, row);
                             display.put(root, panelObject);
                         });
@@ -250,7 +253,7 @@ public class DictionaryEditorFrame extends DomainEditorFrame implements ActionLi
             }
             if (column == 4){
                 c.gridx = 0;
-                JComboBox synSetChooser = new JComboBox();
+                JComboBox<String> synSetChooser = new JComboBox<>();
                 if (word != null){
                     if (word.isNominal()){
                         synSetChooser.addItem("New SynSet (NOUN)");
@@ -330,6 +333,7 @@ public class DictionaryEditorFrame extends DomainEditorFrame implements ActionLi
                                     addSynSet(addedSynSet, root);
                                 }
                             }
+                            modified = true;
                             PanelObject panelObject = new PanelObject(root, row);
                             display.put(root, panelObject);
                         }
@@ -352,7 +356,7 @@ public class DictionaryEditorFrame extends DomainEditorFrame implements ActionLi
             }
         }
 
-        public PanelObject(String root, int row){
+        private PanelObject(String root, int row){
             this.root = root;
             word = (TxtWord) dictionary.getWord(root);
             flagObject = new FlagObject(word);
@@ -364,7 +368,7 @@ public class DictionaryEditorFrame extends DomainEditorFrame implements ActionLi
         }
     }
 
-    public PanelObject addIfNotExists(String root, int row){
+    private PanelObject addIfNotExists(String root, int row){
         if (display.containsKey(root)){
             return display.get(root);
         } else {
@@ -499,18 +503,12 @@ public class DictionaryEditorFrame extends DomainEditorFrame implements ActionLi
         }
 
         public boolean isCellEditable(int row, int col) {
-            if (col < 3) {
-                return false;
-            } else {
-                return true;
-            }
+            return col >= 3;
         }
 
         public void setValueAt(Object value, int row, int col) {
-            switch (col){
-                case 3:
-                    data.set(row, (String) value);
-                    break;
+            if (col == 3) {
+                data.set(row, (String) value);
             }
             fireTableCellUpdated(row, col);
         }
@@ -526,7 +524,7 @@ public class DictionaryEditorFrame extends DomainEditorFrame implements ActionLi
         display = new HashMap<>();
         data = new ArrayList<>();
         try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(domainDataFileName), "UTF8"));
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(domainDataFileName), StandardCharsets.UTF_8));
             String line = br.readLine();
             while (line != null) {
                 data.add(line);
