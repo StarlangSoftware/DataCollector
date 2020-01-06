@@ -22,7 +22,7 @@ public abstract class AnnotatorPanel extends JPanel implements MouseListener, Mo
     protected FileDescription fileDescription;
     protected int wordSpace = 60, lineSpace;
     protected int selectedWordIndex = -1;
-    protected AnnotatedWord clickedWord = null;
+    protected AnnotatedWord clickedWord = null, lastClickedWord = null;
     protected ViewLayerType layerType;
     protected JList list;
     protected DefaultListModel listModel;
@@ -117,6 +117,10 @@ public abstract class AnnotatorPanel extends JPanel implements MouseListener, Mo
     public String getOriginalSentence(){
         AnnotatedSentence originalSentence = new AnnotatedSentence(new File(EditorPanel.ORIGINAL_PATH + fileDescription.getRawFileName()));
         return originalSentence.toWords();
+    }
+
+    public AnnotatedWord getClickedWord(){
+        return lastClickedWord;
     }
 
     public String getRawFileName(){
@@ -317,6 +321,7 @@ public abstract class AnnotatorPanel extends JPanel implements MouseListener, Mo
         if (selectedWordIndex != -1){
             if (mouseEvent.isControlDown()){
                 clickedWord = ((AnnotatedWord)sentence.getWord(selectedWordIndex));
+                lastClickedWord = clickedWord;
                 editText.setText(clickedWord.getName());
                 editText.setBounds(clickedWord.getArea().x - 5, clickedWord.getArea().y + 20, 100, 30);
                 editText.setVisible(true);
@@ -333,6 +338,7 @@ public abstract class AnnotatorPanel extends JPanel implements MouseListener, Mo
                     list.setVisible(true);
                 }
                 clickedWord = ((AnnotatedWord)sentence.getWord(selectedWordIndex));
+                lastClickedWord = clickedWord;
                 pane.setVisible(true);
                 pane.getVerticalScrollBar().setValue(0);
                 if (layerType == ViewLayerType.PROPBANK || layerType == ViewLayerType.INFLECTIONAL_GROUP){

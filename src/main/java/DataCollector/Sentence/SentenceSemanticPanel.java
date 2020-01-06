@@ -1,10 +1,8 @@
 package DataCollector.Sentence;
 
 import AnnotatedSentence.*;
-import AnnotatedSentence.AutoProcessor.AutoDisambiguation.TurkishSentenceAutoDisambiguator;
 import AnnotatedSentence.AutoProcessor.AutoSemantic.TurkishSentenceAutoSemantic;
 import MorphologicalAnalysis.FsmMorphologicalAnalyzer;
-import DataGenerator.InstanceGenerator.FeaturedSemanticInstanceGenerator;
 import WordNet.*;
 
 import javax.swing.*;

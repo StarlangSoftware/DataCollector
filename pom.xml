@@ -86,7 +86,7 @@
         <dependency>
             <groupId>NlpToolkit</groupId>
             <artifactId>WordNet</artifactId>
-            <version>1.0.15</version>
+            <version>1.0.21</version>
         </dependency>
         <dependency>
             <groupId>NlpToolkit</groupId>
@@ -152,36 +152,6 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>dictionary-editor</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <archive>
-                                <manifest>
-                                    <mainClass>DataCollector.WordNet.TestDictionaryEditorFrame</mainClass>
-                                </manifest>
-                            </archive>
-                            <finalName>dictionary-editor</finalName>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>syntactic-editor</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <archive>
-                                <manifest>
-                                    <mainClass>DataCollector.ParseTree.TestSyntacticFrame</mainClass>
-                                </manifest>
-                            </archive>
-                            <finalName>syntactic-editor</finalName>
-                        </configuration>
-                    </execution>
-                    <execution>
                         <id>sentence-semantics</id>
                         <phase>package</phase>
                         <goals>
@@ -194,21 +164,6 @@
                                 </manifest>
                             </archive>
                             <finalName>sentence-semantics</finalName>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>sentence-morphological-analysis</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <archive>
-                                <manifest>
-                                    <mainClass>DataCollector.Sentence.TestSentenceMorphologicalAnalyzerFrame</mainClass>
-                                </manifest>
-                            </archive>
-                            <finalName>sentence-morphological-analysis</finalName>
                         </configuration>
                     </execution>
                 </executions>

@@ -7,14 +7,11 @@ import AnnotatedSentence.AutoProcessor.AutoSemantic.TurkishSentenceAutoSemantic;
 import DataCollector.ParseTree.EditorPanel;
 import MorphologicalAnalysis.FsmMorphologicalAnalyzer;
 import WordNet.WordNet;
-import WordNet.SynSet;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 
 public class SentenceSemanticFrame extends AnnotatorFrame {
@@ -26,7 +23,8 @@ public class SentenceSemanticFrame extends AnnotatorFrame {
     public SentenceSemanticFrame(final FsmMorphologicalAnalyzer fsm, final WordNet wordNet){
         super("semantic");
         exampleSentences = new HashMap<>();
-        AnnotatedCorpus corpus = new AnnotatedCorpus(new File(EditorPanel.TURKISH_PHRASE_PATH));
+        AnnotatedCorpus corpus;
+        corpus = new AnnotatedCorpus(new File(EditorPanel.TURKISH_PHRASE_PATH));
         for (int i = 0; i < corpus.sentenceCount(); i++){
             AnnotatedSentence sentence = (AnnotatedSentence) corpus.getSentence(i);
             for (int j = 0; j < sentence.wordCount(); j++){
@@ -65,6 +63,76 @@ public class SentenceSemanticFrame extends AnnotatorFrame {
                 }
             } catch (IOException f) {
             }
+        });
+        JMenuItem itemAutoAnnotate = addMenuItem(projectMenu, "Annotate Every Word With Last Sense", KeyStroke.getKeyStroke(KeyEvent.VK_W, ActionEvent.CTRL_MASK));
+        itemAutoAnnotate.addActionListener(e -> {
+            SentenceSemanticPanel current;
+            int wordCount = 0, fileCount = 0;
+            current = (SentenceSemanticPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
+            AnnotatedWord clickedWord = current.getClickedWord();
+            for (int i = 0; i < corpus.sentenceCount(); i++){
+                AnnotatedSentence sentence = (AnnotatedSentence) corpus.getSentence(i);
+                boolean modified = false;
+                for (int j = 0; j < sentence.wordCount(); j++){
+                    AnnotatedWord word = (AnnotatedWord) sentence.getWord(j);
+                    String semantic = word.getSemantic();
+                    if (word.getName() != null && word.getName().equals(clickedWord.getName()) && semantic == null){
+                        wordCount++;
+                        modified = true;
+                    }
+                }
+                if (modified){
+                    fileCount++;
+                }
+            }
+            int result = JOptionPane.showConfirmDialog(null,
+                    wordCount + " words in " + fileCount + " files with text (" + clickedWord.getName() + ") will be modified. Are you sure?",
+                    "",
+                    JOptionPane.YES_NO_OPTION);
+            if (result == JOptionPane.YES_OPTION){
+                for (int i = 0; i < corpus.sentenceCount(); i++){
+                    AnnotatedSentence sentence = (AnnotatedSentence) corpus.getSentence(i);
+                    boolean modified = false;
+                    for (int j = 0; j < sentence.wordCount(); j++){
+                        AnnotatedWord word = (AnnotatedWord) sentence.getWord(j);
+                        String semantic = word.getSemantic();
+                        if (word.getName() != null && word.getName().equals(clickedWord.getName()) && semantic == null){
+                            word.setSemantic(clickedWord.getSemantic());
+                            modified = true;
+                        }
+                    }
+                    if (modified){
+                        sentence.save();
+                    }
+                }
+            }
+        });
+        JMenuItem itemShowUnannotated = addMenuItem(projectMenu, "Show Unannotated Files", KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
+        itemShowUnannotated.addActionListener(e -> {
+            int count = 0;
+            String result = JOptionPane.showInputDialog(null, "How many sentences you want to see:", "",
+                    JOptionPane.PLAIN_MESSAGE);
+            int numberOfSentences = Integer.parseInt(result);
+            for (int i = 0; i < corpus.sentenceCount(); i++){
+                AnnotatedSentence sentence = (AnnotatedSentence) corpus.getSentence(i);
+                for (int j = 0; j < sentence.wordCount(); j++){
+                    AnnotatedWord word = (AnnotatedWord) sentence.getWord(j);
+                    String semantic = word.getSemantic();
+                    if (word.getName() != null && semantic == null){
+                        AnnotatorPanel annotatorPanel = generatePanel(EditorPanel.TURKISH_PHRASE_PATH, sentence.getFileName());
+                        addPanelToFrame(annotatorPanel, sentence.getFileName());
+                        count++;
+                        if (count == numberOfSentences){
+                            return;
+                        }
+                        break;
+                    }
+                }
+            }
+        });
+        JMenuItem itemViewAnnotated = addMenuItem(projectMenu, "View Annotations", KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
+        itemViewAnnotated.addActionListener(e -> {
+            new ViewSemanticAnnotationFrame(corpus, this.wordNet, wordNet);
         });
         this.fsm = fsm;
         this.wordNet = wordNet;
