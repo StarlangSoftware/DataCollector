@@ -166,6 +166,21 @@
                             <finalName>sentence-semantics</finalName>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>sentence-shallow-parse</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <archive>
+                                <manifest>
+                                    <mainClass>DataCollector.Sentence.TestSentenceShallowParseFrame</mainClass>
+                                </manifest>
+                            </archive>
+                            <finalName>sentence-shallow-parse</finalName>
+                        </configuration>
+                    </execution>
                 </executions>
                 <configuration>
                     <descriptorRefs>
