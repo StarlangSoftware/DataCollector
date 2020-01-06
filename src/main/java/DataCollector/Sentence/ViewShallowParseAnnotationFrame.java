@@ -26,10 +26,12 @@ public class ViewShallowParseAnnotationFrame extends JFrame implements ActionLis
             case ID_SORT:
                 data.sort((o1, o2) -> {
                     if (o1.get(2).equals(o2.get(2))){
-                        if (o1.get(1).equals(o2.get(1))){
+                        String[] words1 = o1.get(1).split(" ");
+                        String[] words2 = o2.get(1).split(" ");
+                        if (words1[words1.length - 1].equals(words2[words2.length - 1])){
                             return o1.get(0).compareTo(o2.get(0));
                         } else {
-                            return o1.get(1).compareTo(o2.get(1));
+                            return words1[words1.length - 1].compareTo(words2[words2.length - 1]);
                         }
                     } else {
                         return o1.get(2).compareTo(o2.get(2));
@@ -39,14 +41,16 @@ public class ViewShallowParseAnnotationFrame extends JFrame implements ActionLis
                 break;
             case WORD_SORT:
                 data.sort((o1, o2) -> {
-                    if (o1.get(1).equals(o2.get(1))){
+                    String[] words1 = o1.get(1).split(" ");
+                    String[] words2 = o2.get(1).split(" ");
+                    if (words1[words1.length - 1].equals(words2[words2.length - 1])){
                         if (o1.get(2).equals(o2.get(2))){
                             return o1.get(0).compareTo(o2.get(0));
                         } else {
                             return o1.get(2).compareTo(o2.get(2));
                         }
                     } else {
-                        return o1.get(1).compareTo(o2.get(1));
+                        return words1[words1.length - 1].compareTo(words2[words2.length - 1]);
                     }
                 });
                 JOptionPane.showMessageDialog(this, "Words Sorted!", "Sorting Complete", JOptionPane.INFORMATION_MESSAGE);
@@ -136,13 +140,19 @@ public class ViewShallowParseAnnotationFrame extends JFrame implements ActionLis
     }
 
     private void addRow(int i, AnnotatedSentence sentence, String previousGroup, String previousParse){
-        ArrayList<String> row = new ArrayList<String>();
-        row.add(sentence.getFileName());
-        row.add(previousGroup);
-        row.add(previousParse);
-        row.add(sentence.toWords());
-        row.add("" + i);
-        data.add(row);
+        if (previousGroup != null){
+            ArrayList<String> row = new ArrayList<String>();
+            row.add(sentence.getFileName());
+            row.add(previousGroup);
+            if (previousParse != null){
+                row.add(previousParse);
+            } else {
+                row.add("-");
+            }
+            row.add(sentence.toWords());
+            row.add("" + i);
+            data.add(row);
+        }
     }
 
     private void prepareData(AnnotatedCorpus corpus){
@@ -175,13 +185,13 @@ public class ViewShallowParseAnnotationFrame extends JFrame implements ActionLis
         this.corpus = corpus;
         prepareData(corpus);
         JToolBar toolBar = new JToolBar("ToolBox");
-        JButton idSort = new DrawingButton(ViewSemanticAnnotationFrame.class, this, "sortnumbers", ID_SORT, "Sort by WordNet Id");
+        JButton idSort = new DrawingButton(ViewShallowParseAnnotationFrame.class, this, "sortnumbers", ID_SORT, "Sort by Shallow Parse");
         toolBar.add(idSort);
-        JButton textSort = new DrawingButton(ViewSemanticAnnotationFrame.class, this, "sorttext", WORD_SORT, "Sort by Word");
+        JButton textSort = new DrawingButton(ViewShallowParseAnnotationFrame.class, this, "sorttext", WORD_SORT, "Sort by Word");
         toolBar.add(textSort);
-        JButton copy = new DrawingButton(ViewSemanticAnnotationFrame.class, this, "copy", COPY, "Copy Id");
+        JButton copy = new DrawingButton(ViewShallowParseAnnotationFrame.class, this, "copy", COPY, "Copy Id");
         toolBar.add(copy);
-        JButton paste = new DrawingButton(ViewSemanticAnnotationFrame.class, this, "paste", PASTE, "Paste Id");
+        JButton paste = new DrawingButton(ViewShallowParseAnnotationFrame.class, this, "paste", PASTE, "Paste Id");
         toolBar.add(paste);
         add(toolBar, BorderLayout.PAGE_START);
         toolBar.setVisible(true);
