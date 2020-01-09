@@ -1,7 +1,6 @@
 package DataCollector.Sentence;
 
 import AnnotatedSentence.*;
-import Util.DrawingButton;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -10,18 +9,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class ViewShallowParseAnnotationFrame extends JFrame implements ActionListener {
-    private ArrayList<ArrayList<String>> data;
-    private JTable dataTable;
-    private AnnotatedCorpus corpus;
-    private int selectedRow = -1;
-
-    private static final String ID_SORT = "sortid";
-    private static final String WORD_SORT = "sortword";
-    private static final String COPY = "copy";
-    private static final String PASTE = "paste";
+public class ViewShallowParseAnnotationFrame extends ViewAnnotationFrame implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
+        int groupCount;
         switch (e.getActionCommand()) {
             case ID_SORT:
                 data.sort((o1, o2) -> {
@@ -37,6 +28,14 @@ public class ViewShallowParseAnnotationFrame extends JFrame implements ActionLis
                         return o1.get(2).compareTo(o2.get(2));
                     }
                 });
+                groupCount = 0;
+                data.get(0).set(COLOR_COLUMN_INDEX, "0");
+                for (int i = 1; i < data.size(); i++){
+                    if (!data.get(i).get(2).equals(data.get(i - 1).get(2))){
+                        groupCount++;
+                    }
+                    data.get(i).set(COLOR_COLUMN_INDEX, "" + groupCount);
+                }
                 JOptionPane.showMessageDialog(this, "Words Sorted!", "Sorting Complete", JOptionPane.INFORMATION_MESSAGE);
                 break;
             case WORD_SORT:
@@ -53,6 +52,16 @@ public class ViewShallowParseAnnotationFrame extends JFrame implements ActionLis
                         return words1[words1.length - 1].compareTo(words2[words2.length - 1]);
                     }
                 });
+                groupCount = 0;
+                data.get(0).set(COLOR_COLUMN_INDEX, "0");
+                for (int i = 1; i < data.size(); i++){
+                    String[] words1 = data.get(i).get(1).split(" ");
+                    String[] words2 = data.get(i - 1).get(1).split(" ");
+                    if (!words1[words1.length - 1].equals(words2[words2.length - 1])){
+                        groupCount++;
+                    }
+                    data.get(i).set(COLOR_COLUMN_INDEX, "" + groupCount);
+                }
                 JOptionPane.showMessageDialog(this, "Words Sorted!", "Sorting Complete", JOptionPane.INFORMATION_MESSAGE);
                 break;
             case COPY:
@@ -103,15 +112,7 @@ public class ViewShallowParseAnnotationFrame extends JFrame implements ActionLis
         }
 
         public Object getValueAt(int row, int col) {
-            switch (col) {
-                case 0:
-                case 1:
-                case 2:
-                case 3:
-                    return data.get(row).get(col);
-                default:
-                    return "";
-            }
+            return data.get(row).get(col);
         }
 
         public boolean isCellEditable(int row, int col) {
@@ -151,11 +152,12 @@ public class ViewShallowParseAnnotationFrame extends JFrame implements ActionLis
             }
             row.add(sentence.toWords());
             row.add("" + i);
+            row.add("0");
             data.add(row);
         }
     }
 
-    private void prepareData(AnnotatedCorpus corpus){
+    protected void prepareData(AnnotatedCorpus corpus){
         data = new ArrayList<>();
         for (int i = 0; i < corpus.sentenceCount(); i++){
             AnnotatedSentence sentence = (AnnotatedSentence) corpus.getSentence(i);
@@ -182,19 +184,9 @@ public class ViewShallowParseAnnotationFrame extends JFrame implements ActionLis
     }
 
     public ViewShallowParseAnnotationFrame(AnnotatedCorpus corpus){
-        this.corpus = corpus;
+        super(corpus);
+        COLOR_COLUMN_INDEX = 5;
         prepareData(corpus);
-        JToolBar toolBar = new JToolBar("ToolBox");
-        JButton idSort = new DrawingButton(ViewShallowParseAnnotationFrame.class, this, "sortnumbers", ID_SORT, "Sort by Shallow Parse");
-        toolBar.add(idSort);
-        JButton textSort = new DrawingButton(ViewShallowParseAnnotationFrame.class, this, "sorttext", WORD_SORT, "Sort by Word");
-        toolBar.add(textSort);
-        JButton copy = new DrawingButton(ViewShallowParseAnnotationFrame.class, this, "copy", COPY, "Copy Id");
-        toolBar.add(copy);
-        JButton paste = new DrawingButton(ViewShallowParseAnnotationFrame.class, this, "paste", PASTE, "Paste Id");
-        toolBar.add(paste);
-        add(toolBar, BorderLayout.PAGE_START);
-        toolBar.setVisible(true);
         dataTable = new JTable(new ViewShallowParseAnnotationFrame.TableDataModel());
         dataTable.getColumnModel().getColumn(0).setMinWidth(150);
         dataTable.getColumnModel().getColumn(0).setMaxWidth(150);
@@ -202,13 +194,9 @@ public class ViewShallowParseAnnotationFrame extends JFrame implements ActionLis
         dataTable.getColumnModel().getColumn(1).setMaxWidth(200);
         dataTable.getColumnModel().getColumn(2).setMinWidth(150);
         dataTable.getColumnModel().getColumn(2).setMaxWidth(150);
+        dataTable.setDefaultRenderer(Object.class, new CellRenderer());
         JScrollPane tablePane = new JScrollPane(dataTable);
         add(tablePane, BorderLayout.CENTER);
-        setLocationRelativeTo(null);
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setVisible(true);
     }
-
 
 }
