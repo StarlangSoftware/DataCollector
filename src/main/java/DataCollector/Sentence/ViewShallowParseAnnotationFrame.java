@@ -190,8 +190,7 @@ public class ViewShallowParseAnnotationFrame extends ViewAnnotationFrame impleme
         dataTable = new JTable(new ViewShallowParseAnnotationFrame.TableDataModel());
         dataTable.getColumnModel().getColumn(0).setMinWidth(150);
         dataTable.getColumnModel().getColumn(0).setMaxWidth(150);
-        dataTable.getColumnModel().getColumn(1).setMinWidth(200);
-        dataTable.getColumnModel().getColumn(1).setMaxWidth(200);
+        dataTable.getColumnModel().getColumn(1).setWidth(200);
         dataTable.getColumnModel().getColumn(2).setMinWidth(150);
         dataTable.getColumnModel().getColumn(2).setMaxWidth(150);
         dataTable.setDefaultRenderer(Object.class, new CellRenderer());

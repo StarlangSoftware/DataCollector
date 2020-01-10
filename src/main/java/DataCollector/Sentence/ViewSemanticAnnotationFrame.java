@@ -198,10 +198,8 @@ public class ViewSemanticAnnotationFrame extends ViewAnnotationFrame implements 
         dataTable.getColumnModel().getColumn(2).setMaxWidth(200);
         dataTable.getColumnModel().getColumn(3).setMinWidth(150);
         dataTable.getColumnModel().getColumn(3).setMaxWidth(150);
-        dataTable.getColumnModel().getColumn(4).setMinWidth(200);
-        dataTable.getColumnModel().getColumn(4).setMaxWidth(200);
-        dataTable.getColumnModel().getColumn(5).setMinWidth(300);
-        dataTable.getColumnModel().getColumn(5).setMaxWidth(300);
+        dataTable.getColumnModel().getColumn(4).setWidth(200);
+        dataTable.getColumnModel().getColumn(5).setWidth(300);
         dataTable.setDefaultRenderer(Object.class, new CellRenderer());
         JScrollPane tablePane = new JScrollPane(dataTable);
         add(tablePane, BorderLayout.CENTER);

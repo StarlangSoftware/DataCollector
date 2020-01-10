@@ -22,13 +22,16 @@ public abstract class ViewAnnotationFrame extends JFrame implements ActionListen
     protected int COLOR_COLUMN_INDEX;
 
     public class CellRenderer extends DefaultTableCellRenderer {
-        public Component getTableCellRendererComponent(JTable table, Object value, boolean   isSelected, boolean hasFocus, int row, int column){
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column){
             Component c = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             int groupCount = Integer.parseInt(data.get(row).get(COLOR_COLUMN_INDEX));
             if (groupCount % 2 == 0){
                 c.setBackground(Color.WHITE);
             } else {
                 c.setBackground(Color.LIGHT_GRAY);
+            }
+            if (isSelected){
+                c.setBackground(Color.BLUE);
             }
             return c;
         }
