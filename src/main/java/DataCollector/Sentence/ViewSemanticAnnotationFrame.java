@@ -10,7 +10,9 @@ import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class ViewSemanticAnnotationFrame extends ViewAnnotationFrame implements ActionListener {
     private WordNet domainWordNet, turkish;
@@ -18,17 +20,19 @@ public class ViewSemanticAnnotationFrame extends ViewAnnotationFrame implements 
     @Override
     public void actionPerformed(ActionEvent e) {
         int groupCount;
+        Locale locale = new Locale("tr");
+        Collator collator = Collator.getInstance(locale);
         switch (e.getActionCommand()) {
             case ID_SORT:
                 data.sort((o1, o2) -> {
                     if (o1.get(3).equals(o2.get(3))){
                         if (o1.get(2).equals(o2.get(2))){
-                            return o1.get(0).compareTo(o2.get(0));
+                            return collator.compare(o1.get(0), o2.get(0));
                         } else {
-                            return o1.get(2).compareTo(o2.get(2));
+                            return collator.compare(o1.get(2), o2.get(2));
                         }
                     } else {
-                        return o1.get(3).compareTo(o2.get(3));
+                        return collator.compare(o1.get(3), o2.get(3));
                     }
                 });
                 groupCount = 0;
@@ -45,12 +49,12 @@ public class ViewSemanticAnnotationFrame extends ViewAnnotationFrame implements 
                 data.sort((o1, o2) -> {
                     if (o1.get(2).equals(o2.get(2))){
                         if (o1.get(3).equals(o2.get(3))){
-                            return o1.get(0).compareTo(o2.get(0));
+                            return collator.compare(o1.get(0), o2.get(0));
                         } else {
-                            return o1.get(3).compareTo(o2.get(3));
+                            return collator.compare(o1.get(3), o2.get(3));
                         }
                     } else {
-                        return o1.get(2).compareTo(o2.get(2));
+                        return collator.compare(o1.get(2), o2.get(2));
                     }
                 });
                 groupCount = 0;

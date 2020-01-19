@@ -7,12 +7,16 @@ import javax.swing.table.AbstractTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.Collator;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class ViewShallowParseAnnotationFrame extends ViewAnnotationFrame implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         int groupCount;
+        Locale locale = new Locale("tr");
+        Collator collator = Collator.getInstance(locale);
         switch (e.getActionCommand()) {
             case ID_SORT:
                 data.sort((o1, o2) -> {
@@ -20,12 +24,12 @@ public class ViewShallowParseAnnotationFrame extends ViewAnnotationFrame impleme
                         String[] words1 = o1.get(1).split(" ");
                         String[] words2 = o2.get(1).split(" ");
                         if (words1[words1.length - 1].equals(words2[words2.length - 1])){
-                            return o1.get(0).compareTo(o2.get(0));
+                            return collator.compare(o1.get(0), o2.get(0));
                         } else {
-                            return words1[words1.length - 1].compareTo(words2[words2.length - 1]);
+                            return collator.compare(words1[words1.length - 1], words2[words2.length - 1]);
                         }
                     } else {
-                        return o1.get(2).compareTo(o2.get(2));
+                        return collator.compare(o1.get(2), o2.get(2));
                     }
                 });
                 groupCount = 0;
@@ -44,12 +48,12 @@ public class ViewShallowParseAnnotationFrame extends ViewAnnotationFrame impleme
                     String[] words2 = o2.get(1).split(" ");
                     if (words1[words1.length - 1].equals(words2[words2.length - 1])){
                         if (o1.get(2).equals(o2.get(2))){
-                            return o1.get(0).compareTo(o2.get(0));
+                            return collator.compare(o1.get(0), o2.get(0));
                         } else {
-                            return o1.get(2).compareTo(o2.get(2));
+                            return collator.compare(o1.get(2), o2.get(2));
                         }
                     } else {
-                        return words1[words1.length - 1].compareTo(words2[words2.length - 1]);
+                        return collator.compare(words1[words1.length - 1], words2[words2.length - 1]);
                     }
                 });
                 groupCount = 0;
