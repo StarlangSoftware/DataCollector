@@ -46,7 +46,7 @@
         <dependency>
             <groupId>NlpToolkit</groupId>
             <artifactId>DependencyParser</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.1</version>
         </dependency>
         <dependency>
             <groupId>NlpToolkit</groupId>
@@ -179,6 +179,21 @@
                                 </manifest>
                             </archive>
                             <finalName>sentence-shallow-parse</finalName>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>sentence-dependency</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <configuration>
+                            <archive>
+                                <manifest>
+                                    <mainClass>DataCollector.Sentence.TestSentenceDependencyFrame</mainClass>
+                                </manifest>
+                            </archive>
+                            <finalName>sentence-dependency</finalName>
                         </configuration>
                     </execution>
                 </executions>

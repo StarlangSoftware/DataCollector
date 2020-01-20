@@ -1,14 +1,10 @@
 package DataCollector.Sentence;
 
 import AnnotatedSentence.*;
-import Classification.Instance.Instance;
-import Classification.Model.Model;
 import Corpus.FileDescription;
 import AnnotatedSentence.AnnotatedWord;
 import MorphologicalAnalysis.FsmParse;
 import DataCollector.ParseTree.EditorPanel;
-import DataGenerator.InstanceGenerator.InstanceGenerator;
-import DataGenerator.InstanceGenerator.InstanceNotGenerated;
 import AnnotatedTree.ParseTreeDrawable;
 
 import javax.swing.*;
@@ -24,7 +20,8 @@ public abstract class AnnotatorPanel extends JPanel implements MouseListener, Mo
     protected AnnotatedSentence sentence;
     protected FileDescription fileDescription;
     protected int wordSpace = 60, lineSpace;
-    protected int selectedWordIndex = -1;
+    protected int selectedWordIndex = -1, draggedWordIndex = -1;
+    protected boolean selectionMode = false;
     protected AnnotatedWord clickedWord = null, lastClickedWord = null;
     protected ViewLayerType layerType;
     protected JList list;
@@ -58,6 +55,11 @@ public abstract class AnnotatorPanel extends JPanel implements MouseListener, Mo
                             break;
                         case SHALLOW_PARSE:
                             clickedWord.setShallowParse((String) list.getSelectedValue());
+                            break;
+                        case DEPENDENCY:
+                            clickedWord.setUniversalDependency(draggedWordIndex + 1, ((String) list.getSelectedValue()).toLowerCase());
+                            draggedWordIndex = -1;
+                            selectionMode = false;
                             break;
                     }
                     sentence.writeToFile(new File(fileDescription.getFileName()));
@@ -305,6 +307,9 @@ public abstract class AnnotatorPanel extends JPanel implements MouseListener, Mo
                             Graphics2D g2 = (Graphics2D)g;
                             g2.setColor(Color.MAGENTA);
                             g2.draw(cubicCurve);
+                            g.drawOval(startX - 4, startY - 4, 8, 8);
+                            g.drawLine(toX, startY, toX - 5, startY - 5);
+                            g.drawLine(toX, startY, toX + 5, startY - 5);
                         } else {
                             g.drawString("root", currentLeft + maxSize / 2 - g.getFontMetrics().stringWidth("root") / 2, lineIndex * lineSpace);
                             g.setColor(Color.MAGENTA);
