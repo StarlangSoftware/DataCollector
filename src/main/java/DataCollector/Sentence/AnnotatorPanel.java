@@ -57,7 +57,12 @@ public abstract class AnnotatorPanel extends JPanel implements MouseListener, Mo
                             clickedWord.setShallowParse((String) list.getSelectedValue());
                             break;
                         case DEPENDENCY:
-                            clickedWord.setUniversalDependency(draggedWordIndex + 1, ((String) list.getSelectedValue()).toLowerCase());
+                            String relation = ((String) list.getSelectedValue()).toLowerCase();
+                            if (relation.equals("root")){
+                                clickedWord.setUniversalDependency(0, relation);
+                            } else {
+                                clickedWord.setUniversalDependency(draggedWordIndex + 1, relation);
+                            }
                             draggedWordIndex = -1;
                             selectionMode = false;
                             break;
