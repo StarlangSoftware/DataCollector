@@ -14,7 +14,10 @@ import AnnotatedTree.ParseTreeDrawable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.CubicCurve2D;
+import java.awt.geom.Point2D;
 import java.io.File;
+import java.util.ArrayList;
 
 public abstract class AnnotatorPanel extends JPanel implements MouseListener, MouseMotionListener {
     private JTextField editText;
@@ -196,22 +199,38 @@ public abstract class AnnotatorPanel extends JPanel implements MouseListener, Mo
 
     protected void paintComponent(Graphics g){
         super.paintComponent(g);
+        Point2D.Double pointCtrl1, pointCtrl2, pointStart, pointEnd;
+        CubicCurve2D.Double cubicCurve;
         AnnotatedWord previousWord = null, word;
-        int lineIndex = 0, currentLeft = wordSpace;
+        int lineIndex, currentLeft = wordSpace, maxSize;
+        ArrayList<Integer> wordSize = new ArrayList<>();
+        ArrayList<Integer> wordTotal = new ArrayList<>();
+        if (layerType == ViewLayerType.DEPENDENCY){
+            for (int i = 0; i < sentence.wordCount(); i++) {
+                wordTotal.add(currentLeft);
+                word = (AnnotatedWord) sentence.getWord(i);
+                maxSize = maxLayerLength(word, g);
+                wordSize.add(maxSize);
+                currentLeft += maxSize + wordSpace;
+            }
+            lineIndex = 1;
+        } else {
+            lineIndex = 0;
+        }
         boolean bold = false;
         Font currentFont = g.getFont();
-        String prediction, correct = null;
+        String correct;
         setLineSpace();
+        currentLeft = wordSpace;
         for (int i = 0; i < sentence.wordCount(); i++){
             if (i > 0){
                 previousWord = (AnnotatedWord) sentence.getWord(i - 1);
             }
             word = (AnnotatedWord) sentence.getWord(i);
-            prediction = null;
-            int maxSize = maxLayerLength(word, g);
+            maxSize = maxLayerLength(word, g);
             int stringWidth = g.getFontMetrics().stringWidth(word.getName());
             int stringHeight = (int) g.getFontMetrics().getStringBounds(word.getName(), g).getHeight();
-            if (maxSize + currentLeft >= getWidth()){
+            if (maxSize + currentLeft >= getWidth() && layerType != ViewLayerType.DEPENDENCY){
                 lineIndex++;
                 currentLeft = wordSpace;
             }
@@ -270,14 +289,29 @@ public abstract class AnnotatorPanel extends JPanel implements MouseListener, Mo
                         g.drawString(correct, currentLeft, (lineIndex + 1) * lineSpace + 30);
                     }
                     break;
-            }
-            if (prediction != null){
-                if (correct != null && correct.equals(prediction)){
-                    g.setColor(Color.RED);
-                } else {
-                    g.setColor(Color.MAGENTA);
-                }
-                g.drawString(prediction, currentLeft, (lineIndex + 1) * lineSpace + 45);
+                case DEPENDENCY:
+                    if (word.getUniversalDependency() != null){
+                        correct = word.getUniversalDependency().toString();
+                        if (word.getUniversalDependency().to() != 0){
+                            int startX = currentLeft + maxSize / 2;
+                            int startY = lineIndex * lineSpace + 50;
+                            pointStart = new Point2D.Double(startX, startY);
+                            int toX = wordTotal.get(word.getUniversalDependency().to() - 1) + wordSize.get(word.getUniversalDependency().to() - 1) / 2;
+                            g.drawString(correct, (startX + toX) / 2 - g.getFontMetrics().stringWidth(correct) / 2, lineIndex * lineSpace);
+                            pointCtrl1 = new Point2D.Double(startX, startY - 30);
+                            pointCtrl2 = new Point2D.Double(toX, startY - 30);
+                            pointEnd = new Point2D.Double(toX, startY);
+                            cubicCurve = new CubicCurve2D.Double(pointStart.x, pointStart.y, pointCtrl1.x, pointCtrl1.y, pointCtrl2.x, pointCtrl2.y, pointEnd.x, pointEnd.y);
+                            Graphics2D g2 = (Graphics2D)g;
+                            g2.setColor(Color.MAGENTA);
+                            g2.draw(cubicCurve);
+                        } else {
+                            g.drawString("root", currentLeft + maxSize / 2 - g.getFontMetrics().stringWidth("root") / 2, lineIndex * lineSpace);
+                            g.setColor(Color.MAGENTA);
+                            g.drawLine(currentLeft + maxSize / 2, lineIndex * lineSpace + 50, currentLeft + maxSize / 2, lineIndex * lineSpace + 15);
+                        }
+                    }
+                    break;
             }
             currentLeft += maxSize + wordSpace;
         }
