@@ -3,7 +3,6 @@ package DataCollector.Sentence;
 import AnnotatedSentence.AnnotatedCorpus;
 import AnnotatedSentence.AnnotatedSentence;
 import AnnotatedSentence.AnnotatedWord;
-import WordNet.*;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -14,8 +13,7 @@ import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Locale;
 
-public class ViewSemanticAnnotationFrame extends ViewAnnotationFrame implements ActionListener {
-    private WordNet domainWordNet, turkish;
+public class ViewDependencyAnnotationFrame extends ViewAnnotationFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -25,20 +23,20 @@ public class ViewSemanticAnnotationFrame extends ViewAnnotationFrame implements 
         switch (e.getActionCommand()) {
             case ID_SORT:
                 data.sort((o1, o2) -> {
-                    if (o1.get(3).equals(o2.get(3))){
+                    if (o1.get(4).equals(o2.get(4))){
                         if (o1.get(2).equals(o2.get(2))){
                             return collator.compare(o1.get(0), o2.get(0));
                         } else {
                             return collator.compare(o1.get(2), o2.get(2));
                         }
                     } else {
-                        return collator.compare(o1.get(3), o2.get(3));
+                        return collator.compare(o1.get(4), o2.get(4));
                     }
                 });
                 groupCount = 0;
                 data.get(0).set(COLOR_COLUMN_INDEX, "0");
                 for (int i = 1; i < data.size(); i++){
-                    if (!data.get(i).get(3).equals(data.get(i - 1).get(3))){
+                    if (!data.get(i).get(4).equals(data.get(i - 1).get(4))){
                         groupCount++;
                     }
                     data.get(i).set(COLOR_COLUMN_INDEX, "" + groupCount);
@@ -48,10 +46,10 @@ public class ViewSemanticAnnotationFrame extends ViewAnnotationFrame implements 
             case WORD_SORT:
                 data.sort((o1, o2) -> {
                     if (o1.get(2).equals(o2.get(2))){
-                        if (o1.get(3).equals(o2.get(3))){
+                        if (o1.get(4).equals(o2.get(4))){
                             return collator.compare(o1.get(0), o2.get(0));
                         } else {
-                            return collator.compare(o1.get(3), o2.get(3));
+                            return collator.compare(o1.get(4), o2.get(4));
                         }
                     } else {
                         return collator.compare(o1.get(2), o2.get(2));
@@ -77,7 +75,7 @@ public class ViewSemanticAnnotationFrame extends ViewAnnotationFrame implements 
             case PASTE:
                 if (selectedRow != -1){
                     for (int rowNo : dataTable.getSelectedRows()){
-                        updateSemantic(rowNo, data.get(selectedRow).get(3));
+                        updateDependency(rowNo, Integer.parseInt(data.get(selectedRow).get(3)), data.get(selectedRow).get(4));
                     }
                 }
                 break;
@@ -104,12 +102,10 @@ public class ViewSemanticAnnotationFrame extends ViewAnnotationFrame implements 
                 case 2:
                     return "Word";
                 case 3:
-                    return "Sense Id";
+                    return "Dependent Word Index";
                 case 4:
-                    return "SynSet";
+                    return "Dependency Type";
                 case 5:
-                    return "Sense Definition";
-                case 6:
                     return "Sentence";
                 default:
                     return "";
@@ -125,30 +121,25 @@ public class ViewSemanticAnnotationFrame extends ViewAnnotationFrame implements 
         }
 
         public boolean isCellEditable(int row, int col) {
-            return col == 3;
+            return col == 3 || col == 4;
         }
 
         public void setValueAt(Object value, int row, int col) {
             if (col == 3 && !data.get(row).get(3).equals(value)) {
-                updateSemantic(row, (String) value);
+                updateDependency(row, Integer.parseInt((String)value), data.get(row).get(4));
+            }
+            if (col == 4 && !data.get(row).get(4).equals(value)) {
+                updateDependency(row, Integer.parseInt(data.get(row).get(3)), (String) value);
             }
         }
     }
 
-    private void updateSemantic(int row, String newValue){
-        data.get(row).set(3, newValue);
+    private void updateDependency(int row, int to, String newDependency){
+        data.get(row).set(4, newDependency);
         AnnotatedSentence sentence = (AnnotatedSentence) corpus.getSentence(Integer.parseInt(data.get(row).get(COLOR_COLUMN_INDEX - 1)));
         AnnotatedWord word = (AnnotatedWord) sentence.getWord(Integer.parseInt(data.get(row).get(1)) - 1);
-        word.setSemantic(newValue);
+        word.setUniversalDependency(to, newDependency);
         sentence.save();
-        SynSet synSet = domainWordNet.getSynSetWithId(word.getSemantic());
-        if (synSet == null){
-            synSet = turkish.getSynSetWithId(word.getSemantic());
-        }
-        if (synSet != null){
-            data.get(row).set(4, synSet.getSynonym().toString());
-            data.get(row).set(5, synSet.getLongDefinition());
-        }
     }
 
     protected void prepareData(AnnotatedCorpus corpus){
@@ -161,21 +152,10 @@ public class ViewSemanticAnnotationFrame extends ViewAnnotationFrame implements 
                 row.add(sentence.getFileName());
                 row.add("" + (j + 1));
                 row.add(word.getName());
-                if (word.getSemantic() != null){
-                    row.add(word.getSemantic());
-                    SynSet synSet = domainWordNet.getSynSetWithId(word.getSemantic());
-                    if (synSet == null){
-                        synSet = turkish.getSynSetWithId(word.getSemantic());
-                    }
-                    if (synSet != null){
-                        row.add(synSet.getSynonym().toString());
-                        row.add(synSet.getLongDefinition());
-                    } else {
-                        row.add("-");
-                        row.add("-");
-                    }
+                if (word.getUniversalDependency() != null){
+                    row.add("" + word.getUniversalDependency().to());
+                    row.add(word.getUniversalDependency().toString());
                 } else {
-                    row.add("-");
                     row.add("-");
                     row.add("-");
                 }
@@ -186,23 +166,21 @@ public class ViewSemanticAnnotationFrame extends ViewAnnotationFrame implements 
             }
         }
     }
-
-    public ViewSemanticAnnotationFrame(AnnotatedCorpus corpus, WordNet domainWordNet, WordNet turkish){
+    public ViewDependencyAnnotationFrame(AnnotatedCorpus corpus){
         super(corpus);
-        this.domainWordNet = domainWordNet;
-        this.turkish = turkish;
-        COLOR_COLUMN_INDEX = 8;
+        COLOR_COLUMN_INDEX = 7;
         prepareData(corpus);
-        dataTable = new JTable(new TableDataModel());
+        dataTable = new JTable(new ViewDependencyAnnotationFrame.TableDataModel());
         dataTable.getColumnModel().getColumn(0).setMinWidth(150);
         dataTable.getColumnModel().getColumn(0).setMaxWidth(150);
         dataTable.getColumnModel().getColumn(1).setMinWidth(60);
         dataTable.getColumnModel().getColumn(1).setMaxWidth(60);
         dataTable.getColumnModel().getColumn(2).setMinWidth(200);
         dataTable.getColumnModel().getColumn(2).setMaxWidth(200);
-        dataTable.getColumnModel().getColumn(3).setMinWidth(150);
-        dataTable.getColumnModel().getColumn(3).setMaxWidth(150);
-        dataTable.getColumnModel().getColumn(4).setWidth(200);
+        dataTable.getColumnModel().getColumn(3).setMinWidth(60);
+        dataTable.getColumnModel().getColumn(3).setMaxWidth(60);
+        dataTable.getColumnModel().getColumn(4).setMinWidth(100);
+        dataTable.getColumnModel().getColumn(4).setMaxWidth(100);
         dataTable.getColumnModel().getColumn(5).setWidth(300);
         dataTable.setDefaultRenderer(Object.class, new CellRenderer());
         JScrollPane tablePane = new JScrollPane(dataTable);

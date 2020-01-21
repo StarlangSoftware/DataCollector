@@ -302,19 +302,20 @@ public abstract class AnnotatorPanel extends JPanel implements MouseListener, Mo
                         if (word.getUniversalDependency().to() != 0){
                             int startX = currentLeft + maxSize / 2;
                             int startY = lineIndex * lineSpace + 50;
-                            pointStart = new Point2D.Double(startX, startY);
                             int toX = wordTotal.get(word.getUniversalDependency().to() - 1) + wordSize.get(word.getUniversalDependency().to() - 1) / 2;
-                            g.drawString(correct, (startX + toX) / 2 - g.getFontMetrics().stringWidth(correct) / 2, lineIndex * lineSpace);
-                            pointCtrl1 = new Point2D.Double(startX, startY - 30);
-                            pointCtrl2 = new Point2D.Double(toX, startY - 30);
-                            pointEnd = new Point2D.Double(toX, startY);
+                            pointEnd = new Point2D.Double(startX, startY);
+                            pointStart = new Point2D.Double(toX, startY);
+                            int distance = Math.abs(word.getUniversalDependency().to() - 1 - i);
+                            g.drawString(correct, ((int) (pointStart.x + pointEnd.x) / 2) - g.getFontMetrics().stringWidth(correct) / 2, (int) (pointStart.y + 7 - 8 * distance));
+                            pointCtrl1 = new Point2D.Double(pointStart.x, pointStart.y - 10 - 10 * distance);
+                            pointCtrl2 = new Point2D.Double(pointEnd.x, pointEnd.y - 10 - 10 * distance);
                             cubicCurve = new CubicCurve2D.Double(pointStart.x, pointStart.y, pointCtrl1.x, pointCtrl1.y, pointCtrl2.x, pointCtrl2.y, pointEnd.x, pointEnd.y);
                             Graphics2D g2 = (Graphics2D)g;
                             g2.setColor(Color.MAGENTA);
                             g2.draw(cubicCurve);
-                            g.drawOval(startX - 4, startY - 4, 8, 8);
-                            g.drawLine(toX, startY, toX - 5, startY - 5);
-                            g.drawLine(toX, startY, toX + 5, startY - 5);
+                            g.drawOval((int) pointStart.x - 4, (int) pointStart.y - 4, 8, 8);
+                            g.drawLine((int) pointEnd.x, (int) pointEnd.y, (int) pointEnd.x - 5, (int) pointEnd.y - 5);
+                            g.drawLine((int) pointEnd.x, (int) pointEnd.y, (int) pointEnd.x + 5, (int) pointEnd.y - 5);
                         } else {
                             g.drawString("root", currentLeft + maxSize / 2 - g.getFontMetrics().stringWidth("root") / 2, lineIndex * lineSpace);
                             g.setColor(Color.MAGENTA);
