@@ -32,7 +32,7 @@ public class SentenceMorphologicalAnalyzerFrame extends AnnotatorFrame{
                 properties.load(new FileInputStream(new File("config.properties")));
                 String domainPrefix = properties.getProperty("domainPrefix");
                 String domainDictionaryFileName = domainPrefix + "_dictionary.txt";
-                String rootWordStatisticsFileName = domainPrefix + "_statistics.bin";
+                String rootWordStatisticsFileName = domainPrefix + "_statistics.txt";
                 this.fsm = new FsmMorphologicalAnalyzer(domainDictionaryFileName);
                 turkishSentenceAutoDisambiguator = new TurkishSentenceAutoDisambiguator(this.fsm, new RootWordStatistics(new FileInputStream(rootWordStatisticsFileName)));
             } catch (IOException f) {
@@ -46,7 +46,7 @@ public class SentenceMorphologicalAnalyzerFrame extends AnnotatorFrame{
         autoAnalysisDetectionOption = new JCheckBox("Auto Morphological Disambiguation", false);
         toolBar.add(autoAnalysisDetectionOption);
         this.fsm = fsm;
-        turkishSentenceAutoDisambiguator = new TurkishSentenceAutoDisambiguator(new RootWordStatistics("rootwordstatistics.bin"));
+        turkishSentenceAutoDisambiguator = new TurkishSentenceAutoDisambiguator(new RootWordStatistics("penntreebank_statistics.txt"));
     }
 
     @Override
