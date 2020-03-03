@@ -302,18 +302,24 @@ public abstract class AnnotatorPanel extends JPanel implements MouseListener, Mo
                         if (word.getUniversalDependency().to() != 0){
                             int startX = currentLeft + maxSize / 2;
                             int startY = lineIndex * lineSpace + 50;
-                            int toX = wordTotal.get(word.getUniversalDependency().to() - 1) + wordSize.get(word.getUniversalDependency().to() - 1) / 2;
+                            int added;
+                            int distance = word.getUniversalDependency().to() - 1 - i;
+                            if (distance < 0){
+                                added = (sentence.wordCount() - word.getUniversalDependency().to() - Math.abs(distance) + 1) * 5;
+                            } else {
+                                added = (distance - word.getUniversalDependency().to()) * 6;
+                            }
+                            int toX = wordTotal.get(word.getUniversalDependency().to() - 1) + wordSize.get(word.getUniversalDependency().to() - 1) / 2 + added;
                             pointEnd = new Point2D.Double(startX, startY);
                             pointStart = new Point2D.Double(toX, startY);
-                            int distance = Math.abs(word.getUniversalDependency().to() - 1 - i);
-                            g.drawString(correct, ((int) (pointStart.x + pointEnd.x) / 2) - g.getFontMetrics().stringWidth(correct) / 2, (int) (pointStart.y + 7 - 8 * distance));
-                            pointCtrl1 = new Point2D.Double(pointStart.x, pointStart.y - 10 - 10 * distance);
-                            pointCtrl2 = new Point2D.Double(pointEnd.x, pointEnd.y - 10 - 10 * distance);
+                            g.drawString(correct, ((int) (pointStart.x + pointEnd.x) / 2) - g.getFontMetrics().stringWidth(correct) / 2, (int) (pointStart.y + 7 - 8 * Math.abs(distance)));
+                            pointCtrl1 = new Point2D.Double(pointStart.x, pointStart.y - 10 - 10 * Math.abs(distance));
+                            pointCtrl2 = new Point2D.Double(pointEnd.x, pointEnd.y - 10 - 10 * Math.abs(distance));
                             cubicCurve = new CubicCurve2D.Double(pointStart.x, pointStart.y, pointCtrl1.x, pointCtrl1.y, pointCtrl2.x, pointCtrl2.y, pointEnd.x, pointEnd.y);
                             Graphics2D g2 = (Graphics2D)g;
                             g2.setColor(Color.MAGENTA);
                             g2.draw(cubicCurve);
-                            g.drawOval((int) pointStart.x - 4, (int) pointStart.y - 4, 8, 8);
+                            g.drawOval((int) pointStart.x - 2, (int) pointStart.y - 2, 4, 4);
                             g.drawLine((int) pointEnd.x, (int) pointEnd.y, (int) pointEnd.x - 5, (int) pointEnd.y - 5);
                             g.drawLine((int) pointEnd.x, (int) pointEnd.y, (int) pointEnd.x + 5, (int) pointEnd.y - 5);
                         } else {
