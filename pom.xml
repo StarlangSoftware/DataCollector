@@ -86,12 +86,12 @@
         <dependency>
             <groupId>NlpToolkit</groupId>
             <artifactId>WordNet</artifactId>
-            <version>1.0.24</version>
+            <version>1.0.25</version>
         </dependency>
         <dependency>
             <groupId>NlpToolkit</groupId>
             <artifactId>MorphologicalDisambiguation</artifactId>
-            <version>1.0.8</version>
+            <version>1.0.9</version>
         </dependency>
         <dependency>
             <groupId>NlpToolkit</groupId>

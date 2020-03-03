@@ -326,7 +326,11 @@ public abstract class AnnotatorPanel extends JPanel implements MouseListener, Mo
             }
             currentLeft += maxSize + wordSpace;
         }
-        setPreferredSize(new Dimension((int) getPreferredSize().getWidth(), (lineIndex + 2) * lineSpace));
+        if (layerType == ViewLayerType.DEPENDENCY){
+            setPreferredSize(new Dimension(currentLeft, (int) getPreferredSize().getHeight()));
+        } else {
+            setPreferredSize(new Dimension((int) getPreferredSize().getWidth(), (lineIndex + 2) * lineSpace));
+        }
         getParent().invalidate();
     }
 
