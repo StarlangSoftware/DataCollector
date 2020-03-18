@@ -28,7 +28,7 @@ public class SentenceDependencyPanel extends AnnotatorPanel {
             list.setVisible(true);
             pane.setVisible(true);
             pane.getVerticalScrollBar().setValue(0);
-            pane.setBounds((((AnnotatedWord) sentence.getWord(selectedWordIndex)).getArea().x + ((AnnotatedWord) sentence.getWord(draggedWordIndex)).getArea().x) / 2, ((AnnotatedWord) sentence.getWord(selectedWordIndex)).getArea().y + 100, 80, 120);
+            pane.setBounds((((AnnotatedWord) sentence.getWord(selectedWordIndex)).getArea().x + ((AnnotatedWord) sentence.getWord(draggedWordIndex)).getArea().x) / 2, ((AnnotatedWord) sentence.getWord(selectedWordIndex)).getArea().y + 40, 120, 480);
         }
         ((AnnotatedWord)sentence.getWord(selectedWordIndex)).setSelected(false);
         dragged = false;
