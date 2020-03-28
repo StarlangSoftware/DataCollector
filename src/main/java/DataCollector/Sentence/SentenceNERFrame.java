@@ -6,7 +6,7 @@ public class SentenceNERFrame extends AnnotatorFrame {
     private JCheckBox autoNERDetectionOption;
 
     public SentenceNERFrame(){
-        super("ner");
+        super();
         autoNERDetectionOption = new JCheckBox("Auto Named Entity Recognition", false);
         toolBar.add(autoNERDetectionOption);
     }

@@ -11,7 +11,7 @@ public class SentencePropbankPredicateFrame extends AnnotatorFrame {
     private WordNet wordNet;
 
     public SentencePropbankPredicateFrame() {
-        super("propbank");
+        super();
         autoPredicateDetectionOption = new JCheckBox("Auto Predicate Detection", false);
         wordNet = new WordNet();
         toolBar.add(autoPredicateDetectionOption);

@@ -11,7 +11,7 @@ import java.io.File;
 public class SentenceShallowParseFrame extends AnnotatorFrame{
 
     public SentenceShallowParseFrame(){
-        super("shallowparse");
+        super();
         AnnotatedCorpus corpus;
         corpus = new AnnotatedCorpus(new File(EditorPanel.TURKISH_PHRASE_PATH));
         JMenuItem itemViewAnnotated = addMenuItem(projectMenu, "View Annotations", KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));

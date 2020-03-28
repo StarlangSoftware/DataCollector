@@ -21,7 +21,7 @@ public class SentenceSemanticFrame extends AnnotatorFrame {
     private HashMap<String, HashSet<String>> exampleSentences;
 
     public SentenceSemanticFrame(final FsmMorphologicalAnalyzer fsm, final WordNet wordNet){
-        super("semantic");
+        super();
         exampleSentences = new HashMap<>();
         AnnotatedCorpus corpus;
         corpus = new AnnotatedCorpus(new File(EditorPanel.TURKISH_PHRASE_PATH));

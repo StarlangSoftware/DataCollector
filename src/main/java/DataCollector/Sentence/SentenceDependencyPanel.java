@@ -13,6 +13,7 @@ import java.awt.geom.Point2D;
 public class SentenceDependencyPanel extends AnnotatorPanel {
     private boolean dragged = false;
     private int dragX = -1, dragY = -1;
+    private boolean canBeDeleted = false;
 
     public SentenceDependencyPanel(String currentPath, String rawFileName) {
         super(currentPath, rawFileName, ViewLayerType.DEPENDENCY);
@@ -20,15 +21,27 @@ public class SentenceDependencyPanel extends AnnotatorPanel {
 
     public void mouseReleased(MouseEvent mouseEvent) {
         if (draggedWordIndex != -1) {
-            int selectedIndex = populateLeaf(sentence, selectedWordIndex);
-            if (selectedIndex != -1){
-                list.setValueIsAdjusting(true);
-                list.setSelectedIndex(selectedIndex);
+            if (draggedWordIndex == selectedWordIndex){
+                if (canBeDeleted){
+                    sentence.removeWord(selectedWordIndex);
+                    sentence.save();
+                    selectedWordIndex = -1;
+                    selectionMode = false;
+                    dragged = false;
+                    this.repaint();
+                    return;
+                }
+            } else {
+                int selectedIndex = populateLeaf(sentence, selectedWordIndex);
+                if (selectedIndex != -1){
+                    list.setValueIsAdjusting(true);
+                    list.setSelectedIndex(selectedIndex);
+                }
+                list.setVisible(true);
+                pane.setVisible(true);
+                pane.getVerticalScrollBar().setValue(0);
+                pane.setBounds((((AnnotatedWord) sentence.getWord(selectedWordIndex)).getArea().x + ((AnnotatedWord) sentence.getWord(draggedWordIndex)).getArea().x) / 2, ((AnnotatedWord) sentence.getWord(selectedWordIndex)).getArea().y + 20, 120, 440);
             }
-            list.setVisible(true);
-            pane.setVisible(true);
-            pane.getVerticalScrollBar().setValue(0);
-            pane.setBounds((((AnnotatedWord) sentence.getWord(selectedWordIndex)).getArea().x + ((AnnotatedWord) sentence.getWord(draggedWordIndex)).getArea().x) / 2, ((AnnotatedWord) sentence.getWord(selectedWordIndex)).getArea().y + 20, 120, 440);
         }
         ((AnnotatedWord)sentence.getWord(selectedWordIndex)).setSelected(false);
         dragged = false;
@@ -63,6 +76,10 @@ public class SentenceDependencyPanel extends AnnotatorPanel {
         }
     }
 
+    public void canBeDeleted(boolean canBeDeleted){
+        this.canBeDeleted = canBeDeleted;
+    }
+
     public void mouseClicked(MouseEvent mouseEvent) {
         selectionMode = false;
         list.setVisible(false);
@@ -74,11 +91,9 @@ public class SentenceDependencyPanel extends AnnotatorPanel {
         for (int i = 0; i < sentence.wordCount(); i++){
             AnnotatedWord word = (AnnotatedWord) sentence.getWord(i);
             if (word.getArea().contains(e.getX(), e.getY())){
-                if (i != selectedWordIndex){
-                    draggedWordIndex = i;
-                    repaint();
-                    return;
-                }
+                draggedWordIndex = i;
+                repaint();
+                return;
             }
         }
         if (selectedWordIndex != -1){

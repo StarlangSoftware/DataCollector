@@ -24,7 +24,7 @@ public class SentenceMorphologicalAnalyzerFrame extends AnnotatorFrame{
     private TurkishSentenceAutoDisambiguator turkishSentenceAutoDisambiguator;
 
     public SentenceMorphologicalAnalyzerFrame(final FsmMorphologicalAnalyzer fsm){
-        super("mor");
+        super();
         JMenuItem itemUpdateDictionary = addMenuItem(projectMenu, "Update Analyzer", KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
         itemUpdateDictionary.addActionListener(e -> {
             Properties properties = new Properties();

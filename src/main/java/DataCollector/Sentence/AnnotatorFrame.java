@@ -1,18 +1,13 @@
 package DataCollector.Sentence;
 
 import AnnotatedSentence.AnnotatedWord;
-import Classification.Model.Model;
 import DataCollector.*;
 import DataCollector.ParseTree.EditorPanel;
 import Util.DrawingButton;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -25,12 +20,8 @@ public abstract class AnnotatorFrame extends DataCollector {
      * fastfastbackward, and fastfastforward. It then gets the list of files and loops through them, if there has been some
      * trained models it adds them to the model {@link JComboBox}. Then, adds actions to this {@link JComboBox} in order to
      * select project and annotation files.
-     *
-     * @param prefix Is used to chose models start with that prefix.
      */
-    public AnnotatorFrame(String prefix) {
-        FileInputStream inFile;
-        ObjectInputStream inObject;
+    public AnnotatorFrame() {
         JButton button;
         button = new DrawingButton(DataCollector.class, this, "fastfastbackward", FAST_FAST_BACKWARD, "Previous 100 Sentence");
         button.setVisible(true);

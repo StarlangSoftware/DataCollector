@@ -11,7 +11,7 @@ public class SentencePropbankArgumentFrame extends AnnotatorFrame{
     private WordNet wordNet;
 
     public SentencePropbankArgumentFrame(final WordNet wordNet) {
-        super("propbank");
+        super();
         autoArgumentDetectionOption = new JCheckBox("Auto Argument Detection", false);
         toolBar.add(autoArgumentDetectionOption);
         this.wordNet = wordNet;
