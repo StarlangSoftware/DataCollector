@@ -14,7 +14,6 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 
 public class SentenceDependencyFrame extends AnnotatorFrame {
-    private JCheckBox wordDeleteOption;
 
     @Override
     protected AnnotatorPanel generatePanel(String currentPath, String rawFileName) {
@@ -23,17 +22,6 @@ public class SentenceDependencyFrame extends AnnotatorFrame {
 
     public SentenceDependencyFrame(){
         super();
-        wordDeleteOption = new JCheckBox("Delete Word", false);
-        wordDeleteOption.addChangeListener(new ChangeListener() {
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                for (int i = 0; i < projectPane.getTabCount(); i++){
-                    SentenceDependencyPanel current = (SentenceDependencyPanel) ((JScrollPane) projectPane.getComponentAt(i)).getViewport().getView();
-                    current.canBeDeleted(wordDeleteOption.isSelected());
-                }
-            }
-        });
-        toolBar.add(wordDeleteOption);
         AnnotatedCorpus corpus;
         corpus = new AnnotatedCorpus(new File(EditorPanel.TURKISH_PHRASE_PATH));
         JMenuItem itemShowUnannotated = addMenuItem(projectMenu, "Show Unannotated Files", KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
