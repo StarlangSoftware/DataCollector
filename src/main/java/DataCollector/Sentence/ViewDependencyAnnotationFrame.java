@@ -18,7 +18,7 @@ public class ViewDependencyAnnotationFrame extends ViewAnnotationFrame implement
         if (PASTE.equals(e.getActionCommand())) {
             if (selectedRow != -1) {
                 for (int rowNo : dataTable.getSelectedRows()) {
-                    updateDependency(rowNo, Integer.parseInt(data.get(selectedRow).get(3)), data.get(selectedRow).get(TAG_INDEX));
+                    updateDependencyTag(rowNo, data.get(selectedRow).get(TAG_INDEX));
                 }
             }
         }
@@ -52,20 +52,33 @@ public class ViewDependencyAnnotationFrame extends ViewAnnotationFrame implement
 
         public void setValueAt(Object value, int row, int col) {
             if (col == 3 && !data.get(row).get(3).equals(value)) {
-                updateDependency(row, Integer.parseInt((String)value), data.get(row).get(TAG_INDEX));
+                updateDependencyTo(row, Integer.parseInt((String)value));
+                dataTable.invalidate();
             }
             if (col == TAG_INDEX && !data.get(row).get(TAG_INDEX).equals(value)) {
-                updateDependency(row, Integer.parseInt(data.get(row).get(3)), (String) value);
+                updateDependencyTag(row, (String) value);
             }
         }
     }
 
-    private void updateDependency(int row, int to, String newDependency){
+    private void updateDependencyTo(int row, int to){
+        data.get(row).set(3, to + "");
+        AnnotatedSentence sentence = (AnnotatedSentence) corpus.getSentence(Integer.parseInt(data.get(row).get(COLOR_COLUMN_INDEX - 1)));
+        AnnotatedWord word = (AnnotatedWord) sentence.getWord(Integer.parseInt(data.get(row).get(WORD_POS_INDEX)) - 1);
+        if (word.getUniversalDependency() != null){
+            word.setUniversalDependency(to, word.getUniversalDependency().toString());
+            sentence.save();
+        }
+    }
+
+    private void updateDependencyTag(int row, String newDependency){
         data.get(row).set(TAG_INDEX, newDependency);
         AnnotatedSentence sentence = (AnnotatedSentence) corpus.getSentence(Integer.parseInt(data.get(row).get(COLOR_COLUMN_INDEX - 1)));
         AnnotatedWord word = (AnnotatedWord) sentence.getWord(Integer.parseInt(data.get(row).get(WORD_POS_INDEX)) - 1);
-        word.setUniversalDependency(to, newDependency);
-        sentence.save();
+        if (word.getUniversalDependency() != null){
+            word.setUniversalDependency(word.getUniversalDependency().to(), newDependency);
+            sentence.save();
+        }
     }
 
     protected void prepareData(AnnotatedCorpus corpus){
