@@ -18,7 +18,9 @@ public class ViewDependencyAnnotationFrame extends ViewAnnotationFrame implement
         if (PASTE.equals(e.getActionCommand())) {
             if (selectedRow != -1) {
                 for (int rowNo : dataTable.getSelectedRows()) {
-                    updateDependencyTag(rowNo, data.get(selectedRow).get(TAG_INDEX));
+                    if (!updateDependencyTag(rowNo, data.get(selectedRow).get(TAG_INDEX))){
+                        JOptionPane.showMessageDialog(this, "No Dependency Defined Before", "Warning", JOptionPane.INFORMATION_MESSAGE);
+                    }
                 }
             }
         }
@@ -62,23 +64,25 @@ public class ViewDependencyAnnotationFrame extends ViewAnnotationFrame implement
     }
 
     private void updateDependencyTo(int row, int to){
-        data.get(row).set(3, to + "");
         AnnotatedSentence sentence = (AnnotatedSentence) corpus.getSentence(Integer.parseInt(data.get(row).get(COLOR_COLUMN_INDEX - 1)));
         AnnotatedWord word = (AnnotatedWord) sentence.getWord(Integer.parseInt(data.get(row).get(WORD_POS_INDEX)) - 1);
         if (word.getUniversalDependency() != null){
+            data.get(row).set(3, to + "");
             word.setUniversalDependency(to, word.getUniversalDependency().toString());
             sentence.save();
         }
     }
 
-    private void updateDependencyTag(int row, String newDependency){
-        data.get(row).set(TAG_INDEX, newDependency);
+    private boolean updateDependencyTag(int row, String newDependency){
         AnnotatedSentence sentence = (AnnotatedSentence) corpus.getSentence(Integer.parseInt(data.get(row).get(COLOR_COLUMN_INDEX - 1)));
         AnnotatedWord word = (AnnotatedWord) sentence.getWord(Integer.parseInt(data.get(row).get(WORD_POS_INDEX)) - 1);
         if (word.getUniversalDependency() != null){
+            data.get(row).set(TAG_INDEX, newDependency);
             word.setUniversalDependency(word.getUniversalDependency().to(), newDependency);
             sentence.save();
+            return true;
         }
+        return false;
     }
 
     protected void prepareData(AnnotatedCorpus corpus){
