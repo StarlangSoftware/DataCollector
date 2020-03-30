@@ -3,6 +3,7 @@ package DataCollector.Sentence;
 import AnnotatedSentence.AnnotatedCorpus;
 import AnnotatedSentence.AnnotatedSentence;
 import AnnotatedSentence.AnnotatedWord;
+import Dictionary.Word;
 
 import javax.swing.*;
 import java.awt.*;
@@ -98,11 +99,25 @@ public class ViewDependencyAnnotationFrame extends ViewAnnotationFrame implement
                 if (word.getUniversalDependency() != null){
                     row.add("" + word.getUniversalDependency().to());
                     row.add(word.getUniversalDependency().toString());
+                    String sentenceString = "<html>";
+                    ArrayList<Word> wordList = sentence.getWords();
+                    for (int k = 0; k < wordList.size(); k++){
+                        if (j == k){
+                            sentenceString += " <b><font color=\"red\">" + wordList.get(k).getName() + "</font></b>";
+                        } else {
+                            if (k + 1 == word.getUniversalDependency().to()){
+                                sentenceString += " <b><font color=\"blue\">" + wordList.get(k).getName() + "</font></b>";
+                            } else {
+                                sentenceString += " " + wordList.get(k).getName();
+                            }
+                        }
+                    }
+                    row.add(sentenceString + "</html>");
                 } else {
                     row.add("-");
                     row.add("-");
+                    row.add(sentence.toWords());
                 }
-                row.add(sentence.toWords());
                 row.add("" + i);
                 row.add("0");
                 data.add(row);

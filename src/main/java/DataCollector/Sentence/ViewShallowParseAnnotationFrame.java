@@ -1,6 +1,7 @@
 package DataCollector.Sentence;
 
 import AnnotatedSentence.*;
+import Dictionary.Word;
 
 import javax.swing.*;
 import java.awt.*;
@@ -68,10 +69,30 @@ public class ViewShallowParseAnnotationFrame extends ViewAnnotationFrame impleme
                 row.add(word.getName());
                 if (word.getShallowParse() != null){
                     row.add(word.getShallowParse());
+                    int startIndex = j - 1;
+                    while (startIndex >= 0 && ((AnnotatedWord) sentence.getWord(startIndex)).getShallowParse() != null && ((AnnotatedWord) sentence.getWord(startIndex)).getShallowParse().equals(word.getShallowParse())){
+                        startIndex--;
+                    }
+                    startIndex++;
+                    int endIndex = j + 1;
+                    while (endIndex < sentence.wordCount() && ((AnnotatedWord) sentence.getWord(endIndex)).getShallowParse() != null && ((AnnotatedWord) sentence.getWord(endIndex)).getShallowParse().equals(word.getShallowParse())){
+                        endIndex++;
+                    }
+                    endIndex--;
+                    String sentenceString = "<html>";
+                    ArrayList<Word> wordList = sentence.getWords();
+                    for (int k = 0; k < wordList.size(); k++){
+                        if (k >= startIndex && k <= endIndex){
+                            sentenceString += " <b><font color=\"blue\">" + wordList.get(k).getName() + "</font></b>";
+                        } else {
+                            sentenceString += " " + wordList.get(k).getName();
+                        }
+                    }
+                    row.add(sentenceString + "</html>");
                 } else {
                     row.add("-");
+                    row.add(sentence.toWords());
                 }
-                row.add(sentence.toWords());
                 row.add("" + i);
                 row.add("0");
                 data.add(row);
