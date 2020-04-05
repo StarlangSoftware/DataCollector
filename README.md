@@ -183,3 +183,46 @@ WordNet
   	<artifactId>DataCollector</artifactId>
   	<version>1.0.8</version>
 	</dependency>
+
+## Cite
+If you use this resource on your research, please cite the following paper: 
+
+```
+@article{acikgoz,
+  title={All-words word sense disambiguation for {T}urkish},
+  author={O. Açıkg{\"o}z and A. T. G{\"u}rkan and B. Ertopçu and O. Topsakal and B. {\"O}zenç and A. B. Kanburoğlu and {\.{I}}. Çam and B. Avar and G. Ercan and O. T. Y{\i}ld{\i}z},
+  journal={2017 International Conference on Computer Science and Engineering (UBMK)},
+  year={2017},
+  pages={490-495}
+}
+
+@article{akcakaya,
+  title={An all-words sense annotated {T}urkish corpus},
+  author={S. Akçakaya and O. T. Y{\i}ld{\i}z},
+  journal={2018 2nd International Conference on Natural Language and Speech Processing (ICNLSP)},
+  year={2018},
+  pages={1-6}
+}
+
+@inproceedings{arican,
+  title={{E}nglish-{T}urkish Parallel Semantic Annotation of Penn-Treebank},
+  author={ B. N. Ar{\i}can and {\"O}. Bakay and B. Avar and O. T. Y{\i}ld{\i}z and {\"O}. Ergelen},
+  booktitle={Wordnet Conference},
+  pages={298},
+  year={2019}
+}
+
+@inproceedings{ertopcu17,  
+author={B. {Ertopçu} and A. B. {Kanburoğlu} and O. {Topsakal} and O. {Açıkgöz} and A. T. {Gürkan} and B. {Özenç} and İ. {Çam} and B. {Avar} and G. {Ercan} and O. T. {Yıldız}},  
+booktitle={2017 International Conference on Computer Science and Engineering (UBMK)},  title={A new approach for named entity recognition},   
+year={2017},  
+pages={474-479}
+}
+
+@INPROCEEDINGS{topsakal17,
+author={O. {Topsakal} and O. {Açıkgöz} and A. T. {Gürkan} and A. B. {Kanburoğlu} and B. {Ertopçu} and B. {Özenç} and İ. {Çam} and B. {Avar} and G. {Ercan} and O. T. {Yıldız}}, 
+booktitle={2017 International Conference on Computer Science and Engineering (UBMK)}, 
+title={Shallow parsing in Turkish}, 
+year={2017}, 
+pages={480-485}
+}
