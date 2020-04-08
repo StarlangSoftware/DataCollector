@@ -130,51 +130,6 @@
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
-                   <execution>
-                        <id>wordnet-editor</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <archive>
-                                <manifest>
-                                    <mainClass>DataCollector.WordNet.TestWordNetEditorFrame</mainClass>
-                                </manifest>
-                            </archive>
-                            <finalName>wordnet-editor</finalName>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>sentence-semantics</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <archive>
-                                <manifest>
-                                    <mainClass>DataCollector.Sentence.TestSentenceSemanticFrame</mainClass>
-                                </manifest>
-                            </archive>
-                            <finalName>sentence-semantics</finalName>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>sentence-shallow-parse</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <archive>
-                                <manifest>
-                                    <mainClass>DataCollector.Sentence.TestSentenceShallowParseFrame</mainClass>
-                                </manifest>
-                            </archive>
-                            <finalName>sentence-shallow-parse</finalName>
-                        </configuration>
-                    </execution>
                     <execution>
                         <id>sentence-dependency</id>
                         <phase>package</phase>
@@ -191,7 +146,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>sentence-morphological-analyzer</id>
+                        <id>tree-view-english</id>
                         <phase>package</phase>
                         <goals>
                             <goal>single</goal>
@@ -199,10 +154,10 @@
                         <configuration>
                             <archive>
                                 <manifest>
-                                    <mainClass>DataCollector.Sentence.TestSentenceMorphologicalAnalyzerFrame</mainClass>
+                                    <mainClass>DataCollector.ParseTree.TestEnglishViewerFrame</mainClass>
                                 </manifest>
                             </archive>
-                            <finalName>sentence-morphological-analyzer</finalName>
+                            <finalName>tree-english-view</finalName>
                         </configuration>
                     </execution>
                 </executions>
