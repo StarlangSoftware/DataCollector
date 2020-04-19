@@ -119,16 +119,16 @@ public class SentencePropbankArgumentPanel extends AnnotatorPanel{
                 }
             }
             if (!argTmp){
-                frameNode.add(new DefaultMutableTreeNode(new FramesetArgument("ARGMTMP", "")));
+                frameNode.add(new DefaultMutableTreeNode(new FramesetArgument("ARGMTMP", "", "")));
             }
             if (!argLoc){
-                frameNode.add(new DefaultMutableTreeNode(new FramesetArgument("ARGMLOC", "")));
+                frameNode.add(new DefaultMutableTreeNode(new FramesetArgument("ARGMLOC", "", "")));
             }
             if (!argDis){
-                frameNode.add(new DefaultMutableTreeNode(new FramesetArgument("ARGMDIS", "")));
+                frameNode.add(new DefaultMutableTreeNode(new FramesetArgument("ARGMDIS", "", "")));
             }
             if (!argMnr){
-                frameNode.add(new DefaultMutableTreeNode(new FramesetArgument("ARGMMNR", "")));
+                frameNode.add(new DefaultMutableTreeNode(new FramesetArgument("ARGMMNR", "", "")));
             }
         }
         treeModel.reload();
