@@ -171,7 +171,7 @@ Use below line to generate jar file:
 
 ------------------------------------------------
 
-WordNet
+DataCollector
 ============
 + [Maven Usage](#maven-usage)
 
@@ -179,7 +179,7 @@ WordNet
 ### Maven Usage
 
 	<dependency>
-  	<groupId>NlpToolkit</groupId>
+  	<groupId>io.github.starlangsoftware</groupId>
   	<artifactId>DataCollector</artifactId>
   	<version>1.0.8</version>
 	</dependency>
