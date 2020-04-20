@@ -1,7 +1,9 @@
 package DataCollector.Sentence;
 
+import AnnotatedSentence.AnnotatedCorpus;
 import AnnotatedSentence.AutoProcessor.AutoDisambiguation.TurkishSentenceAutoDisambiguator;
 import AnnotatedSentence.AutoProcessor.AutoSemantic.TurkishSentenceAutoSemantic;
+import DataCollector.ParseTree.EditorPanel;
 import Dictionary.TurkishWordComparator;
 import Dictionary.TxtDictionary;
 import MorphologicalAnalysis.FsmMorphologicalAnalyzer;
@@ -25,6 +27,8 @@ public class SentenceMorphologicalAnalyzerFrame extends AnnotatorFrame{
 
     public SentenceMorphologicalAnalyzerFrame(final FsmMorphologicalAnalyzer fsm){
         super();
+        AnnotatedCorpus corpus;
+        corpus = new AnnotatedCorpus(new File(EditorPanel.TURKISH_PHRASE_PATH));
         JMenuItem itemUpdateDictionary = addMenuItem(projectMenu, "Update Analyzer", KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
         itemUpdateDictionary.addActionListener(e -> {
             Properties properties = new Properties();
@@ -47,6 +51,10 @@ public class SentenceMorphologicalAnalyzerFrame extends AnnotatorFrame{
         toolBar.add(autoAnalysisDetectionOption);
         this.fsm = fsm;
         turkishSentenceAutoDisambiguator = new TurkishSentenceAutoDisambiguator(new RootWordStatistics("penntreebank_statistics.txt"));
+        JMenuItem itemViewAnnotated = addMenuItem(projectMenu, "View Annotations", KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
+        itemViewAnnotated.addActionListener(e -> {
+            new ViewMorphologicalAnnotationFrame(corpus);
+        });
     }
 
     @Override
