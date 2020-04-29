@@ -28,8 +28,8 @@ public class SentenceMorphologicalAnalyzerFrame extends AnnotatorFrame{
 
     public SentenceMorphologicalAnalyzerFrame(final FsmMorphologicalAnalyzer fsm, final WordNet wordNet){
         super();
-        AnnotatedCorpus corpus = null;
-        //corpus = new AnnotatedCorpus(new File(EditorPanel.TURKISH_PHRASE_PATH));
+        AnnotatedCorpus corpus;
+        corpus = new AnnotatedCorpus(new File(EditorPanel.TURKISH_PHRASE_PATH));
         JMenuItem itemUpdateDictionary = addMenuItem(projectMenu, "Update Analyzer", KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
         itemUpdateDictionary.addActionListener(e -> {
             Properties properties = new Properties();
