@@ -4,6 +4,7 @@ import AnnotatedSentence.*;
 import AnnotatedSentence.AutoProcessor.AutoDisambiguation.TurkishSentenceAutoDisambiguator;
 import MorphologicalAnalysis.FsmMorphologicalAnalyzer;
 import MorphologicalAnalysis.FsmParseList;
+import WordNet.WordNet;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,13 +12,15 @@ import java.awt.*;
 public class SentenceMorphologicalAnalyzerPanel extends AnnotatorPanel{
     private FsmMorphologicalAnalyzer fsm;
     private TurkishSentenceAutoDisambiguator turkishSentenceAutoDisambiguator;
+    private WordNet wordNet;
 
-    public SentenceMorphologicalAnalyzerPanel(String currentPath, String fileName, FsmMorphologicalAnalyzer fsm, TurkishSentenceAutoDisambiguator turkishSentenceAutoDisambiguator){
+    public SentenceMorphologicalAnalyzerPanel(String currentPath, String fileName, FsmMorphologicalAnalyzer fsm, WordNet wordNet, TurkishSentenceAutoDisambiguator turkishSentenceAutoDisambiguator){
         super(currentPath, fileName, ViewLayerType.INFLECTIONAL_GROUP);
         this.fsm = fsm;
+        this.wordNet = wordNet;
         this.turkishSentenceAutoDisambiguator = turkishSentenceAutoDisambiguator;
         setLayout(new BorderLayout());
-        list.setCellRenderer(new FsmParseListCellRenderer());
+        list.setCellRenderer(new FsmParseListCellRenderer(wordNet));
         ToolTipManager.sharedInstance().registerComponent(list);
     }
 
@@ -29,6 +32,10 @@ public class SentenceMorphologicalAnalyzerPanel extends AnnotatorPanel{
 
     public void setFsm(FsmMorphologicalAnalyzer fsm){
         this.fsm = fsm;
+    }
+
+    public void setWordNet(WordNet wordNet){
+        this.wordNet = wordNet;
     }
 
     public void setTurkishSentenceAutoDisambiguator(TurkishSentenceAutoDisambiguator turkishSentenceAutoDisambiguator){

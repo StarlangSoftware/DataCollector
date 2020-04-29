@@ -23,12 +23,13 @@ import java.util.Properties;
 public class SentenceMorphologicalAnalyzerFrame extends AnnotatorFrame{
     private JCheckBox autoAnalysisDetectionOption;
     private FsmMorphologicalAnalyzer fsm;
+    private WordNet wordNet;
     private TurkishSentenceAutoDisambiguator turkishSentenceAutoDisambiguator;
 
-    public SentenceMorphologicalAnalyzerFrame(final FsmMorphologicalAnalyzer fsm){
+    public SentenceMorphologicalAnalyzerFrame(final FsmMorphologicalAnalyzer fsm, final WordNet wordNet){
         super();
-        AnnotatedCorpus corpus;
-        corpus = new AnnotatedCorpus(new File(EditorPanel.TURKISH_PHRASE_PATH));
+        AnnotatedCorpus corpus = null;
+        //corpus = new AnnotatedCorpus(new File(EditorPanel.TURKISH_PHRASE_PATH));
         JMenuItem itemUpdateDictionary = addMenuItem(projectMenu, "Update Analyzer", KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
         itemUpdateDictionary.addActionListener(e -> {
             Properties properties = new Properties();
@@ -37,19 +38,23 @@ public class SentenceMorphologicalAnalyzerFrame extends AnnotatorFrame{
                 String domainPrefix = properties.getProperty("domainPrefix");
                 String domainDictionaryFileName = domainPrefix + "_dictionary.txt";
                 String rootWordStatisticsFileName = domainPrefix + "_statistics.txt";
+                String wordNetFileName = domainPrefix + "_wordnet.txt";
                 this.fsm = new FsmMorphologicalAnalyzer(domainDictionaryFileName);
+                this.wordNet = new WordNet(wordNetFileName, new Locale("tr"));
                 turkishSentenceAutoDisambiguator = new TurkishSentenceAutoDisambiguator(this.fsm, new RootWordStatistics(new FileInputStream(rootWordStatisticsFileName)));
             } catch (IOException f) {
             }
             for (int i = 0; i < projectPane.getTabCount(); i++){
                 SentenceMorphologicalAnalyzerPanel current = (SentenceMorphologicalAnalyzerPanel) ((JScrollPane) projectPane.getComponentAt(i)).getViewport().getView();
                 current.setFsm(this.fsm);
+                current.setWordNet(this.wordNet);
                 current.setTurkishSentenceAutoDisambiguator(turkishSentenceAutoDisambiguator);
             }
         });
         autoAnalysisDetectionOption = new JCheckBox("Auto Morphological Disambiguation", false);
         toolBar.add(autoAnalysisDetectionOption);
         this.fsm = fsm;
+        this.wordNet = wordNet;
         turkishSentenceAutoDisambiguator = new TurkishSentenceAutoDisambiguator(new RootWordStatistics("penntreebank_statistics.txt"));
         JMenuItem itemViewAnnotated = addMenuItem(projectMenu, "View Annotations", KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
         itemViewAnnotated.addActionListener(e -> {
@@ -59,7 +64,7 @@ public class SentenceMorphologicalAnalyzerFrame extends AnnotatorFrame{
 
     @Override
     protected AnnotatorPanel generatePanel(String currentPath, String rawFileName) {
-        return new SentenceMorphologicalAnalyzerPanel(currentPath, rawFileName, fsm, turkishSentenceAutoDisambiguator);
+        return new SentenceMorphologicalAnalyzerPanel(currentPath, rawFileName, fsm, wordNet, turkishSentenceAutoDisambiguator);
     }
 
     public void next(int count){
