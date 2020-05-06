@@ -52,7 +52,7 @@ public class SyntacticPanel extends StructureEditorPanel{
     }
 
     public void editSymbol(){
-        if (editableNode != null && editableNode.numberOfChildren() > 0 && !editableNode.getChild(0).isLeaf()){
+        if (editableNode != null && editableNode.numberOfChildren() > 0){
             isEditing = true;
             editText.setText(editableNode.getData().getName());
             Rectangle rect = editableNode.getArea();
