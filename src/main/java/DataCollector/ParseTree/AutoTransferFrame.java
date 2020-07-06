@@ -25,17 +25,17 @@ public class AutoTransferFrame extends StructureEditorFrame{
             fcinput.setCurrentDirectory(new File(EditorPanel.ENGLISH_PATH));
             int returnVal = fcinput.showOpenDialog(null);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
-                File f = new File(EditorPanel.TURKISH_PATH_2 + "/" + fcinput.getSelectedFile().getName());
+                File f = new File(EditorPanel.treePath2 + "/" + fcinput.getSelectedFile().getName());
                 if (!f.exists()) {
                     ParseTreeDrawable parseTree = new ParseTreeDrawable(EditorPanel.ENGLISH_PATH, fcinput.getSelectedFile().getName());
                     TreeModifier treeModifier = new TreeModifier(parseTree, new ConvertToLayeredFormat());
                     treeModifier.modify();
                     TurkishAutoTransfer turkishAutoTransfer = new TurkishAutoTransfer();
-                    currentSentence = new TransferredSentence(new File(parseTree.getFileDescription().getFileName(EditorPanel.TURKISH_PHRASE_PATH)));
+                    currentSentence = new TransferredSentence(new File(parseTree.getFileDescription().getFileName(EditorPanel.phrasePath)));
                     turkishAutoTransfer.autoTransfer(parseTree, currentSentence);
-                    parseTree.saveWithPath(EditorPanel.TURKISH_PATH_2);
+                    parseTree.saveWithPath(EditorPanel.treePath2);
                 }
-                AutoTransferPanel autoTransferPanel = new AutoTransferPanel(EditorPanel.TURKISH_PATH_2, fcinput.getSelectedFile().getName(), ViewLayerType.TURKISH_WORD);
+                AutoTransferPanel autoTransferPanel = new AutoTransferPanel(EditorPanel.treePath2, fcinput.getSelectedFile().getName(), ViewLayerType.TURKISH_WORD);
                 addPanelToFrame(autoTransferPanel, fcinput.getSelectedFile().getName());
                 updateInfo();
             }

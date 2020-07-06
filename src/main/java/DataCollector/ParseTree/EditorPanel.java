@@ -12,11 +12,9 @@ import java.util.ArrayList;
 public class EditorPanel extends ViewerPanel implements MouseListener, MouseMotionListener {
 
     protected ParseNodeDrawable previousNode = null;
-    static final public String TURKISH_PATH = "../Turkish/";
-    static final public String TURKISH_PATH_2 = "../Turkish2/";
-    static final public String TURKISH_PARSE_PATH = "../Turkish-Parse/";
-    static final public String TURKISH_PHRASE_PATH = "../Turkish-Phrase/";
-    static final public String TREE_IMAGES = "../Tree-Images/";
+    static public String treePath = "../Turkish/";
+    static public String treePath2 = "../Turkish2/";
+    static public String phrasePath = "../Turkish-Phrase/";
     protected ArrayList<TreeEditAction> actionList;
     protected boolean isEditing;
 

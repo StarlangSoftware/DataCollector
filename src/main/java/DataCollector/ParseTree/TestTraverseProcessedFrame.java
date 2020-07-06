@@ -15,7 +15,7 @@ public class TestTraverseProcessedFrame {
         BilingualDictionary bilingualDictionary = new BilingualDictionary();
         WordNet turkishWordNet = new WordNet();
         WordNet englishWordNet = new WordNet("english_wordnet_version_31.xml");
-        TreeBankDrawable treeBank = new TreeBankDrawable(new File(EditorPanel.TURKISH_PATH));
+        TreeBankDrawable treeBank = new TreeBankDrawable(new File(EditorPanel.treePath));
         TraverseFrame frame = new TraverseProcessedFrame(new FsmMorphologicalAnalyzer(), treeBank);
         frame.loadTranslationDictionary(automaticTranslationDictionary);
         frame.loadBilingualDictionary(bilingualDictionary);

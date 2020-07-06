@@ -1,6 +1,5 @@
 package DataCollector.ParseTree;
 
-import AnnotatedSentence.AnnotatedWord;
 import AnnotatedSentence.ViewLayerType;
 import AnnotatedTree.ParseNodeDrawable;
 import AnnotatedTree.Processor.Condition.IsTurkishLeafNode;
@@ -14,7 +13,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Properties;
 
 public abstract class EditorFrame extends DataCollector{
 
@@ -50,6 +52,15 @@ public abstract class EditorFrame extends DataCollector{
      * to undo menu item.
      */
     public EditorFrame(){
+        Properties properties;
+        properties = new Properties();
+        try {
+            properties.load(new FileInputStream(new File("config.properties")));
+            EditorPanel.treePath = properties.getProperty("treePath", EditorPanel.treePath);
+            EditorPanel.phrasePath = properties.getProperty("phrasePath", EditorPanel.phrasePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         JButton button;
         button = new DrawingButton(DataCollector.class, this, "fastfastbackward", FAST_FAST_BACKWARD, "Previous 100 Tree");
         button.setVisible(true);
@@ -104,7 +115,7 @@ public abstract class EditorFrame extends DataCollector{
             final JFileChooser fcinput = new JFileChooser();
             fcinput.setDialogTitle("Select project file");
             fcinput.setDialogType(JFileChooser.OPEN_DIALOG);
-            fcinput.setCurrentDirectory(new File(EditorPanel.TURKISH_PATH));
+            fcinput.setCurrentDirectory(new File(EditorPanel.treePath));
             int returnVal = fcinput.showOpenDialog(null);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 EditorPanel editorPanel = generatePanel(fcinput.getSelectedFile().getParent(), fcinput.getSelectedFile().getName());

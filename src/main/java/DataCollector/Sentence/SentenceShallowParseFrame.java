@@ -13,7 +13,7 @@ public class SentenceShallowParseFrame extends AnnotatorFrame{
     public SentenceShallowParseFrame(){
         super();
         AnnotatedCorpus corpus;
-        corpus = new AnnotatedCorpus(new File(EditorPanel.TURKISH_PHRASE_PATH));
+        corpus = new AnnotatedCorpus(new File(EditorPanel.phrasePath));
         JMenuItem itemViewAnnotated = addMenuItem(projectMenu, "View Annotations", KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
         itemViewAnnotated.addActionListener(e -> {
             new ViewShallowParseAnnotationFrame(corpus);

@@ -97,33 +97,33 @@ public class SearchFrame extends TraverseFrame{
     protected boolean displayTree(){
         if (treeFiles.size() == 0)
             return false;
-        File file = new File(EditorPanel.TURKISH_PATH + "/" + treeFiles.get(treeIndex));
+        File file = new File(EditorPanel.treePath + "/" + treeFiles.get(treeIndex));
         if (!file.exists())
             return false;
         switch (traverseLayer){
             case 0:
-                viewer = new ViewerPanel(EditorPanel.TURKISH_PATH, treeFiles.get(treeIndex), ViewLayerType.ENGLISH_WORD);
+                viewer = new ViewerPanel(EditorPanel.treePath, treeFiles.get(treeIndex), ViewLayerType.ENGLISH_WORD);
                 break;
             case 1:
-                viewer = new TranslatorPanel(dictionary, bilingualDictionary, EditorPanel.TURKISH_PATH, treeFiles.get(treeIndex), ViewLayerType.TURKISH_WORD);
+                viewer = new TranslatorPanel(dictionary, bilingualDictionary, EditorPanel.treePath, treeFiles.get(treeIndex), ViewLayerType.TURKISH_WORD);
                 break;
             case 2:
-                viewer = new MorphologicalAnalyzerPanel(EditorPanel.TURKISH_PATH, treeFiles.get(treeIndex), fsm, true);
+                viewer = new MorphologicalAnalyzerPanel(EditorPanel.treePath, treeFiles.get(treeIndex), fsm, true);
                 break;
             case 3:
-                viewer = new ViewerPanel(EditorPanel.TURKISH_PATH, treeFiles.get(treeIndex), ViewLayerType.META_MORPHEME);
+                viewer = new ViewerPanel(EditorPanel.treePath, treeFiles.get(treeIndex), ViewLayerType.META_MORPHEME);
                 break;
             case 4:
-                viewer = new MetaMorphemeMoverPanel(EditorPanel.TURKISH_PATH, treeFiles.get(treeIndex));
+                viewer = new MetaMorphemeMoverPanel(EditorPanel.treePath, treeFiles.get(treeIndex));
                 break;
             case 5:
-                viewer = new NERPanel(EditorPanel.TURKISH_PATH, treeFiles.get(treeIndex), true);
+                viewer = new NERPanel(EditorPanel.treePath, treeFiles.get(treeIndex), true);
                 break;
             case 6:
-                viewer = new TurkishSemanticPanel(EditorPanel.TURKISH_PATH, treeFiles.get(treeIndex), turkish, fsm, true);
+                viewer = new TurkishSemanticPanel(EditorPanel.treePath, treeFiles.get(treeIndex), turkish, fsm, true);
                 break;
             case 7:
-                viewer = new EnglishSemanticPanel(EditorPanel.TURKISH_PATH, treeFiles.get(treeIndex), english, turkish);
+                viewer = new EnglishSemanticPanel(EditorPanel.treePath, treeFiles.get(treeIndex), english, turkish);
                 break;
         }
         viewer.setNodeWidth(widthSlider.getValue() * 5);

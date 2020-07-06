@@ -124,27 +124,27 @@ public class TraverseProcessedFrame extends TraverseFrame{
     protected boolean displayTree(){
         if (treeFiles.size() == 0)
             return false;
-        File file = new File(EditorPanel.TURKISH_PATH + "/" + treeFiles.get(treeIndex));
+        File file = new File(EditorPanel.treePath + "/" + treeFiles.get(treeIndex));
         if (!file.exists())
             return false;
         switch (traverseLayer){
             case 0:
-                viewer = new ViewerPanel(EditorPanel.TURKISH_PATH, treeFiles.get(treeIndex), ViewLayerType.ENGLISH_WORD);
+                viewer = new ViewerPanel(EditorPanel.treePath, treeFiles.get(treeIndex), ViewLayerType.ENGLISH_WORD);
                 break;
             case 1:
-                viewer = new TranslatorPanel(dictionary, bilingualDictionary, EditorPanel.TURKISH_PATH, treeFiles.get(treeIndex), ViewLayerType.TURKISH_WORD);
+                viewer = new TranslatorPanel(dictionary, bilingualDictionary, EditorPanel.treePath, treeFiles.get(treeIndex), ViewLayerType.TURKISH_WORD);
                 break;
             case 2:
-                viewer = new MorphologicalAnalyzerPanel(EditorPanel.TURKISH_PATH, treeFiles.get(treeIndex), fsm, false);
+                viewer = new MorphologicalAnalyzerPanel(EditorPanel.treePath, treeFiles.get(treeIndex), fsm, false);
                 break;
             case 3:
-                viewer = new NERPanel(EditorPanel.TURKISH_PATH, treeFiles.get(treeIndex), false);
+                viewer = new NERPanel(EditorPanel.treePath, treeFiles.get(treeIndex), false);
                 break;
             case 4:
-                viewer = new TurkishSemanticPanel(EditorPanel.TURKISH_PATH, treeFiles.get(treeIndex), turkish, fsm, false);
+                viewer = new TurkishSemanticPanel(EditorPanel.treePath, treeFiles.get(treeIndex), turkish, fsm, false);
                 break;
             case 5:
-                viewer = new PropbankArgumentPanel(EditorPanel.TURKISH_PATH, treeFiles.get(treeIndex), turkish);
+                viewer = new PropbankArgumentPanel(EditorPanel.treePath, treeFiles.get(treeIndex), turkish);
                 break;
         }
         viewer.setNodeWidth(widthSlider.getValue() * 5);

@@ -27,7 +27,7 @@ public class AutoTransferPanel extends StructureEditorPanel{
 
     public AutoTransferPanel(String path, String fileName, final ViewLayerType secondLanguage) {
         super(path, fileName, secondLanguage);
-        currentSentence = new TransferredSentence(new File(currentTree.getFileDescription().getFileName(EditorPanel.TURKISH_PHRASE_PATH)));
+        currentSentence = new TransferredSentence(new File(currentTree.getFileDescription().getFileName(EditorPanel.phrasePath)));
         widthDecrease = 85;
         heightDecrease = 120;
         listModel = new DefaultListModel();
@@ -77,11 +77,11 @@ public class AutoTransferPanel extends StructureEditorPanel{
             TreeModifier treeModifier = new TreeModifier(parseTree, new ConvertToLayeredFormat());
             treeModifier.modify();
             TurkishAutoTransfer turkishAutoTransfer = new TurkishAutoTransfer();
-            turkishAutoTransfer.autoTransfer(parseTree, new TransferredSentence(new File(parseTree.getFileDescription().getFileName(EditorPanel.TURKISH_PHRASE_PATH))));
-            parseTree.saveWithPath(EditorPanel.TURKISH_PATH_2);
+            turkishAutoTransfer.autoTransfer(parseTree, new TransferredSentence(new File(parseTree.getFileDescription().getFileName(EditorPanel.phrasePath))));
+            parseTree.saveWithPath(EditorPanel.treePath2);
         }
         super.nextTree(count);
-        currentSentence = new TransferredSentence(new File(currentTree.getFileDescription().getFileName(EditorPanel.TURKISH_PHRASE_PATH)));
+        currentSentence = new TransferredSentence(new File(currentTree.getFileDescription().getFileName(EditorPanel.phrasePath)));
     }
 
     protected void previousTree(int count){
@@ -91,11 +91,11 @@ public class AutoTransferPanel extends StructureEditorPanel{
             TreeModifier treeModifier = new TreeModifier(parseTree, new ConvertToLayeredFormat());
             treeModifier.modify();
             TurkishAutoTransfer turkishAutoTransfer = new TurkishAutoTransfer();
-            turkishAutoTransfer.autoTransfer(parseTree, new TransferredSentence(new File(parseTree.getFileDescription().getFileName(EditorPanel.TURKISH_PHRASE_PATH))));
-            parseTree.saveWithPath(EditorPanel.TURKISH_PATH_2);
+            turkishAutoTransfer.autoTransfer(parseTree, new TransferredSentence(new File(parseTree.getFileDescription().getFileName(EditorPanel.phrasePath))));
+            parseTree.saveWithPath(EditorPanel.treePath2);
         }
         super.previousTree(count);
-        currentSentence = new TransferredSentence(new File(currentTree.getFileDescription().getFileName(EditorPanel.TURKISH_PHRASE_PATH)));
+        currentSentence = new TransferredSentence(new File(currentTree.getFileDescription().getFileName(EditorPanel.phrasePath)));
     }
 
     public void populateLeaf(ParseNodeDrawable node){

@@ -53,7 +53,7 @@ public abstract class AnnotatorFrame extends DataCollector {
             final JFileChooser fcinput = new JFileChooser();
             fcinput.setDialogTitle("Select annotated sentence file");
             fcinput.setDialogType(JFileChooser.OPEN_DIALOG);
-            fcinput.setCurrentDirectory(new File(EditorPanel.TURKISH_PHRASE_PATH));
+            fcinput.setCurrentDirectory(new File(EditorPanel.phrasePath));
             int returnVal = fcinput.showOpenDialog(null);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 AnnotatorPanel annotatorPanel = generatePanel(fcinput.getSelectedFile().getParent(), fcinput.getSelectedFile().getName());

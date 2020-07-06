@@ -24,7 +24,7 @@ public class SentenceSemanticFrame extends AnnotatorFrame {
         super();
         exampleSentences = new HashMap<>();
         AnnotatedCorpus corpus;
-        corpus = new AnnotatedCorpus(new File(EditorPanel.TURKISH_PHRASE_PATH));
+        corpus = new AnnotatedCorpus(new File(EditorPanel.phrasePath));
         for (int i = 0; i < corpus.sentenceCount(); i++){
             AnnotatedSentence sentence = (AnnotatedSentence) corpus.getSentence(i);
             for (int j = 0; j < sentence.wordCount(); j++){
@@ -119,7 +119,7 @@ public class SentenceSemanticFrame extends AnnotatorFrame {
                     AnnotatedWord word = (AnnotatedWord) sentence.getWord(j);
                     String semantic = word.getSemantic();
                     if (word.getName() != null && semantic == null){
-                        AnnotatorPanel annotatorPanel = generatePanel(EditorPanel.TURKISH_PHRASE_PATH, sentence.getFileName());
+                        AnnotatorPanel annotatorPanel = generatePanel(EditorPanel.phrasePath, sentence.getFileName());
                         addPanelToFrame(annotatorPanel, sentence.getFileName());
                         count++;
                         if (count == numberOfSentences){

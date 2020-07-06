@@ -15,7 +15,7 @@ public class TestSearchTree {
         BilingualDictionary bilingualDictionary = new BilingualDictionary();
         WordNet turkishWordNet = new WordNet();
         WordNet englishWordNet = new WordNet("english_wordnet_version_31.xml");
-        TreeBankDrawable treeBank = new TreeBankDrawable(new File(EditorPanel.TURKISH_PATH));
+        TreeBankDrawable treeBank = new TreeBankDrawable(new File(EditorPanel.treePath));
         SearchFrame frame = new SearchFrame(new FsmMorphologicalAnalyzer(), treeBank);
         frame.loadTranslationDictionary(automaticTranslationDictionary);
         frame.loadBilingualDictionary(bilingualDictionary);

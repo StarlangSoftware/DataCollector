@@ -7,8 +7,6 @@ import DataCollector.ParseTree.EditorPanel;
 import DependencyParser.UniversalDependencyRelation;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
@@ -23,7 +21,7 @@ public class SentenceDependencyFrame extends AnnotatorFrame {
     public SentenceDependencyFrame(){
         super();
         AnnotatedCorpus corpus;
-        corpus = new AnnotatedCorpus(new File(EditorPanel.TURKISH_PHRASE_PATH));
+        corpus = new AnnotatedCorpus(new File(EditorPanel.phrasePath));
         JMenuItem itemShowUnannotated = addMenuItem(projectMenu, "Show Unannotated Files", KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
         itemShowUnannotated.addActionListener(e -> {
             int count = 0;
@@ -36,7 +34,7 @@ public class SentenceDependencyFrame extends AnnotatorFrame {
                     AnnotatedWord word = (AnnotatedWord) sentence.getWord(j);
                     UniversalDependencyRelation universalDependencyRelation = word.getUniversalDependency();
                     if (word.getName() != null && universalDependencyRelation == null){
-                        AnnotatorPanel annotatorPanel = generatePanel(EditorPanel.TURKISH_PHRASE_PATH, sentence.getFileName());
+                        AnnotatorPanel annotatorPanel = generatePanel(EditorPanel.phrasePath, sentence.getFileName());
                         addPanelToFrame(annotatorPanel, sentence.getFileName());
                         count++;
                         if (count == numberOfSentences){

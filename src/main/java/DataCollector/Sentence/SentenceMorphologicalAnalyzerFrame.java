@@ -2,10 +2,7 @@ package DataCollector.Sentence;
 
 import AnnotatedSentence.AnnotatedCorpus;
 import AnnotatedSentence.AutoProcessor.AutoDisambiguation.TurkishSentenceAutoDisambiguator;
-import AnnotatedSentence.AutoProcessor.AutoSemantic.TurkishSentenceAutoSemantic;
 import DataCollector.ParseTree.EditorPanel;
-import Dictionary.TurkishWordComparator;
-import Dictionary.TxtDictionary;
 import MorphologicalAnalysis.FsmMorphologicalAnalyzer;
 import MorphologicalDisambiguation.RootWordStatistics;
 import WordNet.WordNet;
@@ -15,7 +12,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Properties;
@@ -29,7 +25,7 @@ public class SentenceMorphologicalAnalyzerFrame extends AnnotatorFrame{
     public SentenceMorphologicalAnalyzerFrame(final FsmMorphologicalAnalyzer fsm, final WordNet wordNet){
         super();
         AnnotatedCorpus corpus;
-        corpus = new AnnotatedCorpus(new File(EditorPanel.TURKISH_PHRASE_PATH));
+        corpus = new AnnotatedCorpus(new File(EditorPanel.phrasePath));
         JMenuItem itemUpdateDictionary = addMenuItem(projectMenu, "Update Analyzer", KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
         itemUpdateDictionary.addActionListener(e -> {
             Properties properties = new Properties();
