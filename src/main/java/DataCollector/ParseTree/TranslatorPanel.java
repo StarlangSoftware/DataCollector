@@ -94,8 +94,8 @@ public class TranslatorPanel extends StructureEditorPanel {
 
     protected void nextTree(int count){
         clear();
-        if (!currentTree.getFileDescription().nextFileExists(count) && currentTree.getFileDescription().nextFileExists(ENGLISH_PATH, count)){
-            ParseTreeDrawable parseTree = new ParseTreeDrawable(ENGLISH_PATH, currentTree.getFileDescription().getExtension(), currentTree.getFileDescription().getIndex() + 1);
+        if (!currentTree.getFileDescription().nextFileExists(count) && currentTree.getFileDescription().nextFileExists(englishPath, count)){
+            ParseTreeDrawable parseTree = new ParseTreeDrawable(englishPath, currentTree.getFileDescription().getExtension(), currentTree.getFileDescription().getIndex() + 1);
             TreeModifier treeModifier = new TreeModifier(parseTree, new ConvertToLayeredFormat());
             treeModifier.modify();
             parseTree.saveWithPath(secondLanguagePath);
@@ -105,8 +105,8 @@ public class TranslatorPanel extends StructureEditorPanel {
 
     protected void previousTree(int count){
         clear();
-        if (!currentTree.getFileDescription().previousFileExists(count) && currentTree.getFileDescription().previousFileExists(ENGLISH_PATH, count)){
-            ParseTreeDrawable parseTree = new ParseTreeDrawable(ENGLISH_PATH, currentTree.getFileDescription().getExtension(), currentTree.getFileDescription().getIndex() - 1);
+        if (!currentTree.getFileDescription().previousFileExists(count) && currentTree.getFileDescription().previousFileExists(englishPath, count)){
+            ParseTreeDrawable parseTree = new ParseTreeDrawable(englishPath, currentTree.getFileDescription().getExtension(), currentTree.getFileDescription().getIndex() - 1);
             TreeModifier treeModifier = new TreeModifier(parseTree, new ConvertToLayeredFormat());
             treeModifier.modify();
             parseTree.saveWithPath(secondLanguagePath);

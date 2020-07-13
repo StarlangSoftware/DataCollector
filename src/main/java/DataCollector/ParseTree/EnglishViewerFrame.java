@@ -71,7 +71,7 @@ public class EnglishViewerFrame extends DataCollector{
             final JFileChooser fcinput = new JFileChooser();
             fcinput.setDialogTitle("Select project file");
             fcinput.setDialogType(JFileChooser.OPEN_DIALOG);
-            fcinput.setCurrentDirectory(new File(EditorPanel.ENGLISH_PATH));
+            fcinput.setCurrentDirectory(new File(EditorPanel.englishPath));
             int returnVal = fcinput.showOpenDialog(null);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 ViewerPanel viewerPanel = new ViewerPanel(fcinput.getSelectedFile().getParent(), fcinput.getSelectedFile().getName(), ViewLayerType.WORD);

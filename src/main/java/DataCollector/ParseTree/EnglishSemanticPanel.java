@@ -109,7 +109,7 @@ public class EnglishSemanticPanel extends LeafEditorPanel{
                 }
             }
         }
-        ParseTreeDrawable englishTree = new ParseTreeDrawable(ENGLISH_PATH, currentTree.getFileDescription());
+        ParseTreeDrawable englishTree = new ParseTreeDrawable(englishPath, currentTree.getFileDescription());
         HashMap<ParseNode, ParseNodeDrawable> mapping = englishTree.mapTree(currentTree);
         for (ParseNode parseNode : mapping.keySet()){
             if (mapping.get(parseNode).equals(node)){

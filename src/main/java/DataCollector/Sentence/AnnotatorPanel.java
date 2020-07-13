@@ -116,7 +116,7 @@ public abstract class AnnotatorPanel extends JPanel implements MouseListener, Mo
     }
 
     public String getSourceSentence(){
-        ParseTreeDrawable englishTree = new ParseTreeDrawable(EditorPanel.ENGLISH_PATH, fileDescription);
+        ParseTreeDrawable englishTree = new ParseTreeDrawable(EditorPanel.englishPath, fileDescription);
         if (englishTree.getRoot() != null){
             return englishTree.toSentence();
         } else {
@@ -125,7 +125,7 @@ public abstract class AnnotatorPanel extends JPanel implements MouseListener, Mo
     }
 
     public String getOriginalSentence(){
-        AnnotatedSentence originalSentence = new AnnotatedSentence(new File(EditorPanel.ORIGINAL_PATH + fileDescription.getRawFileName()));
+        AnnotatedSentence originalSentence = new AnnotatedSentence(new File(EditorPanel.originalPath + fileDescription.getRawFileName()));
         return originalSentence.toWords();
     }
 

@@ -14,12 +14,12 @@ public class ViewerPanel extends JPanel {
     /**
      * Relative path for the English parse trees.
      */
-    static final public String ENGLISH_PATH = "../English/";
+    static public String englishPath = "../English/";
 
     /**
      * Relative path for the original forms of the sentences.
      */
-    static final public String ORIGINAL_PATH = "../Original/";
+    static public String originalPath = "../Original/";
 
     /**
      * Current tree displayed in the panel.
@@ -150,7 +150,7 @@ public class ViewerPanel extends JPanel {
      * @return String form of the current parse tree.
      */
     public String getSourceSentence(){
-        ParseTreeDrawable englishTree = new ParseTreeDrawable(ENGLISH_PATH, currentTree.getFileDescription());
+        ParseTreeDrawable englishTree = new ParseTreeDrawable(englishPath, currentTree.getFileDescription());
         return englishTree.toSentence();
     }
 

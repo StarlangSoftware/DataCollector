@@ -3,10 +3,13 @@ package DataCollector.ParseTree;
 import AnnotatedSentence.ViewLayerType;
 import DataCollector.DataCollector;
 import AnnotatedTree.*;
+import DataCollector.Sentence.ViewSemanticAnnotationFrame;
 import Util.DrawingButton;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.io.File;
 
 public class SyntacticFrame extends StructureEditorFrame{
     static final protected String ADDPARENT = "addparent";
@@ -16,6 +19,7 @@ public class SyntacticFrame extends StructureEditorFrame{
     static final protected String DELETESUBTREE = "deletesubtree";
 
     public SyntacticFrame(){
+        TreeBankDrawable treeBank = new TreeBankDrawable(new File(EditorPanel.treePath));
         this.setTitle("Syntactic");
         JButton button;
         toolBar.addSeparator();
@@ -48,6 +52,10 @@ public class SyntacticFrame extends StructureEditorFrame{
         itemDeleteSymbol.addActionListener(e -> deleteSymbol());
         itemSplitNode.addActionListener(e -> splitNode());
         itemDeleteSubtree.addActionListener(e -> deleteSubtree());
+        JMenuItem itemViewRules = addMenuItem(projectMenu, "View Rules", KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
+        itemViewRules.addActionListener(e -> {
+            new ViewSyntacticRuleFrame(treeBank);
+        });
     }
 
     @Override

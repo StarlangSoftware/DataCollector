@@ -72,8 +72,8 @@ public class AutoTransferPanel extends StructureEditorPanel{
 
     protected void nextTree(int count){
         clear();
-        if (!currentTree.getFileDescription().nextFileExists(count) && currentTree.getFileDescription().nextFileExists(ENGLISH_PATH, count)){
-            ParseTreeDrawable parseTree = new ParseTreeDrawable(EditorPanel.ENGLISH_PATH, currentTree.getFileDescription().getExtension(), currentTree.getFileDescription().getIndex() + 1);
+        if (!currentTree.getFileDescription().nextFileExists(count) && currentTree.getFileDescription().nextFileExists(englishPath, count)){
+            ParseTreeDrawable parseTree = new ParseTreeDrawable(EditorPanel.englishPath, currentTree.getFileDescription().getExtension(), currentTree.getFileDescription().getIndex() + 1);
             TreeModifier treeModifier = new TreeModifier(parseTree, new ConvertToLayeredFormat());
             treeModifier.modify();
             TurkishAutoTransfer turkishAutoTransfer = new TurkishAutoTransfer();
@@ -86,8 +86,8 @@ public class AutoTransferPanel extends StructureEditorPanel{
 
     protected void previousTree(int count){
         clear();
-        if (!currentTree.getFileDescription().previousFileExists(count) && currentTree.getFileDescription().previousFileExists(ENGLISH_PATH, count)){
-            ParseTreeDrawable parseTree = new ParseTreeDrawable(EditorPanel.ENGLISH_PATH, currentTree.getFileDescription().getExtension(), currentTree.getFileDescription().getIndex() - 1);
+        if (!currentTree.getFileDescription().previousFileExists(count) && currentTree.getFileDescription().previousFileExists(englishPath, count)){
+            ParseTreeDrawable parseTree = new ParseTreeDrawable(EditorPanel.englishPath, currentTree.getFileDescription().getExtension(), currentTree.getFileDescription().getIndex() - 1);
             TreeModifier treeModifier = new TreeModifier(parseTree, new ConvertToLayeredFormat());
             treeModifier.modify();
             TurkishAutoTransfer turkishAutoTransfer = new TurkishAutoTransfer();

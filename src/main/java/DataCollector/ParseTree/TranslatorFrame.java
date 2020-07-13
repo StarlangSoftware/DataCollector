@@ -30,12 +30,12 @@ public class TranslatorFrame extends StructureEditorFrame{
             final JFileChooser fcinput = new JFileChooser();
             fcinput.setDialogTitle("Select project file");
             fcinput.setDialogType(JFileChooser.OPEN_DIALOG);
-            fcinput.setCurrentDirectory(new File(EditorPanel.ENGLISH_PATH));
+            fcinput.setCurrentDirectory(new File(EditorPanel.englishPath));
             int returnVal = fcinput.showOpenDialog(null);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 File f = new File(secondLanguagePath + "/" + fcinput.getSelectedFile().getName());
                 if (!f.exists()) {
-                    ParseTreeDrawable parseTree = new ParseTreeDrawable(EditorPanel.ENGLISH_PATH, fcinput.getSelectedFile().getName());
+                    ParseTreeDrawable parseTree = new ParseTreeDrawable(EditorPanel.englishPath, fcinput.getSelectedFile().getName());
                     TreeModifier treeModifier = new TreeModifier(parseTree, new ConvertToLayeredFormat());
                     treeModifier.modify();
                     parseTree.saveWithPath(secondLanguagePath);
