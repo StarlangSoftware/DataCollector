@@ -1,14 +1,26 @@
 package DataCollector.Sentence;
 
+import AnnotatedSentence.AnnotatedCorpus;
+import DataCollector.ParseTree.TreeEditorPanel;
+
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.io.File;
 
 public class SentenceNERFrame extends AnnotatorFrame {
     private JCheckBox autoNERDetectionOption;
 
     public SentenceNERFrame(){
         super();
+        AnnotatedCorpus corpus;
+        corpus = new AnnotatedCorpus(new File(TreeEditorPanel.phrasePath));
         autoNERDetectionOption = new JCheckBox("Auto Named Entity Recognition", false);
         toolBar.add(autoNERDetectionOption);
+        JMenuItem itemViewAnnotated = addMenuItem(projectMenu, "View Annotations", KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
+        itemViewAnnotated.addActionListener(e -> {
+            new ViewNERAnnotationFrame(corpus, this);
+        });
     }
 
     @Override
