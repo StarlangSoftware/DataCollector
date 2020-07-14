@@ -54,7 +54,7 @@ public class SentenceMorphologicalAnalyzerFrame extends AnnotatorFrame{
         turkishSentenceAutoDisambiguator = new TurkishSentenceAutoDisambiguator(new RootWordStatistics("penntreebank_statistics.txt"));
         JMenuItem itemViewAnnotated = addMenuItem(projectMenu, "View Annotations", KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
         itemViewAnnotated.addActionListener(e -> {
-            new ViewMorphologicalAnnotationFrame(corpus);
+            new ViewMorphologicalAnnotationFrame(corpus, this);
         });
     }
 

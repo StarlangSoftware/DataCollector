@@ -16,7 +16,7 @@ public class SentenceShallowParseFrame extends AnnotatorFrame{
         corpus = new AnnotatedCorpus(new File(EditorPanel.phrasePath));
         JMenuItem itemViewAnnotated = addMenuItem(projectMenu, "View Annotations", KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
         itemViewAnnotated.addActionListener(e -> {
-            new ViewShallowParseAnnotationFrame(corpus);
+            new ViewShallowParseAnnotationFrame(corpus, this);
         });
     }
 

@@ -54,7 +54,7 @@ public class SyntacticFrame extends StructureEditorFrame{
         itemDeleteSubtree.addActionListener(e -> deleteSubtree());
         JMenuItem itemViewRules = addMenuItem(projectMenu, "View Rules", KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
         itemViewRules.addActionListener(e -> {
-            new ViewSyntacticRuleFrame(treeBank);
+            new ViewSyntacticRuleFrame(treeBank, this);
         });
     }
 

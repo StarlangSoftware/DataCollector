@@ -132,7 +132,7 @@ public class SentenceSemanticFrame extends AnnotatorFrame {
         });
         JMenuItem itemViewAnnotated = addMenuItem(projectMenu, "View Annotations", KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
         itemViewAnnotated.addActionListener(e -> {
-            new ViewSemanticAnnotationFrame(corpus, this.wordNet, wordNet);
+            new ViewSemanticAnnotationFrame(corpus, this.wordNet, wordNet, this);
         });
         this.fsm = fsm;
         this.wordNet = wordNet;

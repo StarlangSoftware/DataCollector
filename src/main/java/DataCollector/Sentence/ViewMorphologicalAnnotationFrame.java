@@ -1,6 +1,8 @@
 package DataCollector.Sentence;
 
 import AnnotatedSentence.*;
+import DataCollector.ParseTree.EditorPanel;
+import DataCollector.ParseTree.MorphologicalAnalyzerFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -79,7 +81,7 @@ public class ViewMorphologicalAnnotationFrame extends ViewAnnotationFrame implem
         }
     }
 
-    public ViewMorphologicalAnnotationFrame(AnnotatedCorpus corpus){
+    public ViewMorphologicalAnnotationFrame(AnnotatedCorpus corpus, SentenceMorphologicalAnalyzerFrame sentenceMorphologicalAnalyzerFrame){
         super(corpus);
         COLOR_COLUMN_INDEX = 6;
         TAG_INDEX = 3;
@@ -92,6 +94,18 @@ public class ViewMorphologicalAnnotationFrame extends ViewAnnotationFrame implem
         dataTable.getColumnModel().getColumn(WORD_INDEX).setWidth(200);
         dataTable.getColumnModel().getColumn(TAG_INDEX).setWidth(200);
         dataTable.setDefaultRenderer(Object.class, new CellRenderer());
+        dataTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                if (evt.getClickCount() == 2){
+                    int row = dataTable.rowAtPoint(evt.getPoint());
+                    if (row >= 0) {
+                        String fileName = data.get(row).get(0);
+                        sentenceMorphologicalAnalyzerFrame.addPanelToFrame(sentenceMorphologicalAnalyzerFrame.generatePanel(EditorPanel.phrasePath, fileName), fileName);
+                    }
+                }
+            }
+        });
         JScrollPane tablePane = new JScrollPane(dataTable);
         add(tablePane, BorderLayout.CENTER);
     }

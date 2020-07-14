@@ -1,6 +1,7 @@
 package DataCollector.Sentence;
 
 import AnnotatedSentence.*;
+import DataCollector.ParseTree.EditorPanel;
 import Dictionary.Word;
 
 import javax.swing.*;
@@ -100,7 +101,7 @@ public class ViewShallowParseAnnotationFrame extends ViewAnnotationFrame impleme
         }
     }
 
-    public ViewShallowParseAnnotationFrame(AnnotatedCorpus corpus){
+    public ViewShallowParseAnnotationFrame(AnnotatedCorpus corpus, SentenceShallowParseFrame sentenceShallowParseFrame){
         super(corpus);
         COLOR_COLUMN_INDEX = 6;
         TAG_INDEX = 3;
@@ -114,6 +115,18 @@ public class ViewShallowParseAnnotationFrame extends ViewAnnotationFrame impleme
         dataTable.getColumnModel().getColumn(TAG_INDEX).setMinWidth(150);
         dataTable.getColumnModel().getColumn(TAG_INDEX).setMaxWidth(150);
         dataTable.setDefaultRenderer(Object.class, new CellRenderer());
+        dataTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                if (evt.getClickCount() == 2){
+                    int row = dataTable.rowAtPoint(evt.getPoint());
+                    if (row >= 0) {
+                        String fileName = data.get(row).get(0);
+                        sentenceShallowParseFrame.addPanelToFrame(sentenceShallowParseFrame.generatePanel(EditorPanel.phrasePath, fileName), fileName);
+                    }
+                }
+            }
+        });
         JScrollPane tablePane = new JScrollPane(dataTable);
         add(tablePane, BorderLayout.CENTER);
     }

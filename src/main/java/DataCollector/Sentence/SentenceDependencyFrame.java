@@ -47,7 +47,7 @@ public class SentenceDependencyFrame extends AnnotatorFrame {
         });
         JMenuItem itemViewAnnotated = addMenuItem(projectMenu, "View Annotations", KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
         itemViewAnnotated.addActionListener(e -> {
-            new ViewDependencyAnnotationFrame(corpus);
+            new ViewDependencyAnnotationFrame(corpus, this);
         });
     }
 

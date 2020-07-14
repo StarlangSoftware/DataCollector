@@ -3,6 +3,7 @@ package DataCollector.Sentence;
 import AnnotatedSentence.AnnotatedCorpus;
 import AnnotatedSentence.AnnotatedSentence;
 import AnnotatedSentence.AnnotatedWord;
+import DataCollector.ParseTree.EditorPanel;
 import WordNet.*;
 
 import javax.swing.*;
@@ -109,7 +110,7 @@ public class ViewSemanticAnnotationFrame extends ViewAnnotationFrame implements 
         }
     }
 
-    public ViewSemanticAnnotationFrame(AnnotatedCorpus corpus, WordNet domainWordNet, WordNet turkish){
+    public ViewSemanticAnnotationFrame(AnnotatedCorpus corpus, WordNet domainWordNet, WordNet turkish, SentenceSemanticFrame sentenceSemanticFrame){
         super(corpus);
         this.domainWordNet = domainWordNet;
         this.turkish = turkish;
@@ -127,6 +128,18 @@ public class ViewSemanticAnnotationFrame extends ViewAnnotationFrame implements 
         dataTable.getColumnModel().getColumn(4).setWidth(200);
         dataTable.getColumnModel().getColumn(5).setWidth(300);
         dataTable.setDefaultRenderer(Object.class, new CellRenderer());
+        dataTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                if (evt.getClickCount() == 2){
+                    int row = dataTable.rowAtPoint(evt.getPoint());
+                    if (row >= 0) {
+                        String fileName = data.get(row).get(0);
+                        sentenceSemanticFrame.addPanelToFrame(sentenceSemanticFrame.generatePanel(EditorPanel.phrasePath, fileName), fileName);
+                    }
+                }
+            }
+        });
         JScrollPane tablePane = new JScrollPane(dataTable);
         add(tablePane, BorderLayout.CENTER);
     }

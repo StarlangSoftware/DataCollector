@@ -40,9 +40,9 @@ public class ViewSyntacticRuleFrame extends JFrame implements ActionListener {
         public int compare(ArrayList<String> o1, ArrayList<String> o2) {
             if (o1.get(1).equals(o2.get(1))) {
                 if (o1.get(0).equals(o2.get(0))) {
-                    return collator.compare(o1.get(2), o2.get(2));
-                } else {
                     return collator.compare(o1.get(0), o2.get(0));
+                } else {
+                    return collator.compare(o1.get(2), o2.get(2));
                 }
             } else {
                 return collator.compare(o1.get(1), o2.get(1));
@@ -189,7 +189,7 @@ public class ViewSyntacticRuleFrame extends JFrame implements ActionListener {
 
     }
 
-    public ViewSyntacticRuleFrame(TreeBankDrawable treeBank){
+    public ViewSyntacticRuleFrame(TreeBankDrawable treeBank, SyntacticFrame syntacticFrame){
         this.treeBank = treeBank;
         COLOR_COLUMN_INDEX = 3;
         JToolBar toolBar = new JToolBar("ToolBox");
@@ -208,6 +208,18 @@ public class ViewSyntacticRuleFrame extends JFrame implements ActionListener {
         dataTable.getColumnModel().getColumn(1).setMinWidth(200);
         dataTable.getColumnModel().getColumn(2).setMinWidth(300);
         dataTable.setDefaultRenderer(Object.class, new ViewSyntacticRuleFrame.CellRenderer());
+        dataTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                if (evt.getClickCount() == 2){
+                    int row = dataTable.rowAtPoint(evt.getPoint());
+                    if (row >= 0) {
+                        String fileName = data.get(row).get(0);
+                        syntacticFrame.addPanelToFrame(new SyntacticPanel(EditorPanel.treePath, fileName, ViewLayerType.TURKISH_WORD), fileName);
+                    }
+                }
+            }
+        });
         JScrollPane tablePane = new JScrollPane(dataTable);
         add(tablePane, BorderLayout.CENTER);
     }
