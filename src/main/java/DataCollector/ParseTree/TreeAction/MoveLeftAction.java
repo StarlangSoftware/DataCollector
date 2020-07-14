@@ -1,14 +1,14 @@
 package DataCollector.ParseTree.TreeAction;
 
 import AnnotatedTree.*;
-import DataCollector.ParseTree.EditorPanel;
+import DataCollector.ParseTree.TreeEditorPanel;
 
 public class MoveLeftAction extends TreeEditAction{
 
     private ParseTreeDrawable tree;
     private ParseNodeDrawable node;
 
-    public MoveLeftAction(EditorPanel associatedPanel, ParseTreeDrawable tree, ParseNodeDrawable node){
+    public MoveLeftAction(TreeEditorPanel associatedPanel, ParseTreeDrawable tree, ParseNodeDrawable node){
         this.associatedPanel = associatedPanel;
         this.tree = tree;
         this.node = node;

@@ -4,7 +4,7 @@ import AnnotatedSentence.LayerNotExistsException;
 import AnnotatedSentence.ViewLayerType;
 import MorphologicalAnalysis.MetamorphicParse;
 import AnnotatedTree.*;
-import DataCollector.ParseTree.EditorPanel;
+import DataCollector.ParseTree.TreeEditorPanel;
 
 public class MetaMorphemeMoveAction extends TreeEditAction{
 
@@ -13,7 +13,7 @@ public class MetaMorphemeMoveAction extends TreeEditAction{
     private int fromIndex;
     private MetamorphicParse removedParse;
 
-    public MetaMorphemeMoveAction(EditorPanel associatedPanel, LayerInfo fromLayer, LayerInfo toLayer, int fromIndex){
+    public MetaMorphemeMoveAction(TreeEditorPanel associatedPanel, LayerInfo fromLayer, LayerInfo toLayer, int fromIndex){
         this.associatedPanel = associatedPanel;
         this.fromLayer = fromLayer;
         this.toLayer = toLayer;

@@ -1,7 +1,7 @@
 package DataCollector.Sentence;
 
 import AnnotatedSentence.*;
-import DataCollector.ParseTree.EditorPanel;
+import DataCollector.ParseTree.TreeEditorPanel;
 import Dictionary.Word;
 
 import javax.swing.*;
@@ -122,7 +122,7 @@ public class ViewShallowParseAnnotationFrame extends ViewAnnotationFrame impleme
                     int row = dataTable.rowAtPoint(evt.getPoint());
                     if (row >= 0) {
                         String fileName = data.get(row).get(0);
-                        sentenceShallowParseFrame.addPanelToFrame(sentenceShallowParseFrame.generatePanel(EditorPanel.phrasePath, fileName), fileName);
+                        sentenceShallowParseFrame.addPanelToFrame(sentenceShallowParseFrame.generatePanel(TreeEditorPanel.phrasePath, fileName), fileName);
                     }
                 }
             }

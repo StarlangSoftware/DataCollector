@@ -1,6 +1,6 @@
 package DataCollector.ParseTree.TreeAction;
 
-import DataCollector.ParseTree.EditorPanel;
+import DataCollector.ParseTree.TreeEditorPanel;
 import AnnotatedTree.ParseNodeDrawable;
 
 public class AddParentAction extends TreeEditAction{
@@ -8,7 +8,7 @@ public class AddParentAction extends TreeEditAction{
     private ParseNodeDrawable oldParent;
     private ParseNodeDrawable newParent;
 
-    public AddParentAction(EditorPanel associatedPanel, ParseNodeDrawable node){
+    public AddParentAction(TreeEditorPanel associatedPanel, ParseNodeDrawable node){
         this.associatedPanel = associatedPanel;
         this.node = node;
     }

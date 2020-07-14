@@ -8,6 +8,6 @@ public class TestMorphologicalAnalyzerFrame {
     public static void main(String[] args){
         FsmMorphologicalAnalyzer fsm = new FsmMorphologicalAnalyzer();
         RootWordStatistics rootWordStatistics = new RootWordStatistics("penntreebank_statistics.txt");
-        new MorphologicalAnalyzerFrame(fsm, rootWordStatistics);
+        new TreeMorphologicalAnalyzerFrame(fsm, rootWordStatistics);
     }
 }

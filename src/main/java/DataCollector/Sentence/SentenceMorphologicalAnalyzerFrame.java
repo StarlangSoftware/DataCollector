@@ -2,7 +2,7 @@ package DataCollector.Sentence;
 
 import AnnotatedSentence.AnnotatedCorpus;
 import AnnotatedSentence.AutoProcessor.AutoDisambiguation.TurkishSentenceAutoDisambiguator;
-import DataCollector.ParseTree.EditorPanel;
+import DataCollector.ParseTree.TreeEditorPanel;
 import MorphologicalAnalysis.FsmMorphologicalAnalyzer;
 import MorphologicalDisambiguation.RootWordStatistics;
 import WordNet.WordNet;
@@ -25,7 +25,7 @@ public class SentenceMorphologicalAnalyzerFrame extends AnnotatorFrame{
     public SentenceMorphologicalAnalyzerFrame(final FsmMorphologicalAnalyzer fsm, final WordNet wordNet){
         super();
         AnnotatedCorpus corpus;
-        corpus = new AnnotatedCorpus(new File(EditorPanel.phrasePath));
+        corpus = new AnnotatedCorpus(new File(TreeEditorPanel.phrasePath));
         JMenuItem itemUpdateDictionary = addMenuItem(projectMenu, "Update Analyzer", KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
         itemUpdateDictionary.addActionListener(e -> {
             Properties properties = new Properties();

@@ -1,7 +1,7 @@
 package DataCollector.ParseTree.TreeAction;
 
 import AnnotatedSentence.ViewLayerType;
-import DataCollector.ParseTree.EditorPanel;
+import DataCollector.ParseTree.TreeEditorPanel;
 import AnnotatedTree.LayerInfo;
 
 public class LayerAction extends TreeEditAction{
@@ -11,7 +11,7 @@ public class LayerAction extends TreeEditAction{
     private String previousLayerData;
     private ViewLayerType viewLayerType;
 
-    public LayerAction(EditorPanel associatedPanel, LayerInfo info, String layerData, ViewLayerType viewLayerType){
+    public LayerAction(TreeEditorPanel associatedPanel, LayerInfo info, String layerData, ViewLayerType viewLayerType){
         this.associatedPanel = associatedPanel;
         this.info = info;
         this.layerData = layerData;

@@ -1,10 +1,10 @@
 package DataCollector.ParseTree.TreeAction;
 
-import DataCollector.ParseTree.EditorPanel;
+import DataCollector.ParseTree.TreeEditorPanel;
 
 public abstract class TreeEditAction {
 
-    protected EditorPanel associatedPanel;
+    protected TreeEditorPanel associatedPanel;
 
     public abstract void execute();
     public abstract void undo();

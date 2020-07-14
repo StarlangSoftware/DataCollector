@@ -1,7 +1,7 @@
 package DataCollector.ParseTree.TreeAction;
 
 import AnnotatedSentence.ViewLayerType;
-import DataCollector.ParseTree.EditorPanel;
+import DataCollector.ParseTree.TreeEditorPanel;
 import AnnotatedTree.LayerInfo;
 
 public class LayerClearAction extends TreeEditAction{
@@ -9,7 +9,7 @@ public class LayerClearAction extends TreeEditAction{
     private ViewLayerType viewLayerType;
     private String previousLayerData;
 
-    public LayerClearAction(EditorPanel associatedPanel, LayerInfo info, ViewLayerType viewLayerType){
+    public LayerClearAction(TreeEditorPanel associatedPanel, LayerInfo info, ViewLayerType viewLayerType){
         this.associatedPanel = associatedPanel;
         this.info = info;
         this.viewLayerType = viewLayerType;

@@ -4,7 +4,7 @@ import AnnotatedSentence.*;
 import Corpus.FileDescription;
 import AnnotatedSentence.AnnotatedWord;
 import MorphologicalAnalysis.FsmParse;
-import DataCollector.ParseTree.EditorPanel;
+import DataCollector.ParseTree.TreeEditorPanel;
 import AnnotatedTree.ParseTreeDrawable;
 
 import javax.swing.*;
@@ -116,7 +116,7 @@ public abstract class AnnotatorPanel extends JPanel implements MouseListener, Mo
     }
 
     public String getSourceSentence(){
-        ParseTreeDrawable englishTree = new ParseTreeDrawable(EditorPanel.englishPath, fileDescription);
+        ParseTreeDrawable englishTree = new ParseTreeDrawable(TreeEditorPanel.englishPath, fileDescription);
         if (englishTree.getRoot() != null){
             return englishTree.toSentence();
         } else {
@@ -125,7 +125,7 @@ public abstract class AnnotatorPanel extends JPanel implements MouseListener, Mo
     }
 
     public String getOriginalSentence(){
-        AnnotatedSentence originalSentence = new AnnotatedSentence(new File(EditorPanel.originalPath + fileDescription.getRawFileName()));
+        AnnotatedSentence originalSentence = new AnnotatedSentence(new File(TreeEditorPanel.originalPath + fileDescription.getRawFileName()));
         return originalSentence.toWords();
     }
 

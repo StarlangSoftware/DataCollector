@@ -1,8 +1,7 @@
 package DataCollector.Sentence;
 
 import AnnotatedSentence.*;
-import DataCollector.ParseTree.EditorPanel;
-import DataCollector.ParseTree.MorphologicalAnalyzerFrame;
+import DataCollector.ParseTree.TreeEditorPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -101,7 +100,7 @@ public class ViewMorphologicalAnnotationFrame extends ViewAnnotationFrame implem
                     int row = dataTable.rowAtPoint(evt.getPoint());
                     if (row >= 0) {
                         String fileName = data.get(row).get(0);
-                        sentenceMorphologicalAnalyzerFrame.addPanelToFrame(sentenceMorphologicalAnalyzerFrame.generatePanel(EditorPanel.phrasePath, fileName), fileName);
+                        sentenceMorphologicalAnalyzerFrame.addPanelToFrame(sentenceMorphologicalAnalyzerFrame.generatePanel(TreeEditorPanel.phrasePath, fileName), fileName);
                     }
                 }
             }

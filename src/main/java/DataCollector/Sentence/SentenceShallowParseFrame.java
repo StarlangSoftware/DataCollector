@@ -1,7 +1,7 @@
 package DataCollector.Sentence;
 
 import AnnotatedSentence.AnnotatedCorpus;
-import DataCollector.ParseTree.EditorPanel;
+import DataCollector.ParseTree.TreeEditorPanel;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -13,7 +13,7 @@ public class SentenceShallowParseFrame extends AnnotatorFrame{
     public SentenceShallowParseFrame(){
         super();
         AnnotatedCorpus corpus;
-        corpus = new AnnotatedCorpus(new File(EditorPanel.phrasePath));
+        corpus = new AnnotatedCorpus(new File(TreeEditorPanel.phrasePath));
         JMenuItem itemViewAnnotated = addMenuItem(projectMenu, "View Annotations", KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
         itemViewAnnotated.addActionListener(e -> {
             new ViewShallowParseAnnotationFrame(corpus, this);

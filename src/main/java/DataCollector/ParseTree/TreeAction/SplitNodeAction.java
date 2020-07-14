@@ -1,14 +1,14 @@
 package DataCollector.ParseTree.TreeAction;
 
 import AnnotatedTree.*;
-import DataCollector.ParseTree.EditorPanel;
+import DataCollector.ParseTree.TreeEditorPanel;
 
 public class SplitNodeAction extends TreeEditAction{
     private ParseNodeDrawable node;
     private ParseNodeDrawable parent;
     private ParseTreeDrawable parseTree;
 
-    public SplitNodeAction(EditorPanel associatedPanel, ParseTreeDrawable parseTree, ParseNodeDrawable node){
+    public SplitNodeAction(TreeEditorPanel associatedPanel, ParseTreeDrawable parseTree, ParseNodeDrawable node){
         this.associatedPanel = associatedPanel;
         this.node = node;
         this.parseTree = parseTree;

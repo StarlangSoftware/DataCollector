@@ -3,8 +3,7 @@ package DataCollector.Sentence;
 import AnnotatedSentence.AnnotatedCorpus;
 import AnnotatedSentence.AnnotatedSentence;
 import AnnotatedSentence.AnnotatedWord;
-import DataCollector.ParseTree.EditorPanel;
-import DataCollector.ParseTree.SyntacticPanel;
+import DataCollector.ParseTree.TreeEditorPanel;
 import Dictionary.Word;
 
 import javax.swing.*;
@@ -151,7 +150,7 @@ public class ViewDependencyAnnotationFrame extends ViewAnnotationFrame implement
                     int row = dataTable.rowAtPoint(evt.getPoint());
                     if (row >= 0) {
                         String fileName = data.get(row).get(0);
-                        sentenceDependencyFrame.addPanelToFrame(sentenceDependencyFrame.generatePanel(EditorPanel.phrasePath, fileName), fileName);
+                        sentenceDependencyFrame.addPanelToFrame(sentenceDependencyFrame.generatePanel(TreeEditorPanel.phrasePath, fileName), fileName);
                     }
                 }
             }

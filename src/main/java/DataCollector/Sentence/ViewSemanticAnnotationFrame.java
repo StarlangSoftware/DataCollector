@@ -3,7 +3,7 @@ package DataCollector.Sentence;
 import AnnotatedSentence.AnnotatedCorpus;
 import AnnotatedSentence.AnnotatedSentence;
 import AnnotatedSentence.AnnotatedWord;
-import DataCollector.ParseTree.EditorPanel;
+import DataCollector.ParseTree.TreeEditorPanel;
 import WordNet.*;
 
 import javax.swing.*;
@@ -135,7 +135,7 @@ public class ViewSemanticAnnotationFrame extends ViewAnnotationFrame implements 
                     int row = dataTable.rowAtPoint(evt.getPoint());
                     if (row >= 0) {
                         String fileName = data.get(row).get(0);
-                        sentenceSemanticFrame.addPanelToFrame(sentenceSemanticFrame.generatePanel(EditorPanel.phrasePath, fileName), fileName);
+                        sentenceSemanticFrame.addPanelToFrame(sentenceSemanticFrame.generatePanel(TreeEditorPanel.phrasePath, fileName), fileName);
                     }
                 }
             }

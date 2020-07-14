@@ -2,7 +2,7 @@ package DataCollector.ParseTree.TreeAction;
 
 import AnnotatedSentence.ViewLayerType;
 import AnnotatedTree.*;
-import DataCollector.ParseTree.EditorPanel;
+import DataCollector.ParseTree.TreeEditorPanel;
 
 public class MorphologicalAnalysisAction extends TreeEditAction {
 
@@ -12,7 +12,7 @@ public class MorphologicalAnalysisAction extends TreeEditAction {
     private String previousMorphologicalAnalysis;
     private String previousMorphotactics;
 
-    public MorphologicalAnalysisAction(EditorPanel associatedPanel, LayerInfo info, String morphologicalAnalysis, String morphotactics){
+    public MorphologicalAnalysisAction(TreeEditorPanel associatedPanel, LayerInfo info, String morphologicalAnalysis, String morphotactics){
         this.associatedPanel = associatedPanel;
         this.info = info;
         this.morphologicalAnalysis = morphologicalAnalysis;

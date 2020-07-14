@@ -1,7 +1,7 @@
 package DataCollector.ParseTree.TreeAction;
 
 import ParseTree.Symbol;
-import DataCollector.ParseTree.EditorPanel;
+import DataCollector.ParseTree.TreeEditorPanel;
 import AnnotatedTree.ParseNodeDrawable;
 
 public class EditSymbolAction extends TreeEditAction {
@@ -9,7 +9,7 @@ public class EditSymbolAction extends TreeEditAction {
     private Symbol oldSymbol;
     private Symbol newSymbol;
 
-    public EditSymbolAction(EditorPanel associatedPanel, ParseNodeDrawable node, Symbol newSymbol){
+    public EditSymbolAction(TreeEditorPanel associatedPanel, ParseNodeDrawable node, Symbol newSymbol){
         this.associatedPanel = associatedPanel;
         this.node = node;
         this.newSymbol = newSymbol;

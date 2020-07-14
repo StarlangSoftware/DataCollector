@@ -1,14 +1,14 @@
 package DataCollector.ParseTree.TreeAction;
 
 import AnnotatedTree.ParseNodeDrawable;
-import DataCollector.ParseTree.EditorPanel;
+import DataCollector.ParseTree.TreeEditorPanel;
 
 public class DeleteNodeAction extends TreeEditAction{
     private ParseNodeDrawable node;
     private ParseNodeDrawable oldParent;
     private int nodeIndex, childCount;
 
-    public DeleteNodeAction(EditorPanel associatedPanel, ParseNodeDrawable node){
+    public DeleteNodeAction(TreeEditorPanel associatedPanel, ParseNodeDrawable node){
         this.associatedPanel = associatedPanel;
         this.node = node;
     }

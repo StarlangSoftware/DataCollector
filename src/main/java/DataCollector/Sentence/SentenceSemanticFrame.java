@@ -4,7 +4,7 @@ import AnnotatedSentence.AnnotatedCorpus;
 import AnnotatedSentence.AnnotatedSentence;
 import AnnotatedSentence.AnnotatedWord;
 import AnnotatedSentence.AutoProcessor.AutoSemantic.TurkishSentenceAutoSemantic;
-import DataCollector.ParseTree.EditorPanel;
+import DataCollector.ParseTree.TreeEditorPanel;
 import MorphologicalAnalysis.FsmMorphologicalAnalyzer;
 import WordNet.WordNet;
 
@@ -24,7 +24,7 @@ public class SentenceSemanticFrame extends AnnotatorFrame {
         super();
         exampleSentences = new HashMap<>();
         AnnotatedCorpus corpus;
-        corpus = new AnnotatedCorpus(new File(EditorPanel.phrasePath));
+        corpus = new AnnotatedCorpus(new File(TreeEditorPanel.phrasePath));
         for (int i = 0; i < corpus.sentenceCount(); i++){
             AnnotatedSentence sentence = (AnnotatedSentence) corpus.getSentence(i);
             for (int j = 0; j < sentence.wordCount(); j++){
@@ -119,7 +119,7 @@ public class SentenceSemanticFrame extends AnnotatorFrame {
                     AnnotatedWord word = (AnnotatedWord) sentence.getWord(j);
                     String semantic = word.getSemantic();
                     if (word.getName() != null && semantic == null){
-                        AnnotatorPanel annotatorPanel = generatePanel(EditorPanel.phrasePath, sentence.getFileName());
+                        AnnotatorPanel annotatorPanel = generatePanel(TreeEditorPanel.phrasePath, sentence.getFileName());
                         addPanelToFrame(annotatorPanel, sentence.getFileName());
                         count++;
                         if (count == numberOfSentences){

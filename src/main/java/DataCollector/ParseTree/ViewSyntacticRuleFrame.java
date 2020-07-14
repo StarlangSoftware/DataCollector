@@ -189,7 +189,7 @@ public class ViewSyntacticRuleFrame extends JFrame implements ActionListener {
 
     }
 
-    public ViewSyntacticRuleFrame(TreeBankDrawable treeBank, SyntacticFrame syntacticFrame){
+    public ViewSyntacticRuleFrame(TreeBankDrawable treeBank, TreeSyntacticFrame syntacticFrame){
         this.treeBank = treeBank;
         COLOR_COLUMN_INDEX = 3;
         JToolBar toolBar = new JToolBar("ToolBox");
@@ -215,7 +215,7 @@ public class ViewSyntacticRuleFrame extends JFrame implements ActionListener {
                     int row = dataTable.rowAtPoint(evt.getPoint());
                     if (row >= 0) {
                         String fileName = data.get(row).get(0);
-                        syntacticFrame.addPanelToFrame(new SyntacticPanel(EditorPanel.treePath, fileName, ViewLayerType.TURKISH_WORD), fileName);
+                        syntacticFrame.addPanelToFrame(new TreeSyntacticPanel(TreeEditorPanel.treePath, fileName, ViewLayerType.TURKISH_WORD), fileName);
                     }
                 }
             }

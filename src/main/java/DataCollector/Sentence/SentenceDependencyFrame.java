@@ -3,7 +3,7 @@ package DataCollector.Sentence;
 import AnnotatedSentence.AnnotatedCorpus;
 import AnnotatedSentence.AnnotatedSentence;
 import AnnotatedSentence.AnnotatedWord;
-import DataCollector.ParseTree.EditorPanel;
+import DataCollector.ParseTree.TreeEditorPanel;
 import DependencyParser.UniversalDependencyRelation;
 
 import javax.swing.*;
@@ -21,7 +21,7 @@ public class SentenceDependencyFrame extends AnnotatorFrame {
     public SentenceDependencyFrame(){
         super();
         AnnotatedCorpus corpus;
-        corpus = new AnnotatedCorpus(new File(EditorPanel.phrasePath));
+        corpus = new AnnotatedCorpus(new File(TreeEditorPanel.phrasePath));
         JMenuItem itemShowUnannotated = addMenuItem(projectMenu, "Show Unannotated Files", KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
         itemShowUnannotated.addActionListener(e -> {
             int count = 0;
@@ -34,7 +34,7 @@ public class SentenceDependencyFrame extends AnnotatorFrame {
                     AnnotatedWord word = (AnnotatedWord) sentence.getWord(j);
                     UniversalDependencyRelation universalDependencyRelation = word.getUniversalDependency();
                     if (word.getName() != null && universalDependencyRelation == null){
-                        AnnotatorPanel annotatorPanel = generatePanel(EditorPanel.phrasePath, sentence.getFileName());
+                        AnnotatorPanel annotatorPanel = generatePanel(TreeEditorPanel.phrasePath, sentence.getFileName());
                         addPanelToFrame(annotatorPanel, sentence.getFileName());
                         count++;
                         if (count == numberOfSentences){
