@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Locale;
 
-public class ViewSyntacticRuleFrame extends JFrame implements ActionListener {
+public class ViewTreeSyntacticAnnotationFrame extends JFrame implements ActionListener {
     protected ArrayList<ArrayList<String>> data;
     protected JTable dataTable;
     protected TreeBankDrawable treeBank;
@@ -189,11 +189,11 @@ public class ViewSyntacticRuleFrame extends JFrame implements ActionListener {
 
     }
 
-    public ViewSyntacticRuleFrame(TreeBankDrawable treeBank, TreeSyntacticFrame syntacticFrame){
+    public ViewTreeSyntacticAnnotationFrame(TreeBankDrawable treeBank, TreeSyntacticFrame syntacticFrame){
         this.treeBank = treeBank;
         COLOR_COLUMN_INDEX = 3;
         JToolBar toolBar = new JToolBar("ToolBox");
-        JButton idSort = new DrawingButton(ViewSyntacticRuleFrame.class, this, "sortnumbers", ID_SORT, "");
+        JButton idSort = new DrawingButton(ViewTreeSyntacticAnnotationFrame.class, this, "sortnumbers", ID_SORT, "");
         toolBar.add(idSort);
         add(toolBar, BorderLayout.PAGE_START);
         toolBar.setVisible(true);
@@ -207,7 +207,7 @@ public class ViewSyntacticRuleFrame extends JFrame implements ActionListener {
         dataTable.getColumnModel().getColumn(0).setMaxWidth(150);
         dataTable.getColumnModel().getColumn(1).setMinWidth(200);
         dataTable.getColumnModel().getColumn(2).setMinWidth(300);
-        dataTable.setDefaultRenderer(Object.class, new ViewSyntacticRuleFrame.CellRenderer());
+        dataTable.setDefaultRenderer(Object.class, new ViewTreeSyntacticAnnotationFrame.CellRenderer());
         dataTable.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {

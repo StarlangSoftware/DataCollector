@@ -10,7 +10,7 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.CubicCurve2D;
 import java.awt.geom.Point2D;
 
-public class SentenceDependencyPanel extends AnnotatorPanel {
+public class SentenceDependencyPanel extends SentenceAnnotatorPanel {
     private boolean dragged = false;
     private int dragX = -1, dragY = -1;
 

@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public class SentenceSemanticPanel extends AnnotatorPanel{
+public class SentenceSemanticPanel extends SentenceAnnotatorPanel {
 
     private FsmMorphologicalAnalyzer fsm;
     private WordNet wordNet;

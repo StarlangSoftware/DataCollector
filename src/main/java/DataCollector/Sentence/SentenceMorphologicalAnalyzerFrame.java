@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.Properties;
 
-public class SentenceMorphologicalAnalyzerFrame extends AnnotatorFrame{
+public class SentenceMorphologicalAnalyzerFrame extends SentenceAnnotatorFrame {
     private JCheckBox autoAnalysisDetectionOption;
     private FsmMorphologicalAnalyzer fsm;
     private WordNet wordNet;
@@ -54,12 +54,12 @@ public class SentenceMorphologicalAnalyzerFrame extends AnnotatorFrame{
         turkishSentenceAutoDisambiguator = new TurkishSentenceAutoDisambiguator(new RootWordStatistics("penntreebank_statistics.txt"));
         JMenuItem itemViewAnnotated = addMenuItem(projectMenu, "View Annotations", KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
         itemViewAnnotated.addActionListener(e -> {
-            new ViewMorphologicalAnnotationFrame(corpus, this);
+            new ViewSentenceMorphologicalAnnotationFrame(corpus, this);
         });
     }
 
     @Override
-    protected AnnotatorPanel generatePanel(String currentPath, String rawFileName) {
+    protected SentenceAnnotatorPanel generatePanel(String currentPath, String rawFileName) {
         return new SentenceMorphologicalAnalyzerPanel(currentPath, rawFileName, fsm, wordNet, turkishSentenceAutoDisambiguator);
     }
 

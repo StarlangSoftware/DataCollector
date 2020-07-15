@@ -8,7 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 
-public class SentenceShallowParseFrame extends AnnotatorFrame{
+public class SentenceShallowParseFrame extends SentenceAnnotatorFrame {
 
     public SentenceShallowParseFrame(){
         super();
@@ -16,12 +16,12 @@ public class SentenceShallowParseFrame extends AnnotatorFrame{
         corpus = new AnnotatedCorpus(new File(TreeEditorPanel.phrasePath));
         JMenuItem itemViewAnnotated = addMenuItem(projectMenu, "View Annotations", KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
         itemViewAnnotated.addActionListener(e -> {
-            new ViewShallowParseAnnotationFrame(corpus, this);
+            new ViewSentenceShallowParseAnnotationFrame(corpus, this);
         });
     }
 
     @Override
-    protected AnnotatorPanel generatePanel(String currentPath, String rawFileName) {
+    protected SentenceAnnotatorPanel generatePanel(String currentPath, String rawFileName) {
         return new SentenceShallowParsePanel(currentPath, rawFileName);
     }
 }

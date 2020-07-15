@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Locale;
 
-public abstract class ViewAnnotationFrame extends JFrame implements ActionListener {
+public abstract class ViewSentenceAnnotationFrame extends JFrame implements ActionListener {
     protected ArrayList<ArrayList<String>> data;
     protected JTable dataTable;
     protected AnnotatedCorpus corpus;
@@ -130,16 +130,16 @@ public abstract class ViewAnnotationFrame extends JFrame implements ActionListen
 
     }
 
-    public ViewAnnotationFrame(AnnotatedCorpus corpus){
+    public ViewSentenceAnnotationFrame(AnnotatedCorpus corpus){
         this.corpus = corpus;
         JToolBar toolBar = new JToolBar("ToolBox");
-        JButton idSort = new DrawingButton(ViewAnnotationFrame.class, this, "sortnumbers", ID_SORT, "");
+        JButton idSort = new DrawingButton(ViewSentenceAnnotationFrame.class, this, "sortnumbers", ID_SORT, "");
         toolBar.add(idSort);
-        JButton textSort = new DrawingButton(ViewAnnotationFrame.class, this, "sorttext", WORD_SORT, "");
+        JButton textSort = new DrawingButton(ViewSentenceAnnotationFrame.class, this, "sorttext", WORD_SORT, "");
         toolBar.add(textSort);
-        JButton copy = new DrawingButton(ViewAnnotationFrame.class, this, "copy", COPY, "Copy Id");
+        JButton copy = new DrawingButton(ViewSentenceAnnotationFrame.class, this, "copy", COPY, "Copy Id");
         toolBar.add(copy);
-        JButton paste = new DrawingButton(ViewAnnotationFrame.class, this, "paste", PASTE, "Paste Id");
+        JButton paste = new DrawingButton(ViewSentenceAnnotationFrame.class, this, "paste", PASTE, "Paste Id");
         toolBar.add(paste);
         add(toolBar, BorderLayout.PAGE_START);
         toolBar.setVisible(true);

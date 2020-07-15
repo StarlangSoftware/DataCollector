@@ -1,11 +1,10 @@
 package DataCollector.Sentence;
 
 import AnnotatedSentence.*;
-import DataGenerator.InstanceGenerator.FeaturedShallowParseInstanceGenerator;
 
 import java.awt.*;
 
-public class SentenceShallowParsePanel extends AnnotatorPanel{
+public class SentenceShallowParsePanel extends SentenceAnnotatorPanel {
     private String[] shallowParseList = {"YÜKLEM", "ÖZNE", "NESNE", "ZARF_TÜMLECİ", "DOLAYLI_TÜMLEÇ", "HİÇBİRİ"};
 
     public SentenceShallowParsePanel(String currentPath, String fileName){

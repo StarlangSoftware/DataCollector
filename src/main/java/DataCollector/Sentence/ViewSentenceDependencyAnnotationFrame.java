@@ -1,6 +1,8 @@
 package DataCollector.Sentence;
 
-import AnnotatedSentence.*;
+import AnnotatedSentence.AnnotatedCorpus;
+import AnnotatedSentence.AnnotatedSentence;
+import AnnotatedSentence.AnnotatedWord;
 import DataCollector.ParseTree.TreeEditorPanel;
 import Dictionary.Word;
 
@@ -10,21 +12,24 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class ViewShallowParseAnnotationFrame extends ViewAnnotationFrame implements ActionListener {
+public class ViewSentenceDependencyAnnotationFrame extends ViewSentenceAnnotationFrame implements ActionListener {
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
         if (PASTE.equals(e.getActionCommand())) {
             if (selectedRow != -1) {
                 for (int rowNo : dataTable.getSelectedRows()) {
-                    updateShallowParse(rowNo, data.get(selectedRow).get(TAG_INDEX));
+                    if (!updateDependencyTag(rowNo, data.get(selectedRow).get(TAG_INDEX))){
+                        JOptionPane.showMessageDialog(this, "No Dependency Defined Before", "Warning", JOptionPane.INFORMATION_MESSAGE);
+                    }
                 }
             }
         }
         dataTable.invalidate();
     }
 
-    public class ShallowParseTableDataModel extends TableDataModel {
+    public class DependencyTableDataModel extends TableDataModel {
 
         public String getColumnName(int col) {
             switch (col) {
@@ -35,27 +40,51 @@ public class ViewShallowParseAnnotationFrame extends ViewAnnotationFrame impleme
                 case WORD_INDEX:
                     return "Word";
                 case 3:
-                    return "Shallow Parse";
+                    return "Dependent Word Index";
                 case 4:
+                    return "Dependency Type";
+                case 5:
                     return "Sentence";
                 default:
                     return "";
             }
         }
 
+        public boolean isCellEditable(int row, int col) {
+            return col == 3 || col == TAG_INDEX;
+        }
+
         public void setValueAt(Object value, int row, int col) {
+            if (col == 3 && !data.get(row).get(3).equals(value)) {
+                updateDependencyTo(row, Integer.parseInt((String)value));
+                dataTable.invalidate();
+            }
             if (col == TAG_INDEX && !data.get(row).get(TAG_INDEX).equals(value)) {
-                updateShallowParse(row, (String) value);
+                updateDependencyTag(row, (String) value);
             }
         }
     }
 
-    private void updateShallowParse(int row, String newValue){
-        data.get(row).set(TAG_INDEX, newValue);
+    private void updateDependencyTo(int row, int to){
         AnnotatedSentence sentence = (AnnotatedSentence) corpus.getSentence(Integer.parseInt(data.get(row).get(COLOR_COLUMN_INDEX - 1)));
         AnnotatedWord word = (AnnotatedWord) sentence.getWord(Integer.parseInt(data.get(row).get(WORD_POS_INDEX)) - 1);
-        word.setShallowParse(newValue);
-        sentence.save();
+        if (word.getUniversalDependency() != null){
+            data.get(row).set(3, to + "");
+            word.setUniversalDependency(to, word.getUniversalDependency().toString());
+            sentence.save();
+        }
+    }
+
+    private boolean updateDependencyTag(int row, String newDependency){
+        AnnotatedSentence sentence = (AnnotatedSentence) corpus.getSentence(Integer.parseInt(data.get(row).get(COLOR_COLUMN_INDEX - 1)));
+        AnnotatedWord word = (AnnotatedWord) sentence.getWord(Integer.parseInt(data.get(row).get(WORD_POS_INDEX)) - 1);
+        if (word.getUniversalDependency() != null){
+            data.get(row).set(TAG_INDEX, newDependency);
+            word.setUniversalDependency(word.getUniversalDependency().to(), newDependency);
+            sentence.save();
+            return true;
+        }
+        return false;
     }
 
     protected void prepareData(AnnotatedCorpus corpus){
@@ -68,29 +97,25 @@ public class ViewShallowParseAnnotationFrame extends ViewAnnotationFrame impleme
                 row.add(sentence.getFileName());
                 row.add("" + (j + 1));
                 row.add(word.getName());
-                if (word.getShallowParse() != null){
-                    row.add(word.getShallowParse());
-                    int startIndex = j - 1;
-                    while (startIndex >= 0 && ((AnnotatedWord) sentence.getWord(startIndex)).getShallowParse() != null && ((AnnotatedWord) sentence.getWord(startIndex)).getShallowParse().equals(word.getShallowParse())){
-                        startIndex--;
-                    }
-                    startIndex++;
-                    int endIndex = j + 1;
-                    while (endIndex < sentence.wordCount() && ((AnnotatedWord) sentence.getWord(endIndex)).getShallowParse() != null && ((AnnotatedWord) sentence.getWord(endIndex)).getShallowParse().equals(word.getShallowParse())){
-                        endIndex++;
-                    }
-                    endIndex--;
+                if (word.getUniversalDependency() != null){
+                    row.add("" + word.getUniversalDependency().to());
+                    row.add(word.getUniversalDependency().toString());
                     String sentenceString = "<html>";
                     ArrayList<Word> wordList = sentence.getWords();
                     for (int k = 0; k < wordList.size(); k++){
-                        if (k >= startIndex && k <= endIndex){
-                            sentenceString += " <b><font color=\"blue\">" + wordList.get(k).getName() + "</font></b>";
+                        if (j == k){
+                            sentenceString += " <b><font color=\"red\">" + wordList.get(k).getName() + "</font></b>";
                         } else {
-                            sentenceString += " " + wordList.get(k).getName();
+                            if (k + 1 == word.getUniversalDependency().to()){
+                                sentenceString += " <b><font color=\"blue\">" + wordList.get(k).getName() + "</font></b>";
+                            } else {
+                                sentenceString += " " + wordList.get(k).getName();
+                            }
                         }
                     }
                     row.add(sentenceString + "</html>");
                 } else {
+                    row.add("-");
                     row.add("-");
                     row.add(sentence.toWords());
                 }
@@ -101,19 +126,22 @@ public class ViewShallowParseAnnotationFrame extends ViewAnnotationFrame impleme
         }
     }
 
-    public ViewShallowParseAnnotationFrame(AnnotatedCorpus corpus, SentenceShallowParseFrame sentenceShallowParseFrame){
+    public ViewSentenceDependencyAnnotationFrame(AnnotatedCorpus corpus, SentenceDependencyFrame sentenceDependencyFrame){
         super(corpus);
-        COLOR_COLUMN_INDEX = 6;
-        TAG_INDEX = 3;
+        COLOR_COLUMN_INDEX = 7;
+        TAG_INDEX = 4;
         prepareData(corpus);
-        dataTable = new JTable(new ShallowParseTableDataModel());
+        dataTable = new JTable(new DependencyTableDataModel());
         dataTable.getColumnModel().getColumn(FILENAME_INDEX).setMinWidth(150);
         dataTable.getColumnModel().getColumn(FILENAME_INDEX).setMaxWidth(150);
         dataTable.getColumnModel().getColumn(WORD_POS_INDEX).setMinWidth(60);
         dataTable.getColumnModel().getColumn(WORD_POS_INDEX).setMaxWidth(60);
         dataTable.getColumnModel().getColumn(WORD_INDEX).setWidth(200);
-        dataTable.getColumnModel().getColumn(TAG_INDEX).setMinWidth(150);
-        dataTable.getColumnModel().getColumn(TAG_INDEX).setMaxWidth(150);
+        dataTable.getColumnModel().getColumn(3).setMinWidth(60);
+        dataTable.getColumnModel().getColumn(3).setMaxWidth(60);
+        dataTable.getColumnModel().getColumn(TAG_INDEX).setMinWidth(100);
+        dataTable.getColumnModel().getColumn(TAG_INDEX).setMaxWidth(100);
+        dataTable.getColumnModel().getColumn(5).setWidth(300);
         dataTable.setDefaultRenderer(Object.class, new CellRenderer());
         dataTable.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -122,7 +150,7 @@ public class ViewShallowParseAnnotationFrame extends ViewAnnotationFrame impleme
                     int row = dataTable.rowAtPoint(evt.getPoint());
                     if (row >= 0) {
                         String fileName = data.get(row).get(0);
-                        sentenceShallowParseFrame.addPanelToFrame(sentenceShallowParseFrame.generatePanel(TreeEditorPanel.phrasePath, fileName), fileName);
+                        sentenceDependencyFrame.addPanelToFrame(sentenceDependencyFrame.generatePanel(TreeEditorPanel.phrasePath, fileName), fileName);
                     }
                 }
             }

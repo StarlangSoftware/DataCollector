@@ -18,7 +18,7 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.HashSet;
 
-public class SentencePropbankArgumentPanel extends AnnotatorPanel{
+public class SentencePropbankArgumentPanel extends SentenceAnnotatorPanel {
     private FramesetList xmlParser;
     private WordNet wordNet;
     private JTree tree;

@@ -9,7 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class ViewNERAnnotationFrame extends ViewAnnotationFrame implements ActionListener {
+public class ViewSentenceNERAnnotationFrame extends ViewSentenceAnnotationFrame implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
@@ -76,12 +76,12 @@ public class ViewNERAnnotationFrame extends ViewAnnotationFrame implements Actio
         }
     }
 
-    public ViewNERAnnotationFrame(AnnotatedCorpus corpus, SentenceNERFrame sentenceNERFrame){
+    public ViewSentenceNERAnnotationFrame(AnnotatedCorpus corpus, SentenceNERFrame sentenceNERFrame){
         super(corpus);
         COLOR_COLUMN_INDEX = 6;
         TAG_INDEX = 3;
         prepareData(corpus);
-        dataTable = new JTable(new ViewNERAnnotationFrame.MorphologicalTableDataModel());
+        dataTable = new JTable(new ViewSentenceNERAnnotationFrame.MorphologicalTableDataModel());
         dataTable.getColumnModel().getColumn(FILENAME_INDEX).setMinWidth(150);
         dataTable.getColumnModel().getColumn(FILENAME_INDEX).setMaxWidth(150);
         dataTable.getColumnModel().getColumn(WORD_POS_INDEX).setMinWidth(60);

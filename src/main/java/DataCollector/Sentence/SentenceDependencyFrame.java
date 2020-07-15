@@ -11,10 +11,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 
-public class SentenceDependencyFrame extends AnnotatorFrame {
+public class SentenceDependencyFrame extends SentenceAnnotatorFrame {
 
     @Override
-    protected AnnotatorPanel generatePanel(String currentPath, String rawFileName) {
+    protected SentenceAnnotatorPanel generatePanel(String currentPath, String rawFileName) {
         return new SentenceDependencyPanel(currentPath, rawFileName);
     }
 
@@ -34,7 +34,7 @@ public class SentenceDependencyFrame extends AnnotatorFrame {
                     AnnotatedWord word = (AnnotatedWord) sentence.getWord(j);
                     UniversalDependencyRelation universalDependencyRelation = word.getUniversalDependency();
                     if (word.getName() != null && universalDependencyRelation == null){
-                        AnnotatorPanel annotatorPanel = generatePanel(TreeEditorPanel.phrasePath, sentence.getFileName());
+                        SentenceAnnotatorPanel annotatorPanel = generatePanel(TreeEditorPanel.phrasePath, sentence.getFileName());
                         addPanelToFrame(annotatorPanel, sentence.getFileName());
                         count++;
                         if (count == numberOfSentences){
@@ -47,7 +47,7 @@ public class SentenceDependencyFrame extends AnnotatorFrame {
         });
         JMenuItem itemViewAnnotated = addMenuItem(projectMenu, "View Annotations", KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
         itemViewAnnotated.addActionListener(e -> {
-            new ViewDependencyAnnotationFrame(corpus, this);
+            new ViewSentenceDependencyAnnotationFrame(corpus, this);
         });
     }
 

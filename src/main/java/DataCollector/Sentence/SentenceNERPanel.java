@@ -3,11 +3,10 @@ package DataCollector.Sentence;
 import AnnotatedSentence.*;
 import AnnotatedSentence.AutoProcessor.AutoNER.TurkishSentenceAutoNER;
 import NamedEntityRecognition.NamedEntityType;
-import DataGenerator.InstanceGenerator.FeaturedNerInstanceGenerator;
 
 import java.awt.*;
 
-public class SentenceNERPanel extends AnnotatorPanel {
+public class SentenceNERPanel extends SentenceAnnotatorPanel {
     private TurkishSentenceAutoNER turkishSentenceAutoNER;
 
     public SentenceNERPanel(String currentPath, String fileName){

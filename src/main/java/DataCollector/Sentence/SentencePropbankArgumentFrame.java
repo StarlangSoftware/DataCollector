@@ -5,7 +5,7 @@ import WordNet.WordNet;
 
 import javax.swing.*;
 
-public class SentencePropbankArgumentFrame extends AnnotatorFrame{
+public class SentencePropbankArgumentFrame extends SentenceAnnotatorFrame {
     private JCheckBox autoArgumentDetectionOption;
     private FramesetList xmlParser;
     private WordNet wordNet;
@@ -19,7 +19,7 @@ public class SentencePropbankArgumentFrame extends AnnotatorFrame{
     }
 
     @Override
-    protected AnnotatorPanel generatePanel(String currentPath, String rawFileName) {
+    protected SentenceAnnotatorPanel generatePanel(String currentPath, String rawFileName) {
         return new SentencePropbankArgumentPanel(currentPath, rawFileName, wordNet, xmlParser);
     }
 

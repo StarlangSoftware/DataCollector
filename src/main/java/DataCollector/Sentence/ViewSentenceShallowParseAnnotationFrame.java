@@ -2,6 +2,7 @@ package DataCollector.Sentence;
 
 import AnnotatedSentence.*;
 import DataCollector.ParseTree.TreeEditorPanel;
+import Dictionary.Word;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,21 +10,21 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class ViewMorphologicalAnnotationFrame extends ViewAnnotationFrame implements ActionListener {
+public class ViewSentenceShallowParseAnnotationFrame extends ViewSentenceAnnotationFrame implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
         if (PASTE.equals(e.getActionCommand())) {
             if (selectedRow != -1) {
                 for (int rowNo : dataTable.getSelectedRows()) {
-                    updateMorphologicalAnalysis(rowNo, data.get(selectedRow).get(TAG_INDEX));
+                    updateShallowParse(rowNo, data.get(selectedRow).get(TAG_INDEX));
                 }
             }
         }
         dataTable.invalidate();
     }
 
-    public class MorphologicalTableDataModel extends TableDataModel {
+    public class ShallowParseTableDataModel extends TableDataModel {
 
         public String getColumnName(int col) {
             switch (col) {
@@ -34,7 +35,7 @@ public class ViewMorphologicalAnnotationFrame extends ViewAnnotationFrame implem
                 case WORD_INDEX:
                     return "Word";
                 case 3:
-                    return "Morphological Analysis";
+                    return "Shallow Parse";
                 case 4:
                     return "Sentence";
                 default:
@@ -44,16 +45,16 @@ public class ViewMorphologicalAnnotationFrame extends ViewAnnotationFrame implem
 
         public void setValueAt(Object value, int row, int col) {
             if (col == TAG_INDEX && !data.get(row).get(TAG_INDEX).equals(value)) {
-                updateMorphologicalAnalysis(row, (String) value);
+                updateShallowParse(row, (String) value);
             }
         }
     }
 
-    private void updateMorphologicalAnalysis(int row, String newValue){
+    private void updateShallowParse(int row, String newValue){
         data.get(row).set(TAG_INDEX, newValue);
         AnnotatedSentence sentence = (AnnotatedSentence) corpus.getSentence(Integer.parseInt(data.get(row).get(COLOR_COLUMN_INDEX - 1)));
         AnnotatedWord word = (AnnotatedWord) sentence.getWord(Integer.parseInt(data.get(row).get(WORD_POS_INDEX)) - 1);
-        word.setParse(newValue);
+        word.setShallowParse(newValue);
         sentence.save();
     }
 
@@ -67,12 +68,32 @@ public class ViewMorphologicalAnnotationFrame extends ViewAnnotationFrame implem
                 row.add(sentence.getFileName());
                 row.add("" + (j + 1));
                 row.add(word.getName());
-                if (word.getParse() != null){
-                    row.add(word.getParse().toString());
+                if (word.getShallowParse() != null){
+                    row.add(word.getShallowParse());
+                    int startIndex = j - 1;
+                    while (startIndex >= 0 && ((AnnotatedWord) sentence.getWord(startIndex)).getShallowParse() != null && ((AnnotatedWord) sentence.getWord(startIndex)).getShallowParse().equals(word.getShallowParse())){
+                        startIndex--;
+                    }
+                    startIndex++;
+                    int endIndex = j + 1;
+                    while (endIndex < sentence.wordCount() && ((AnnotatedWord) sentence.getWord(endIndex)).getShallowParse() != null && ((AnnotatedWord) sentence.getWord(endIndex)).getShallowParse().equals(word.getShallowParse())){
+                        endIndex++;
+                    }
+                    endIndex--;
+                    String sentenceString = "<html>";
+                    ArrayList<Word> wordList = sentence.getWords();
+                    for (int k = 0; k < wordList.size(); k++){
+                        if (k >= startIndex && k <= endIndex){
+                            sentenceString += " <b><font color=\"blue\">" + wordList.get(k).getName() + "</font></b>";
+                        } else {
+                            sentenceString += " " + wordList.get(k).getName();
+                        }
+                    }
+                    row.add(sentenceString + "</html>");
                 } else {
                     row.add("-");
+                    row.add(sentence.toWords());
                 }
-                row.add(sentence.toWords());
                 row.add("" + i);
                 row.add("0");
                 data.add(row);
@@ -80,18 +101,19 @@ public class ViewMorphologicalAnnotationFrame extends ViewAnnotationFrame implem
         }
     }
 
-    public ViewMorphologicalAnnotationFrame(AnnotatedCorpus corpus, SentenceMorphologicalAnalyzerFrame sentenceMorphologicalAnalyzerFrame){
+    public ViewSentenceShallowParseAnnotationFrame(AnnotatedCorpus corpus, SentenceShallowParseFrame sentenceShallowParseFrame){
         super(corpus);
         COLOR_COLUMN_INDEX = 6;
         TAG_INDEX = 3;
         prepareData(corpus);
-        dataTable = new JTable(new ViewMorphologicalAnnotationFrame.MorphologicalTableDataModel());
+        dataTable = new JTable(new ShallowParseTableDataModel());
         dataTable.getColumnModel().getColumn(FILENAME_INDEX).setMinWidth(150);
         dataTable.getColumnModel().getColumn(FILENAME_INDEX).setMaxWidth(150);
         dataTable.getColumnModel().getColumn(WORD_POS_INDEX).setMinWidth(60);
         dataTable.getColumnModel().getColumn(WORD_POS_INDEX).setMaxWidth(60);
         dataTable.getColumnModel().getColumn(WORD_INDEX).setWidth(200);
-        dataTable.getColumnModel().getColumn(TAG_INDEX).setWidth(200);
+        dataTable.getColumnModel().getColumn(TAG_INDEX).setMinWidth(150);
+        dataTable.getColumnModel().getColumn(TAG_INDEX).setMaxWidth(150);
         dataTable.setDefaultRenderer(Object.class, new CellRenderer());
         dataTable.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
@@ -100,7 +122,7 @@ public class ViewMorphologicalAnnotationFrame extends ViewAnnotationFrame implem
                     int row = dataTable.rowAtPoint(evt.getPoint());
                     if (row >= 0) {
                         String fileName = data.get(row).get(0);
-                        sentenceMorphologicalAnalyzerFrame.addPanelToFrame(sentenceMorphologicalAnalyzerFrame.generatePanel(TreeEditorPanel.phrasePath, fileName), fileName);
+                        sentenceShallowParseFrame.addPanelToFrame(sentenceShallowParseFrame.generatePanel(TreeEditorPanel.phrasePath, fileName), fileName);
                     }
                 }
             }
@@ -108,6 +130,5 @@ public class ViewMorphologicalAnnotationFrame extends ViewAnnotationFrame implem
         JScrollPane tablePane = new JScrollPane(dataTable);
         add(tablePane, BorderLayout.CENTER);
     }
-
 
 }

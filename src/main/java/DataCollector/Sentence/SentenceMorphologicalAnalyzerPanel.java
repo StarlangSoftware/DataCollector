@@ -9,7 +9,7 @@ import WordNet.WordNet;
 import javax.swing.*;
 import java.awt.*;
 
-public class SentenceMorphologicalAnalyzerPanel extends AnnotatorPanel{
+public class SentenceMorphologicalAnalyzerPanel extends SentenceAnnotatorPanel {
     private FsmMorphologicalAnalyzer fsm;
     private TurkishSentenceAutoDisambiguator turkishSentenceAutoDisambiguator;
     private WordNet wordNet;

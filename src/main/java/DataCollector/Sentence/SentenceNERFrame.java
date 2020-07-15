@@ -8,7 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 
-public class SentenceNERFrame extends AnnotatorFrame {
+public class SentenceNERFrame extends SentenceAnnotatorFrame {
     private JCheckBox autoNERDetectionOption;
 
     public SentenceNERFrame(){
@@ -19,12 +19,12 @@ public class SentenceNERFrame extends AnnotatorFrame {
         toolBar.add(autoNERDetectionOption);
         JMenuItem itemViewAnnotated = addMenuItem(projectMenu, "View Annotations", KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
         itemViewAnnotated.addActionListener(e -> {
-            new ViewNERAnnotationFrame(corpus, this);
+            new ViewSentenceNERAnnotationFrame(corpus, this);
         });
     }
 
     @Override
-    protected AnnotatorPanel generatePanel(String currentPath, String rawFileName) {
+    protected SentenceAnnotatorPanel generatePanel(String currentPath, String rawFileName) {
         return new SentenceNERPanel(currentPath, rawFileName);
     }
 

@@ -9,7 +9,7 @@ import WordNet.WordNet;
 
 import java.awt.*;
 
-public class SentencePropbankPredicatePanel extends AnnotatorPanel{
+public class SentencePropbankPredicatePanel extends SentenceAnnotatorPanel {
     private TurkishSentenceAutoPredicate turkishSentenceAutoPredicate;
     private WordNet wordNet;
 

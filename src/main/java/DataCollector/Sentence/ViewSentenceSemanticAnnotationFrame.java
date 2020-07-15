@@ -4,7 +4,7 @@ import AnnotatedSentence.AnnotatedCorpus;
 import AnnotatedSentence.AnnotatedSentence;
 import AnnotatedSentence.AnnotatedWord;
 import DataCollector.ParseTree.TreeEditorPanel;
-import Dictionary.Word;
+import WordNet.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +12,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class ViewDependencyAnnotationFrame extends ViewAnnotationFrame implements ActionListener {
+public class ViewSentenceSemanticAnnotationFrame extends ViewSentenceAnnotationFrame implements ActionListener {
+    private WordNet domainWordNet, turkish;
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -20,16 +21,14 @@ public class ViewDependencyAnnotationFrame extends ViewAnnotationFrame implement
         if (PASTE.equals(e.getActionCommand())) {
             if (selectedRow != -1) {
                 for (int rowNo : dataTable.getSelectedRows()) {
-                    if (!updateDependencyTag(rowNo, data.get(selectedRow).get(TAG_INDEX))){
-                        JOptionPane.showMessageDialog(this, "No Dependency Defined Before", "Warning", JOptionPane.INFORMATION_MESSAGE);
-                    }
+                    updateSemantic(rowNo, data.get(selectedRow).get(TAG_INDEX));
                 }
             }
         }
         dataTable.invalidate();
     }
 
-    public class DependencyTableDataModel extends TableDataModel {
+    public class SemanticTableDataModel extends TableDataModel {
 
         public String getColumnName(int col) {
             switch (col) {
@@ -40,51 +39,39 @@ public class ViewDependencyAnnotationFrame extends ViewAnnotationFrame implement
                 case WORD_INDEX:
                     return "Word";
                 case 3:
-                    return "Dependent Word Index";
+                    return "Sense Id";
                 case 4:
-                    return "Dependency Type";
+                    return "SynSet";
                 case 5:
+                    return "Sense Definition";
+                case 6:
                     return "Sentence";
                 default:
                     return "";
             }
         }
 
-        public boolean isCellEditable(int row, int col) {
-            return col == 3 || col == TAG_INDEX;
-        }
-
         public void setValueAt(Object value, int row, int col) {
-            if (col == 3 && !data.get(row).get(3).equals(value)) {
-                updateDependencyTo(row, Integer.parseInt((String)value));
-                dataTable.invalidate();
-            }
             if (col == TAG_INDEX && !data.get(row).get(TAG_INDEX).equals(value)) {
-                updateDependencyTag(row, (String) value);
+                updateSemantic(row, (String) value);
             }
         }
     }
 
-    private void updateDependencyTo(int row, int to){
+    private void updateSemantic(int row, String newValue){
+        data.get(row).set(TAG_INDEX, newValue);
         AnnotatedSentence sentence = (AnnotatedSentence) corpus.getSentence(Integer.parseInt(data.get(row).get(COLOR_COLUMN_INDEX - 1)));
         AnnotatedWord word = (AnnotatedWord) sentence.getWord(Integer.parseInt(data.get(row).get(WORD_POS_INDEX)) - 1);
-        if (word.getUniversalDependency() != null){
-            data.get(row).set(3, to + "");
-            word.setUniversalDependency(to, word.getUniversalDependency().toString());
-            sentence.save();
+        word.setSemantic(newValue);
+        sentence.save();
+        SynSet synSet = domainWordNet.getSynSetWithId(word.getSemantic());
+        if (synSet == null){
+            synSet = turkish.getSynSetWithId(word.getSemantic());
         }
-    }
-
-    private boolean updateDependencyTag(int row, String newDependency){
-        AnnotatedSentence sentence = (AnnotatedSentence) corpus.getSentence(Integer.parseInt(data.get(row).get(COLOR_COLUMN_INDEX - 1)));
-        AnnotatedWord word = (AnnotatedWord) sentence.getWord(Integer.parseInt(data.get(row).get(WORD_POS_INDEX)) - 1);
-        if (word.getUniversalDependency() != null){
-            data.get(row).set(TAG_INDEX, newDependency);
-            word.setUniversalDependency(word.getUniversalDependency().to(), newDependency);
-            sentence.save();
-            return true;
+        if (synSet != null){
+            data.get(row).set(4, synSet.getSynonym().toString());
+            data.get(row).set(5, synSet.getLongDefinition());
         }
-        return false;
     }
 
     protected void prepareData(AnnotatedCorpus corpus){
@@ -97,28 +84,25 @@ public class ViewDependencyAnnotationFrame extends ViewAnnotationFrame implement
                 row.add(sentence.getFileName());
                 row.add("" + (j + 1));
                 row.add(word.getName());
-                if (word.getUniversalDependency() != null){
-                    row.add("" + word.getUniversalDependency().to());
-                    row.add(word.getUniversalDependency().toString());
-                    String sentenceString = "<html>";
-                    ArrayList<Word> wordList = sentence.getWords();
-                    for (int k = 0; k < wordList.size(); k++){
-                        if (j == k){
-                            sentenceString += " <b><font color=\"red\">" + wordList.get(k).getName() + "</font></b>";
-                        } else {
-                            if (k + 1 == word.getUniversalDependency().to()){
-                                sentenceString += " <b><font color=\"blue\">" + wordList.get(k).getName() + "</font></b>";
-                            } else {
-                                sentenceString += " " + wordList.get(k).getName();
-                            }
-                        }
+                if (word.getSemantic() != null){
+                    row.add(word.getSemantic());
+                    SynSet synSet = domainWordNet.getSynSetWithId(word.getSemantic());
+                    if (synSet == null){
+                        synSet = turkish.getSynSetWithId(word.getSemantic());
                     }
-                    row.add(sentenceString + "</html>");
+                    if (synSet != null){
+                        row.add(synSet.getSynonym().toString());
+                        row.add(synSet.getLongDefinition());
+                    } else {
+                        row.add("-");
+                        row.add("-");
+                    }
                 } else {
                     row.add("-");
                     row.add("-");
-                    row.add(sentence.toWords());
+                    row.add("-");
                 }
+                row.add(sentence.toWords());
                 row.add("" + i);
                 row.add("0");
                 data.add(row);
@@ -126,21 +110,22 @@ public class ViewDependencyAnnotationFrame extends ViewAnnotationFrame implement
         }
     }
 
-    public ViewDependencyAnnotationFrame(AnnotatedCorpus corpus, SentenceDependencyFrame sentenceDependencyFrame){
+    public ViewSentenceSemanticAnnotationFrame(AnnotatedCorpus corpus, WordNet domainWordNet, WordNet turkish, SentenceSemanticFrame sentenceSemanticFrame){
         super(corpus);
-        COLOR_COLUMN_INDEX = 7;
-        TAG_INDEX = 4;
+        this.domainWordNet = domainWordNet;
+        this.turkish = turkish;
+        COLOR_COLUMN_INDEX = 8;
+        TAG_INDEX = 3;
         prepareData(corpus);
-        dataTable = new JTable(new DependencyTableDataModel());
+        dataTable = new JTable(new SemanticTableDataModel());
         dataTable.getColumnModel().getColumn(FILENAME_INDEX).setMinWidth(150);
         dataTable.getColumnModel().getColumn(FILENAME_INDEX).setMaxWidth(150);
         dataTable.getColumnModel().getColumn(WORD_POS_INDEX).setMinWidth(60);
         dataTable.getColumnModel().getColumn(WORD_POS_INDEX).setMaxWidth(60);
         dataTable.getColumnModel().getColumn(WORD_INDEX).setWidth(200);
-        dataTable.getColumnModel().getColumn(3).setMinWidth(60);
-        dataTable.getColumnModel().getColumn(3).setMaxWidth(60);
-        dataTable.getColumnModel().getColumn(TAG_INDEX).setMinWidth(100);
-        dataTable.getColumnModel().getColumn(TAG_INDEX).setMaxWidth(100);
+        dataTable.getColumnModel().getColumn(TAG_INDEX).setMinWidth(150);
+        dataTable.getColumnModel().getColumn(TAG_INDEX).setMaxWidth(150);
+        dataTable.getColumnModel().getColumn(4).setWidth(200);
         dataTable.getColumnModel().getColumn(5).setWidth(300);
         dataTable.setDefaultRenderer(Object.class, new CellRenderer());
         dataTable.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -150,7 +135,7 @@ public class ViewDependencyAnnotationFrame extends ViewAnnotationFrame implement
                     int row = dataTable.rowAtPoint(evt.getPoint());
                     if (row >= 0) {
                         String fileName = data.get(row).get(0);
-                        sentenceDependencyFrame.addPanelToFrame(sentenceDependencyFrame.generatePanel(TreeEditorPanel.phrasePath, fileName), fileName);
+                        sentenceSemanticFrame.addPanelToFrame(sentenceSemanticFrame.generatePanel(TreeEditorPanel.phrasePath, fileName), fileName);
                     }
                 }
             }

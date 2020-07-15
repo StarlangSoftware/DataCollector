@@ -15,7 +15,7 @@ import java.awt.geom.Point2D;
 import java.io.File;
 import java.util.ArrayList;
 
-public abstract class AnnotatorPanel extends JPanel implements MouseListener, MouseMotionListener {
+public abstract class SentenceAnnotatorPanel extends JPanel implements MouseListener, MouseMotionListener {
     private JTextField editText;
     protected AnnotatedSentence sentence;
     protected FileDescription fileDescription;
@@ -28,7 +28,7 @@ public abstract class AnnotatorPanel extends JPanel implements MouseListener, Mo
     protected DefaultListModel listModel;
     protected JScrollPane pane;
 
-    public AnnotatorPanel(String currentPath, String rawFileName, final ViewLayerType layerType){
+    public SentenceAnnotatorPanel(String currentPath, String rawFileName, final ViewLayerType layerType){
         this.fileDescription = new FileDescription(currentPath, rawFileName);
         this.layerType = layerType;
         this.addMouseMotionListener(this);

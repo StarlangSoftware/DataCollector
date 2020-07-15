@@ -14,7 +14,7 @@ import java.awt.event.KeyEvent;
 import java.io.*;
 import java.util.*;
 
-public class SentenceSemanticFrame extends AnnotatorFrame {
+public class SentenceSemanticFrame extends SentenceAnnotatorFrame {
     private JCheckBox autoSemanticDetectionOption;
     private FsmMorphologicalAnalyzer fsm;
     private WordNet wordNet;
@@ -119,7 +119,7 @@ public class SentenceSemanticFrame extends AnnotatorFrame {
                     AnnotatedWord word = (AnnotatedWord) sentence.getWord(j);
                     String semantic = word.getSemantic();
                     if (word.getName() != null && semantic == null){
-                        AnnotatorPanel annotatorPanel = generatePanel(TreeEditorPanel.phrasePath, sentence.getFileName());
+                        SentenceAnnotatorPanel annotatorPanel = generatePanel(TreeEditorPanel.phrasePath, sentence.getFileName());
                         addPanelToFrame(annotatorPanel, sentence.getFileName());
                         count++;
                         if (count == numberOfSentences){
@@ -132,7 +132,7 @@ public class SentenceSemanticFrame extends AnnotatorFrame {
         });
         JMenuItem itemViewAnnotated = addMenuItem(projectMenu, "View Annotations", KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
         itemViewAnnotated.addActionListener(e -> {
-            new ViewSemanticAnnotationFrame(corpus, this.wordNet, wordNet, this);
+            new ViewSentenceSemanticAnnotationFrame(corpus, this.wordNet, wordNet, this);
         });
         this.fsm = fsm;
         this.wordNet = wordNet;
@@ -140,7 +140,7 @@ public class SentenceSemanticFrame extends AnnotatorFrame {
         toolBar.add(autoSemanticDetectionOption);
     }
 
-    protected AnnotatorPanel generatePanel(String currentPath, String rawFileName) {
+    protected SentenceAnnotatorPanel generatePanel(String currentPath, String rawFileName) {
         return new SentenceSemanticPanel(currentPath, rawFileName, fsm, wordNet, exampleSentences);
     }
 
