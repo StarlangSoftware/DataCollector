@@ -1,11 +1,15 @@
 package DataCollector.ParseTree;
 
+import AnnotatedTree.TreeBankDrawable;
 import MorphologicalAnalysis.FsmMorphologicalAnalyzer;
 import MorphologicalDisambiguation.RootWordStatistics;
 import AnnotatedTree.AutoProcessor.AutoDisambiguation.TreeAutoDisambiguator;
 import AnnotatedTree.AutoProcessor.AutoDisambiguation.TurkishTreeAutoDisambiguator;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.io.File;
 
 public class TreeMorphologicalAnalyzerFrame extends TreeEditorFrame {
     private JCheckBox autoDisambiguation;
@@ -18,6 +22,11 @@ public class TreeMorphologicalAnalyzerFrame extends TreeEditorFrame {
         this.fsm = fsm;
         autoDisambiguation = new JCheckBox("AutoDisambiguation", true);
         toolBar.add(autoDisambiguation);
+        TreeBankDrawable treeBank = new TreeBankDrawable(new File(TreeEditorPanel.treePath));
+        JMenuItem itemViewAnnotations = addMenuItem(projectMenu, "View Annotations", KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
+        itemViewAnnotations.addActionListener(e -> {
+            new ViewTreeMorphologicalAnnotationFrame(treeBank, fsm, this);
+        });
     }
 
     private void autoDisambiguate(){
