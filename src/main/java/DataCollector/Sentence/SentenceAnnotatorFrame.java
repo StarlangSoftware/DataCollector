@@ -8,8 +8,11 @@ import Util.DrawingButton;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Properties;
 
 public abstract class SentenceAnnotatorFrame extends DataCollector {
 
@@ -22,6 +25,15 @@ public abstract class SentenceAnnotatorFrame extends DataCollector {
      * select project and annotation files.
      */
     public SentenceAnnotatorFrame() {
+        Properties properties;
+        properties = new Properties();
+        try {
+            properties.load(new FileInputStream(new File("config.properties")));
+            TreeEditorPanel.treePath = properties.getProperty("treePath", TreeEditorPanel.treePath);
+            TreeEditorPanel.phrasePath = properties.getProperty("phrasePath", TreeEditorPanel.phrasePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         JButton button;
         button = new DrawingButton(DataCollector.class, this, "fastfastbackward", FAST_FAST_BACKWARD, "Previous 100 Sentence");
         button.setVisible(true);
