@@ -22,6 +22,7 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
     private JComboBox<SynSet> leftSearchAlternatives;
     private JComboBox<SynSet> alternatives;
     private JCheckBox showMoved, automaticSelection;
+    private JComboBox<String> fontSizeSelection;
     private JList dictionaryList, wordNetList;
     private boolean completed = false;
 
@@ -151,6 +152,23 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
         toolBar.add(showMoved);
         automaticSelection = new JCheckBox("Automatic Selection");
         toolBar.add(automaticSelection);
+        toolBar.addSeparator();
+        Label fontSize = new Label("Font Size:");
+        fontSize.setMaximumSize(new Dimension(80, 30));
+        toolBar.add(fontSize);
+        fontSizeSelection = new JComboBox<String>(new String[]{"11", "12", "13", "14", "15", "16", "17", "18", "19", "20"});
+        fontSizeSelection.setMaximumSize(new Dimension(70, 30));
+        fontSizeSelection.addActionListener(e -> {
+            final Font currentFont = noun.getTree().getFont();
+            final Font bigFont = new Font(currentFont.getName(), currentFont.getStyle(), Integer.parseInt((String) fontSizeSelection.getSelectedItem()));
+            noun.getTree().setFont(bigFont);
+            adjective.getTree().setFont(bigFont);
+            adverb.getTree().setFont(bigFont);
+            verb.getTree().setFont(bigFont);
+            dictionaryList.setFont(bigFont);
+            wordNetList.setFont(bigFont);
+        });
+        toolBar.add(fontSizeSelection);
     }
 
     private void showPath(PartOfSpeechTree partOfSpeechTree, DefaultMutableTreeNode treeNode){
