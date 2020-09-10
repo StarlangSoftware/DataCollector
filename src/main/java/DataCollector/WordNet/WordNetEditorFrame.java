@@ -69,11 +69,21 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
         }
 
         public String toString(){
-            String literal = synSet.getSynonym().getLiteral(0).getName();
+            String color = "black";
+            int count = 0;
+            for (int i = 0; i < synSet.relationSize(); i++){
+                if (synSet.getRelation(i) instanceof SemanticRelation && (((SemanticRelation) synSet.getRelation(i)).getRelationType().equals(SemanticRelationType.HYPERNYM) || ((SemanticRelation) synSet.getRelation(i)).getRelationType().equals(SemanticRelationType.INSTANCE_HYPERNYM))){
+                    count++;
+                }
+            }
+            if (count > 1){
+                color = "red";
+            }
+            String literal = "<html><font color=\"" + color + "\">" + synSet.getSynonym().getLiteral(0).getName();
             for (int i = 1; i < synSet.getSynonym().literalSize(); i++){
                 literal += "::" + synSet.getSynonym().getLiteral(i).getName();
             }
-            return literal + " (" + synSet.getDefinition() + ")";
+            return literal + " (" + synSet.getDefinition() + ")" + "</font></html>";
         }
 
         public SynSet getSynSet(){
