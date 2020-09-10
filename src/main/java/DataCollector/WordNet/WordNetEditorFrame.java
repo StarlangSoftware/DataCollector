@@ -341,9 +341,24 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
                                     }
                                     DefaultMutableTreeNode parentNode = noun.nodeList.get(synSet);
                                     parentNode.remove(selectedTreeNode);
-                                    DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode)noun.tree.getModel().getRoot();
-                                    insertIntoCorrectPosition(rootNode, selectedTreeNode);
-                                    noun.treeModel.reload(rootNode);
+                                    SynSet newParent = null;
+                                    for (int j = 0; j < selectedSynSet.relationSize(); j++){
+                                        if (selectedSynSet.getRelation(j) instanceof SemanticRelation){
+                                            if ((((SemanticRelation) selectedSynSet.getRelation(j)).getRelationType() == SemanticRelationType.HYPERNYM || ((SemanticRelation) selectedSynSet.getRelation(j)).getRelationType() == SemanticRelationType.INSTANCE_HYPERNYM)){
+                                                newParent = domainWordNet.getSynSetWithId(selectedSynSet.getRelation(j).getName());
+                                                break;
+                                            }
+                                        }
+                                    }
+                                    if (newParent == null){
+                                        DefaultMutableTreeNode rootNode = (DefaultMutableTreeNode)noun.tree.getModel().getRoot();
+                                        insertIntoCorrectPosition(rootNode, selectedTreeNode);
+                                        noun.treeModel.reload(rootNode);
+                                    } else {
+                                        DefaultMutableTreeNode newParentNode = noun.nodeList.get(newParent);
+                                        insertIntoCorrectPosition(newParentNode, selectedTreeNode);
+                                        noun.treeModel.reload(newParentNode);
+                                    }
                                     if (showMoved.isSelected()){
                                         showPath(noun, selectedTreeNode);
                                     } else {
