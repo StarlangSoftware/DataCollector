@@ -104,6 +104,14 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
             return literal.getName() + " (" + pos + ")";
         }
 
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            LiteralObject that = (LiteralObject) o;
+            return literal.getName().equals(that.literal.getName()) && pos == that.pos;
+        }
+
     }
 
     public class WordObject{
@@ -730,12 +738,12 @@ public class WordNetEditorFrame extends DomainEditorFrame implements ActionListe
                     String word = synSet.getSynonym().getLiteral(i).getName().toLowerCase(new Locale("tr"));
                     if (!word.contains(" ") && !word.startsWith(".") && !word.startsWith(",") && !word.startsWith("(") && !word.matches(".*[0-9]+.*")){
                         if (synSet.getPos().equals(Pos.VERB)){
-                            if (dictionary.getWord(word.substring(0, word.length() - 3)) == null){
+                            if (dictionary.getWord(word.substring(0, word.length() - 3)) == null && !listModel.contains(new LiteralObject(synSet.getSynonym().getLiteral(i), synSet.getPos()))){
                                 listModel.addElement(new LiteralObject(synSet.getSynonym().getLiteral(i), synSet.getPos()));
                                 break;
                             }
                         } else {
-                            if (dictionary.getWord(word) == null){
+                            if (dictionary.getWord(word) == null && !listModel.contains(new LiteralObject(synSet.getSynonym().getLiteral(i), synSet.getPos()))){
                                 listModel.addElement(new LiteralObject(synSet.getSynonym().getLiteral(i), synSet.getPos()));
                                 break;
                             }
