@@ -64,9 +64,19 @@ public class SentenceDependencyPanel extends SentenceAnnotatorPanel {
     }
 
     public void mouseClicked(MouseEvent mouseEvent) {
-        selectionMode = false;
-        list.setVisible(false);
-        pane.setVisible(false);
+        if (selectedWordIndex != -1 && mouseEvent.isControlDown()) {
+            clickedWord = ((AnnotatedWord) sentence.getWord(selectedWordIndex));
+            lastClickedWord = clickedWord;
+            editText.setText(clickedWord.getName());
+            editText.setBounds(clickedWord.getArea().x - 5, clickedWord.getArea().y + 20, 100, 30);
+            editText.setVisible(true);
+            pane.setVisible(false);
+            editText.requestFocus();
+        } else {
+            selectionMode = false;
+            list.setVisible(false);
+            pane.setVisible(false);
+        }
     }
 
     public void mouseDragged(MouseEvent e) {

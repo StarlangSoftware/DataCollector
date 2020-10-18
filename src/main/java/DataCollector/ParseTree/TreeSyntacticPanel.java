@@ -1,6 +1,5 @@
 package DataCollector.ParseTree;
 
-import AnnotatedSentence.LayerNotExistsException;
 import AnnotatedSentence.ViewLayerType;
 import DataCollector.ParseTree.TreeAction.*;
 import ParseTree.ParseNode;
@@ -16,7 +15,6 @@ public class TreeSyntacticPanel extends TreeStructureEditorPanel {
     private ParseNodeDrawable fromNode = null;
     private boolean dragged = false;
     private int draggedIndex = -1;
-
     private JTextField editText;
 
     public TreeSyntacticPanel(String path, String fileName, ViewLayerType viewLayer) {
@@ -27,8 +25,12 @@ public class TreeSyntacticPanel extends TreeStructureEditorPanel {
         editText.addActionListener(actionEvent -> {
             isEditing = false;
             if (!editText.getText().contains("(") && !editText.getText().contains(")") && !editText.getText().contains("{") && !editText.getText().contains("}")){
-                EditSymbolAction action = new EditSymbolAction(TreeSyntacticPanel.this, editableNode,
-                        new Symbol(editText.getText()));
+                TreeEditAction action;
+                if (editableNode.isLeaf()){
+                    action = new LayerAction(TreeSyntacticPanel.this, editableNode.getLayerInfo(), editText.getText(), ViewLayerType.TURKISH_WORD);
+                } else {
+                    action = new EditSymbolAction(TreeSyntacticPanel.this, editableNode, new Symbol(editText.getText()));
+                }
                 actionList.add(action);
                 action.execute();
             }
@@ -52,9 +54,13 @@ public class TreeSyntacticPanel extends TreeStructureEditorPanel {
     }
 
     public void editSymbol(){
-        if (editableNode != null && editableNode.numberOfChildren() > 0){
+        if (editableNode != null){
             isEditing = true;
-            editText.setText(editableNode.getData().getName());
+            if (editableNode.isLeaf()){
+                editText.setText(editableNode.getLayerData(ViewLayerType.TURKISH_WORD));
+            } else {
+                editText.setText(editableNode.getData().getName());
+            }
             Rectangle rect = editableNode.getArea();
             editText.setBounds(rect.x - 20, rect.y - 4, rect.width + 40, rect.height + 8);
             editText.setVisible(true);
@@ -139,8 +145,7 @@ public class TreeSyntacticPanel extends TreeStructureEditorPanel {
 
     public void mouseMoved(MouseEvent mouseEvent) {
         ParseNodeDrawable node = currentTree.getNodeAt(mouseEvent.getX(), mouseEvent.getY());
-        try{
-            if (node != null && node != previousNode && !dragged && !isEditing && (!node.isLeaf() || node.getLayerInfo().getNumberOfWords() > 1)){
+            if (node != null && node != previousNode && !dragged && !isEditing){
                 if (previousNode != null)
                     previousNode.setSelected(false);
                 node.setSelected(true);
@@ -153,30 +158,20 @@ public class TreeSyntacticPanel extends TreeStructureEditorPanel {
                     this.repaint();
                 }
             }
-        }  catch (LayerNotExistsException e) {
-            e.printStackTrace();
-        }
     }
 
     public void mouseClicked(MouseEvent mouseEvent) {
-        ParseNodeDrawable node = currentTree.getLeafNodeAt(mouseEvent.getX(), mouseEvent.getY());
-        try{
-            if (node == null || node.getLayerInfo().getNumberOfWords() > 1){
-                node = currentTree.getNodeAt(mouseEvent.getX(), mouseEvent.getY());
-                if (editableNode != null) {
-                    editableNode.setEditable(false);
-                }
-                if (node != null && (!node.isLeaf() || node.getLayerInfo().getNumberOfWords() > 1)){
-                    editableNode = node;
-                    editableNode.setEditable(true);
-                    editText.setVisible(false);
-                    isEditing = false;
-                    this.repaint();
-                    this.setFocusable(true);
-                }
+        ParseNodeDrawable node = currentTree.getNodeAt(mouseEvent.getX(), mouseEvent.getY());
+        if (node != null){
+            if (editableNode != null) {
+                editableNode.setEditable(false);
             }
-        } catch (LayerNotExistsException e){
-            e.printStackTrace();
+            editableNode = node;
+            editableNode.setEditable(true);
+            editText.setVisible(false);
+            isEditing = false;
+            this.repaint();
+            this.setFocusable(true);
         }
     }
 

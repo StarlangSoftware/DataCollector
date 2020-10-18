@@ -16,7 +16,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 public abstract class SentenceAnnotatorPanel extends JPanel implements MouseListener, MouseMotionListener {
-    private JTextField editText;
+    protected JTextField editText;
     protected AnnotatedSentence sentence;
     protected FileDescription fileDescription;
     protected int wordSpace = 60, lineSpace;
