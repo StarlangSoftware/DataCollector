@@ -18,6 +18,15 @@ public class SentenceDependencyPanel extends SentenceAnnotatorPanel {
         super(currentPath, rawFileName, ViewLayerType.DEPENDENCY);
     }
 
+    public void deleteWord(){
+        if (selectedWordIndex != -1) {
+            sentence.removeWord(selectedWordIndex);
+            sentence.save();
+            selectedWordIndex = -1;
+            this.repaint();
+        }
+    }
+
     public void mouseReleased(MouseEvent mouseEvent) {
         if (draggedWordIndex != -1) {
             int selectedIndex = populateLeaf(sentence, selectedWordIndex);
@@ -73,9 +82,14 @@ public class SentenceDependencyPanel extends SentenceAnnotatorPanel {
             pane.setVisible(false);
             editText.requestFocus();
         } else {
-            selectionMode = false;
-            list.setVisible(false);
-            pane.setVisible(false);
+            if (selectedWordIndex != -1 && mouseEvent.isShiftDown()){
+                ((AnnotatedWord)sentence.getWord(selectedWordIndex)).setSelected(true);
+                this.repaint();
+            } else {
+                selectionMode = false;
+                list.setVisible(false);
+                pane.setVisible(false);
+            }
         }
     }
 
