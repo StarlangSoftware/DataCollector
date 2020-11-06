@@ -2,7 +2,7 @@ package DataCollector.ParseTree;
 
 import AnnotatedSentence.ViewLayerType;
 import ParseTree.ParseNode;
-import DependencyParser.TurkishDependencyRelation;
+import DependencyParser.Turkish.TurkishDependencyRelation;
 import AnnotatedTree.*;
 import DataCollector.ParseTree.TreeAction.LayerAction;
 

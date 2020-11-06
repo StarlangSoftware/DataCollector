@@ -6,7 +6,7 @@ import AnnotatedSentence.AnnotatedWord;
 import DataCollector.DataCollector;
 import DataCollector.ParseTree.TreeEditorPanel;
 import DataCollector.ParseTree.TreeSyntacticPanel;
-import DependencyParser.UniversalDependencyRelation;
+import DependencyParser.Universal.UniversalDependencyRelation;
 import Util.DrawingButton;
 
 import javax.swing.*;

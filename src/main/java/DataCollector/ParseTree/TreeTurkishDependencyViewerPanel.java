@@ -1,8 +1,8 @@
 package DataCollector.ParseTree;
 
-import DependencyParser.TurkishDependencyTreeBankCorpus;
-import DependencyParser.TurkishDependencyTreeBankSentence;
-import DependencyParser.TurkishDependencyTreeBankWord;
+import DependencyParser.Turkish.TurkishDependencyTreeBankCorpus;
+import DependencyParser.Turkish.TurkishDependencyTreeBankSentence;
+import DependencyParser.Turkish.TurkishDependencyTreeBankWord;
 
 import javax.swing.*;
 import java.awt.*;

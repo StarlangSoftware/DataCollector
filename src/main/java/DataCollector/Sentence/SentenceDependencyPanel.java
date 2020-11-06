@@ -3,7 +3,7 @@ package DataCollector.Sentence;
 import AnnotatedSentence.AnnotatedSentence;
 import AnnotatedSentence.AnnotatedWord;
 import AnnotatedSentence.ViewLayerType;
-import DependencyParser.UniversalDependencyType;
+import DependencyParser.Universal.UniversalDependencyType;
 
 import java.awt.*;
 import java.awt.event.MouseEvent;
