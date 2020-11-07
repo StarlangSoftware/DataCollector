@@ -3,8 +3,10 @@ package DataCollector.Sentence;
 import AnnotatedSentence.AnnotatedSentence;
 import AnnotatedSentence.AnnotatedWord;
 import AnnotatedSentence.ViewLayerType;
+import DependencyParser.Universal.UniversalDependencyRelation;
 import DependencyParser.Universal.UniversalDependencyType;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.geom.CubicCurve2D;
@@ -28,20 +30,34 @@ public class SentenceDependencyPanel extends SentenceAnnotatorPanel {
     }
 
     public void mouseReleased(MouseEvent mouseEvent) {
+        boolean errorMode = false;
         if (draggedWordIndex != -1) {
-            int selectedIndex = populateLeaf(sentence, selectedWordIndex);
-            if (selectedIndex != -1){
-                list.setValueIsAdjusting(true);
-                list.setSelectedIndex(selectedIndex);
+            UniversalDependencyRelation parentRelation = ((AnnotatedWord) sentence.getWord(draggedWordIndex)).getUniversalDependency();
+            if (parentRelation != null &&
+                    (parentRelation.toString().equals("PUNCT") || parentRelation.toString().equals("MARK") ||
+                            parentRelation.toString().equals("CASE") || parentRelation.toString().equals("GOESWITH") ||
+                            parentRelation.toString().equals("FIXED") || parentRelation.toString().equals("CC") ||
+                            parentRelation.toString().equals("AUX") || parentRelation.toString().equals("COP"))){
+                JOptionPane.showMessageDialog(this, parentRelation.toString() + " not expected to have children!", "Dependency Rule", JOptionPane.ERROR_MESSAGE);
+                selectionMode = false;
+                errorMode = true;
+            } else {
+                int selectedIndex = populateLeaf(sentence, selectedWordIndex);
+                if (selectedIndex != -1){
+                    list.setValueIsAdjusting(true);
+                    list.setSelectedIndex(selectedIndex);
+                }
+                list.setVisible(true);
+                pane.setVisible(true);
+                pane.getVerticalScrollBar().setValue(0);
+                pane.setBounds((((AnnotatedWord) sentence.getWord(selectedWordIndex)).getArea().x + ((AnnotatedWord) sentence.getWord(draggedWordIndex)).getArea().x) / 2, ((AnnotatedWord) sentence.getWord(selectedWordIndex)).getArea().y + 20, 120, 440);
             }
-            list.setVisible(true);
-            pane.setVisible(true);
-            pane.getVerticalScrollBar().setValue(0);
-            pane.setBounds((((AnnotatedWord) sentence.getWord(selectedWordIndex)).getArea().x + ((AnnotatedWord) sentence.getWord(draggedWordIndex)).getArea().x) / 2, ((AnnotatedWord) sentence.getWord(selectedWordIndex)).getArea().y + 20, 120, 440);
         }
         ((AnnotatedWord)sentence.getWord(selectedWordIndex)).setSelected(false);
         dragged = false;
-        selectionMode = true;
+        if (!errorMode){
+            selectionMode = true;
+        }
         dragX = -1;
         dragY = -1;
         this.repaint();
@@ -139,12 +155,76 @@ public class SentenceDependencyPanel extends SentenceAnnotatorPanel {
     }
 
     public int populateLeaf(AnnotatedSentence sentence, int wordIndex){
+        int numberOfValidItemsUntilNow = -1;
         int selectedIndex = -1;
         listModel.clear();
         AnnotatedWord selectedWord = ((AnnotatedWord)sentence.getWord(selectedWordIndex));
         for (int i = 0; i < UniversalDependencyType.values().length; i++){
+            if (draggedWordIndex > selectedWordIndex){
+                if (UniversalDependencyType.values()[i].equals(UniversalDependencyType.FIXED) ||
+                        UniversalDependencyType.values()[i].equals(UniversalDependencyType.FLAT) ||
+                        UniversalDependencyType.values()[i].equals(UniversalDependencyType.CONJ) ||
+                        UniversalDependencyType.values()[i].equals(UniversalDependencyType.APPOS) ||
+                        UniversalDependencyType.values()[i].equals(UniversalDependencyType.GOESWITH)){
+                    continue;
+                }
+            }
+            if (draggedWordIndex + 1 < selectedWordIndex && UniversalDependencyType.values()[i].equals(UniversalDependencyType.GOESWITH)){
+                continue;
+            }
+            if (selectedWord.getParse() != null){
+                String uvPos = selectedWord.getParse().getUniversalDependencyPos();
+                String dependency = UniversalDependencyType.values()[i].toString();
+                if (uvPos != null){
+                    if (dependency.equals("ADVMOD")){
+                        if (!uvPos.equals("ADV") && !uvPos.equals("ADJ") && !uvPos.equals("CCONJ") &&
+                                !uvPos.equals("DET") && !uvPos.equals("PART") && !uvPos.equals("SYM")){
+                            continue;
+                        }
+                    }
+                    if (dependency.equals("AUX") && !uvPos.equals("AUX")){
+                        continue;
+                    }
+                    if (dependency.equals("CASE")){
+                        if (uvPos.equals("PROPN") || uvPos.equals("ADJ") || uvPos.equals("PRON") ||
+                                uvPos.equals("DET") || uvPos.equals("NUM") || uvPos.equals("AUX")){
+                            continue;
+                        }
+                    }
+                    if (dependency.equals("MARK") || dependency.equals("CC")){
+                        if (uvPos.equals("NOUN") || uvPos.equals("PROPN") || uvPos.equals("ADJ") ||
+                                uvPos.equals("PRON") || uvPos.equals("DET") || uvPos.equals("NUM") ||
+                                uvPos.equals("VERB") || uvPos.equals("AUX") || uvPos.equals("INTJ")){
+                            continue;
+                        }
+                    }
+                    if (dependency.equals("COP")){
+                        if (!uvPos.equals("AUX") && !uvPos.equals("PRON") &&
+                                !uvPos.equals("DET") && !uvPos.equals("SYM")){
+                            continue;
+                        }
+                    }
+                    if (dependency.equals("DET")){
+                        if (!uvPos.equals("DET") && !uvPos.equals("PRON")){
+                            continue;
+                        }
+                    }
+                    if (dependency.equals("NUMMOD")){
+                        if (!uvPos.equals("NUM") && !uvPos.equals("NOUN") && !uvPos.equals("SYM")){
+                            continue;
+                        }
+                    }
+                    if (!dependency.equals("PUNCT") && uvPos.equals("PUNCT")){
+                        continue;
+                    }
+                    if (dependency.equals("COMPOUND") && uvPos.equals("AUX")){
+                        continue;
+                    }
+                }
+            }
+            numberOfValidItemsUntilNow++;
             if (selectedWord.getUniversalDependency() != null && selectedWord.getUniversalDependency().toString().equalsIgnoreCase(UniversalDependencyType.values()[i].toString())){
-                selectedIndex = i;
+                selectedIndex = numberOfValidItemsUntilNow;
             }
             listModel.addElement(UniversalDependencyType.values()[i].toString());
         }
