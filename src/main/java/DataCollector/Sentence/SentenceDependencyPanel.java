@@ -175,51 +175,8 @@ public class SentenceDependencyPanel extends SentenceAnnotatorPanel {
             if (selectedWord.getParse() != null){
                 String uvPos = selectedWord.getParse().getUniversalDependencyPos();
                 String dependency = UniversalDependencyType.values()[i].toString();
-                if (uvPos != null){
-                    if (dependency.equals("ADVMOD")){
-                        if (!uvPos.equals("ADV") && !uvPos.equals("ADJ") && !uvPos.equals("CCONJ") &&
-                                !uvPos.equals("DET") && !uvPos.equals("PART") && !uvPos.equals("SYM")){
-                            continue;
-                        }
-                    }
-                    if (dependency.equals("AUX") && !uvPos.equals("AUX")){
-                        continue;
-                    }
-                    if (dependency.equals("CASE")){
-                        if (uvPos.equals("PROPN") || uvPos.equals("ADJ") || uvPos.equals("PRON") ||
-                                uvPos.equals("DET") || uvPos.equals("NUM") || uvPos.equals("AUX")){
-                            continue;
-                        }
-                    }
-                    if (dependency.equals("MARK") || dependency.equals("CC")){
-                        if (uvPos.equals("NOUN") || uvPos.equals("PROPN") || uvPos.equals("ADJ") ||
-                                uvPos.equals("PRON") || uvPos.equals("DET") || uvPos.equals("NUM") ||
-                                uvPos.equals("VERB") || uvPos.equals("AUX") || uvPos.equals("INTJ")){
-                            continue;
-                        }
-                    }
-                    if (dependency.equals("COP")){
-                        if (!uvPos.equals("AUX") && !uvPos.equals("PRON") &&
-                                !uvPos.equals("DET") && !uvPos.equals("SYM")){
-                            continue;
-                        }
-                    }
-                    if (dependency.equals("DET")){
-                        if (!uvPos.equals("DET") && !uvPos.equals("PRON")){
-                            continue;
-                        }
-                    }
-                    if (dependency.equals("NUMMOD")){
-                        if (!uvPos.equals("NUM") && !uvPos.equals("NOUN") && !uvPos.equals("SYM")){
-                            continue;
-                        }
-                    }
-                    if (!dependency.equals("PUNCT") && uvPos.equals("PUNCT")){
-                        continue;
-                    }
-                    if (dependency.equals("COMPOUND") && uvPos.equals("AUX")){
-                        continue;
-                    }
+                if (uvPos != null && !AnnotatedSentence.checkDependencyWithUniversalPosTag(dependency, uvPos)){
+                    continue;
                 }
             }
             numberOfValidItemsUntilNow++;

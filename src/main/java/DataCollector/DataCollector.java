@@ -8,7 +8,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.*;
-import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
 public class DataCollector extends JFrame implements ActionListener {
@@ -143,7 +143,7 @@ public class DataCollector extends JFrame implements ActionListener {
     protected ArrayList<FileWithSelectedWords> loadMultipleFileNames(String fileName) {
         ArrayList<FileWithSelectedWords> fileList = new ArrayList<FileWithSelectedWords>();
         try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), "UTF8"));
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), StandardCharsets.UTF_8));
             String line = br.readLine();
             while (line != null) {
                 FileWithSelectedWords fileWithSelectedWords = new FileWithSelectedWords(line.trim());
