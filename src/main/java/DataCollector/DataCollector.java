@@ -20,6 +20,8 @@ public class DataCollector extends JFrame implements ActionListener {
     protected JMenuItem itemOpenMultiple;
     protected JLabel infoTop;
     protected JLabel infoBottom;
+    protected JPanel bottom;
+    protected JPanel info;
     protected JTabbedPane projectPane;
     protected JToolBar toolBar;
     protected JMenuBar menu;
@@ -165,7 +167,6 @@ public class DataCollector extends JFrame implements ActionListener {
      * Then adds Open, Open Multiple, Save, Close and Close All items to the {@link JMenu} and define actions for Close and Close All items.
      */
     protected DataCollector() {
-        JPanel info;
         menu = new JMenuBar();
         setJMenuBar(menu);
         projectMenu = new JMenu("Project");
@@ -183,14 +184,16 @@ public class DataCollector extends JFrame implements ActionListener {
         addButtons(toolBar);
         add(toolBar, BorderLayout.PAGE_START);
         toolBar.setVisible(true);
-        info = new JPanel(new BorderLayout(50, 0));
-        add(info, BorderLayout.SOUTH);
+        bottom = new JPanel(new BorderLayout());
+        info = new JPanel(new BorderLayout());
         infoTop = new JLabel("Ali Topu At ");
         infoTop.setForeground(Color.BLUE);
         info.add(infoTop, BorderLayout.NORTH);
         infoBottom = new JLabel("Cümle Burada Olacak ");
         infoBottom.setForeground(Color.RED);
         info.add(infoBottom, BorderLayout.SOUTH);
+        bottom.add(info, BorderLayout.NORTH);
+        add(bottom, BorderLayout.SOUTH);
         setLocationRelativeTo(null);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

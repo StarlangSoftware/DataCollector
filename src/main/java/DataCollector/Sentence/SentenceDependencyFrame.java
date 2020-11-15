@@ -6,13 +6,8 @@ import AnnotatedSentence.AnnotatedWord;
 import AnnotatedSentence.DependencyError.DependencyError;
 import DataCollector.DataCollector;
 import DataCollector.ParseTree.TreeEditorPanel;
-import DataCollector.ParseTree.TreeSyntacticPanel;
-import DataCollector.WordNet.WordNetEditorFrame;
 import DependencyParser.Universal.UniversalDependencyRelation;
-import Dictionary.Pos;
-import Dictionary.TxtWord;
 import Util.DrawingButton;
-import WordNet.SynSet;
 
 import javax.swing.*;
 import java.awt.*;
@@ -33,8 +28,10 @@ public class SentenceDependencyFrame extends SentenceAnnotatorFrame {
 
     public SentenceDependencyFrame(){
         super();
+        JPanel errorPanel = new JPanel(new BorderLayout(50, 0));
         errorList = new JList<>();
-        add(errorList, BorderLayout.SOUTH);
+        errorPanel.add(errorList);
+        bottom.add(errorPanel, BorderLayout.SOUTH);
         errorList.setVisible(false);
         JButton button = new DrawingButton(DataCollector.class, this, "delete", DELETEWORD, "Delete Word");
         button.setVisible(true);

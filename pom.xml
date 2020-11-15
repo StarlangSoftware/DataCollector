@@ -190,21 +190,6 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>wordnet-editor</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <archive>
-                                <manifest>
-                                    <mainClass>DataCollector.WordNet.TestWordNetEditorFrame</mainClass>
-                                </manifest>
-                            </archive>
-                            <finalName>wordnet-editor</finalName>
-                        </configuration>
-                    </execution>
-                    <execution>
                         <id>sentence-dependency</id>
                         <phase>package</phase>
                         <goals>
@@ -220,21 +205,6 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>tree-view-english</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <archive>
-                                <manifest>
-                                    <mainClass>DataCollector.ParseTree.TestEnglishViewerFrame</mainClass>
-                                </manifest>
-                            </archive>
-                            <finalName>tree-english-view</finalName>
-                        </configuration>
-                    </execution>
-                    <execution>
                         <id>sentence-morphological-analyzer</id>
                         <phase>package</phase>
                         <goals>
@@ -247,21 +217,6 @@
                                 </manifest>
                             </archive>
                             <finalName>sentence-morphological-analyzer</finalName>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>syntactic-editor</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <archive>
-                                <manifest>
-                                    <mainClass>DataCollector.ParseTree.TestSyntacticFrame</mainClass>
-                                </manifest>
-                            </archive>
-                            <finalName>syntactic-editor</finalName>
                         </configuration>
                     </execution>
                 </executions>
