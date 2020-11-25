@@ -26,9 +26,9 @@ public class SentenceFrameNetPredicatePanel extends SentenceAnnotatorPanel {
     public int populateLeaf(AnnotatedSentence sentence, int wordIndex){
         AnnotatedWord word = (AnnotatedWord) sentence.getWord(wordIndex);
         listModel.clear();
-        listModel.addElement(new FrameElement("NONE", null));
+        listModel.addElement(new FrameElement("NONE", null, null));
         if (word.getSemantic() != null && wordNet.getSynSetWithId(word.getSemantic()) != null && wordNet.getSynSetWithId(word.getSemantic()).getPos().equals(Pos.VERB)){
-            listModel.addElement(new FrameElement("PREDICATE", word.getSemantic()));
+            listModel.addElement(new FrameElement("PREDICATE", "NONE", word.getSemantic()));
         }
         if (word.getFrameElement() != null && word.getFrameElement().getFrameElementType().equals("NONE")){
             return 0;

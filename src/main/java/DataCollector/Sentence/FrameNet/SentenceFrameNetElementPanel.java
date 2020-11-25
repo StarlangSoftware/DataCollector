@@ -4,7 +4,9 @@ import AnnotatedSentence.AnnotatedSentence;
 import AnnotatedSentence.ViewLayerType;
 import AnnotatedSentence.AnnotatedWord;
 import DataCollector.Sentence.SentenceAnnotatorPanel;
-import FrameNet.*;
+import FrameNet.Frame;
+import FrameNet.FrameNet;
+import FrameNet.LexicalUnit;
 import WordNet.*;
 
 import javax.swing.*;
@@ -15,6 +17,7 @@ import javax.swing.tree.TreeSelectionModel;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashSet;
 
 public class SentenceFrameNetElementPanel extends SentenceAnnotatorPanel {
@@ -23,7 +26,7 @@ public class SentenceFrameNetElementPanel extends SentenceAnnotatorPanel {
     private WordNet wordNet;
     private JTree tree;
     private DefaultTreeModel treeModel;
-    private HashSet<LexicalUnit> currentLexicalUnits;
+    private ArrayList<DisplayedFrame> currentFrames;
     private boolean selfSelected = false;
 
     public SentenceFrameNetElementPanel(String currentPath, String fileName, WordNet wordNet, FrameNet frameNet){
@@ -40,13 +43,13 @@ public class SentenceFrameNetElementPanel extends SentenceAnnotatorPanel {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
             if (node != null && clickedWord != null && !selfSelected) {
                 if (node.getLevel() == 2){
-                    SynSet synSet = (SynSet) ((DefaultMutableTreeNode)node.getParent()).getUserObject();
+                    DisplayedFrame displayedFrame = (DisplayedFrame) ((DefaultMutableTreeNode)node.getParent()).getUserObject();
                     String frameElement = (String) node.getUserObject();
-                    clickedWord.setArgument(frameElement + "$" + synSet.getId());
+                    clickedWord.setFrameElement(frameElement + "$" + displayedFrame.getFrame().getName() + "$" + displayedFrame.getLexicalUnit().getSynSetId());
                     sentence.writeToFile(new File(fileDescription.getFileName()));
                 } else {
                     if (node.getLevel() == 0){
-                        clickedWord.setArgument("NONE");
+                        clickedWord.setFrameElement("NONE");
                         sentence.writeToFile(new File(fileDescription.getFileName()));
                     }
                 }
@@ -62,33 +65,37 @@ public class SentenceFrameNetElementPanel extends SentenceAnnotatorPanel {
         setFocusable(false);
     }
 
-    private HashSet<LexicalUnit> getLexicalUnits(AnnotatedSentence sentence){
-        HashSet<LexicalUnit> lexicalUnits = new HashSet<>();
+    private void getFrames(AnnotatedSentence sentence){
+        currentFrames = new ArrayList<>();
         for (int i = 0; i < sentence.wordCount(); i++){
             AnnotatedWord word = (AnnotatedWord) sentence.getWord(i);
             if (word.getFrameElement() != null && word.getFrameElement().getFrameElementType().equals("PREDICATE") && word.getSemantic() != null){
                 SynSet synSet = wordNet.getSynSetWithId(word.getSemantic());
                 if (synSet != null && frameNet.lexicalUnitExists(synSet.getId())){
-                    lexicalUnits.addAll(frameNet.getLexicalUnits(synSet.getId()));
+                    for (Frame frame : frameNet.getFrames(synSet.getId())){
+                        if (!currentFrames.contains(new DisplayedFrame(frame, frame.getLexicalUnitWithId(synSet.getId())))){
+                            currentFrames.add(new DisplayedFrame(frame, frame.getLexicalUnitWithId(synSet.getId())));
+                        }
+                    }
                 }
             }
         }
-        return lexicalUnits;
     }
 
     public int populateLeaf(AnnotatedSentence sentence, int wordIndex){
         DefaultMutableTreeNode selectedNode = null;
-        currentLexicalUnits = getLexicalUnits(sentence);
+        getFrames(sentence);
         AnnotatedWord word = (AnnotatedWord) sentence.getWord(wordIndex);
         ((DefaultMutableTreeNode)treeModel.getRoot()).removeAllChildren();
         treeModel.reload();
-        for (LexicalUnit lexicalUnit : currentLexicalUnits){
-            DefaultMutableTreeNode frameNode = new DefaultMutableTreeNode(wordNet.getSynSetWithId(lexicalUnit.getSynSetId()));
+        for (DisplayedFrame frame : currentFrames){
+            DefaultMutableTreeNode frameNode = new DefaultMutableTreeNode(frame);
             ((DefaultMutableTreeNode) treeModel.getRoot()).add(frameNode);
+            LexicalUnit lexicalUnit = frame.getLexicalUnit();
             for (String frameElement : lexicalUnit.getFrameElements()){
                 DefaultMutableTreeNode frameElementNode = new DefaultMutableTreeNode(frameElement);
                 frameNode.add(frameElementNode);
-                if (word.getFrameElement() != null && word.getFrameElement().getId() != null && word.getFrameElement().getId().equals(lexicalUnit.getSynSetId()) && word.getFrameElement().getFrameElementType() != null && word.getFrameElement().getFrameElementType().equals(frameElement)){
+                if (word.getFrameElement() != null && word.getFrameElement().getId() != null && word.getFrameElement().getId().equals(lexicalUnit.getSynSetId()) && word.getFrameElement().getFrameElementType() != null && word.getFrameElement().getFrameElementType().equals(frameElement) && word.getFrameElement().getFrame() != null && word.getFrameElement().getFrame().equals(frame.getFrame().getName())){
                     selectedNode = frameElementNode;
                 }
             }
@@ -107,7 +114,7 @@ public class SentenceFrameNetElementPanel extends SentenceAnnotatorPanel {
         if (selectedWordIndex != -1){
             populateLeaf(sentence, selectedWordIndex);
             pane.getVerticalScrollBar().setValue(0);
-            pane.setBounds(((AnnotatedWord)sentence.getWord(selectedWordIndex)).getArea().x, ((AnnotatedWord)sentence.getWord(selectedWordIndex)).getArea().y + 20, 240, 90);
+            pane.setBounds(((AnnotatedWord)sentence.getWord(selectedWordIndex)).getArea().x, ((AnnotatedWord)sentence.getWord(selectedWordIndex)).getArea().y + 20, 240, 200);
             clickedWord = ((AnnotatedWord)sentence.getWord(selectedWordIndex));
             selectedWordIndex = -1;
             selfSelected = false;
