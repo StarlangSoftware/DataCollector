@@ -1,6 +1,9 @@
 package DataCollector.ParseTree;
 
 import AnnotatedTree.TreeBankDrawable;
+import DataCollector.ParseTree.MorphologicalAnalyzer.ViewTreeMorphologicalAnnotationFrame;
+import DataCollector.ParseTree.NER.ViewTreeNERAnnotationFrame;
+import DataCollector.ParseTree.Semantic.ViewTreeSemanticAnnotationFrame;
 import DataCollector.Sentence.ViewSentenceAnnotationFrame;
 import Util.DrawingButton;
 

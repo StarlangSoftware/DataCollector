@@ -149,7 +149,7 @@ public abstract class SentenceAnnotatorFrame extends DataCollector {
      * @param annotatorPanel {@link SentenceAnnotatorPanel} input.
      * @param fileName       File name input.
      */
-    protected void addPanelToFrame(SentenceAnnotatorPanel annotatorPanel, String fileName) {
+    public void addPanelToFrame(SentenceAnnotatorPanel annotatorPanel, String fileName) {
         JScrollPane treePane = new JScrollPane();
         treePane.setViewportView(annotatorPanel);
         projectPane.add(treePane, fileName);

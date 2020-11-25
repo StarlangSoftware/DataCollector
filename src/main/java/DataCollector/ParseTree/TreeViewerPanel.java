@@ -24,7 +24,7 @@ public class TreeViewerPanel extends JPanel {
     /**
      * Current tree displayed in the panel.
      */
-    protected ParseTreeDrawable currentTree;
+    public ParseTreeDrawable currentTree;
 
     /**
      * The parse tree is displayed in the panel with spaces from the right end and bottom end of the panel. The distance

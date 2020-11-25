@@ -1,6 +1,12 @@
 package DataCollector.ParseTree;
 
 import AnnotatedSentence.ViewLayerType;
+import DataCollector.ParseTree.MetaMorphemeMover.TreeMetaMorphemeMoverPanel;
+import DataCollector.ParseTree.MorphologicalAnalyzer.TreeMorphologicalAnalyzerPanel;
+import DataCollector.ParseTree.NER.TreeNERPanel;
+import DataCollector.ParseTree.Semantic.TreeEnglishSemanticPanel;
+import DataCollector.ParseTree.Semantic.TreeTurkishSemanticPanel;
+import DataCollector.ParseTree.Translate.TreeTranslatorPanel;
 import ParseTree.ParseNode;
 import MorphologicalAnalysis.FsmMorphologicalAnalyzer;
 import AnnotatedTree.*;

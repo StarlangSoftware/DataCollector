@@ -210,7 +210,7 @@ public abstract class TreeEditorFrame extends DataCollector{
      * @param editorPanel Editor panel to be added.
      * @param fileName Name of the file that is displayed on the tab.
      */
-    protected void addPanelToFrame(TreeEditorPanel editorPanel, String fileName){
+    public void addPanelToFrame(TreeEditorPanel editorPanel, String fileName){
         JScrollPane treePane = new JScrollPane();
         treePane.setViewportView(editorPanel);
         projectPane.add(treePane, fileName);

@@ -17,7 +17,7 @@ import java.util.ArrayList;
 
 public abstract class SentenceAnnotatorPanel extends JPanel implements MouseListener, MouseMotionListener {
     protected JTextField editText;
-    protected AnnotatedSentence sentence;
+    public AnnotatedSentence sentence;
     protected FileDescription fileDescription;
     protected int wordSpace = 60, lineSpace;
     protected int selectedWordIndex = -1, draggedWordIndex = -1;
@@ -52,6 +52,9 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
                             break;
                         case PROPBANK:
                             clickedWord.setArgument(list.getSelectedValue().toString());
+                            break;
+                        case FRAMENET:
+                            clickedWord.setFrameElement(list.getSelectedValue().toString());
                             break;
                         case SHALLOW_PARSE:
                             clickedWord.setShallowParse((String) list.getSelectedValue());
@@ -174,6 +177,14 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
                     }
                 }
                 break;
+            case FRAMENET:
+                if (word.getFrameElement() != null){
+                    size = g.getFontMetrics().stringWidth(word.getFrameElement().getFrameElementType());
+                    if (size > maxSize){
+                        maxSize = size;
+                    }
+                }
+                break;
             case SHALLOW_PARSE:
                 if (word.getShallowParse() != null){
                     size = g.getFontMetrics().stringWidth(word.getShallowParse());
@@ -287,6 +298,12 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
                 case PROPBANK:
                     if (word.getArgument() != null){
                         correct = word.getArgument().getArgumentType();
+                        g.drawString(correct, currentLeft, (lineIndex + 1) * lineSpace + 30);
+                    }
+                    break;
+                case FRAMENET:
+                    if (word.getFrameElement() != null){
+                        correct = word.getFrameElement().getFrameElementType();
                         g.drawString(correct, currentLeft, (lineIndex + 1) * lineSpace + 30);
                     }
                     break;
