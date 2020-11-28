@@ -1,6 +1,8 @@
 package DataCollector.Sentence.FrameNet;
 
 import AnnotatedSentence.AnnotatedSentence;
+import AnnotatedSentence.AutoProcessor.AutoPredicate.TurkishSentenceAutoFramePredicate;
+import AnnotatedSentence.AutoProcessor.AutoPredicate.TurkishSentenceAutoPredicate;
 import AnnotatedSentence.ViewLayerType;
 import AnnotatedSentence.AnnotatedWord;
 import DataCollector.Sentence.SentenceAnnotatorPanel;
@@ -12,7 +14,7 @@ import WordNet.WordNet;
 import java.awt.*;
 
 public class SentenceFrameNetPredicatePanel extends SentenceAnnotatorPanel {
-
+    private TurkishSentenceAutoFramePredicate turkishSentenceAutoFramePredicate;
     private WordNet wordNet;
     private FrameNet frameNet;
 
@@ -21,6 +23,14 @@ public class SentenceFrameNetPredicatePanel extends SentenceAnnotatorPanel {
         setLayout(new BorderLayout());
         this.wordNet = wordNet;
         this.frameNet = frameNet;
+        turkishSentenceAutoFramePredicate = new TurkishSentenceAutoFramePredicate(frameNet);
+    }
+
+    public void autoDetect(){
+        if (turkishSentenceAutoFramePredicate.autoPredicate(sentence)){
+            sentence.save();
+            this.repaint();
+        }
     }
 
     public int populateLeaf(AnnotatedSentence sentence, int wordIndex){
