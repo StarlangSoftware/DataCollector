@@ -25,6 +25,8 @@ public class SentenceSemanticFrame extends SentenceAnnotatorFrame {
     public SentenceSemanticFrame(final FsmMorphologicalAnalyzer fsm, final WordNet wordNet){
         super();
         exampleSentences = new HashMap<>();
+        this.fsm = fsm;
+        this.wordNet = wordNet;
         AnnotatedCorpus corpus;
         corpus = new AnnotatedCorpus(new File(TreeEditorPanel.phrasePath));
         for (int i = 0; i < corpus.sentenceCount(); i++){
@@ -136,8 +138,6 @@ public class SentenceSemanticFrame extends SentenceAnnotatorFrame {
         itemViewAnnotated.addActionListener(e -> {
             new ViewSentenceSemanticAnnotationFrame(corpus, this.wordNet, wordNet, this);
         });
-        this.fsm = fsm;
-        this.wordNet = wordNet;
         autoSemanticDetectionOption = new JCheckBox("Auto Semantic Detection", false);
         toolBar.add(autoSemanticDetectionOption);
     }

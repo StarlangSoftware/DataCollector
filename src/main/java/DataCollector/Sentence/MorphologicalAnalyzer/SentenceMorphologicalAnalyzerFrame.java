@@ -26,6 +26,8 @@ public class SentenceMorphologicalAnalyzerFrame extends SentenceAnnotatorFrame {
 
     public SentenceMorphologicalAnalyzerFrame(final FsmMorphologicalAnalyzer fsm, final WordNet wordNet){
         super();
+        this.fsm = fsm;
+        this.wordNet = wordNet;
         AnnotatedCorpus corpus;
         corpus = new AnnotatedCorpus(new File(TreeEditorPanel.phrasePath));
         JMenuItem itemUpdateDictionary = addMenuItem(projectMenu, "Update Analyzer", KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
@@ -51,8 +53,6 @@ public class SentenceMorphologicalAnalyzerFrame extends SentenceAnnotatorFrame {
         });
         autoAnalysisDetectionOption = new JCheckBox("Auto Morphological Disambiguation", false);
         toolBar.add(autoAnalysisDetectionOption);
-        this.fsm = fsm;
-        this.wordNet = wordNet;
         turkishSentenceAutoDisambiguator = new TurkishSentenceAutoDisambiguator(new RootWordStatistics("penntreebank_statistics.txt"));
         JMenuItem itemViewAnnotated = addMenuItem(projectMenu, "View Annotations", KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
         itemViewAnnotated.addActionListener(e -> {

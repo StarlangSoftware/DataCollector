@@ -129,6 +129,18 @@ public class SentenceSemanticPanel extends SentenceAnnotatorPanel {
                             multiple = 3;
                         }
                     }
+                    if (i + 3 < sentence.wordCount()){
+                        AnnotatedWord threeNext = (AnnotatedWord) sentence.getWord(i + 3);
+                        if (threeNext.getSemantic() != null && multiple == 3 && synSet.equals(wordNet.getSynSetWithId(threeNext.getSemantic()))){
+                            multiple = 4;
+                        }
+                    }
+                    if (i + 4 < sentence.wordCount()){
+                        AnnotatedWord fourNext = (AnnotatedWord) sentence.getWord(i + 4);
+                        if (fourNext.getSemantic() != null && multiple == 4 && synSet.equals(wordNet.getSynSetWithId(fourNext.getSemantic()))){
+                            multiple = 5;
+                        }
+                    }
                     if (synSet.getDefinition() != null){
                         if (synSet.getDefinition().length() < 24 + (multiple - 1) * 35){
                             current = synSet.getDefinition();
@@ -158,6 +170,37 @@ public class SentenceSemanticPanel extends SentenceAnnotatorPanel {
         DefaultMutableTreeNode selectedNode = null;
         ((DefaultMutableTreeNode)treeModel.getRoot()).removeAllChildren();
         treeModel.reload();
+        for (int i = wordIndex - 4; i <= wordIndex; i++){
+            if (i >= 0 && i + 4 < sentence.wordCount()){
+                AnnotatedWord word1 = (AnnotatedWord) sentence.getWord(i);
+                AnnotatedWord word2 = (AnnotatedWord) sentence.getWord(i + 1);
+                AnnotatedWord word3 = (AnnotatedWord) sentence.getWord(i + 2);
+                AnnotatedWord word4 = (AnnotatedWord) sentence.getWord(i + 3);
+                AnnotatedWord word5 = (AnnotatedWord) sentence.getWord(i + 4);
+                if (word1.getParse() != null && word2.getParse() != null && word3.getParse() != null && word4.getParse() != null && word5.getParse() != null){
+                    ArrayList<SynSet> idioms = wordNet.constructIdiomSynSets(word1.getParse(), word2.getParse(), word3.getParse(), word4.getParse(), word5.getParse(), word1.getMetamorphicParse(), word2.getMetamorphicParse(), word3.getMetamorphicParse(), word4.getMetamorphicParse(), word5.getMetamorphicParse(), fsm);
+                    DefaultMutableTreeNode currentSelected = addSynSets(word, idioms);
+                    if (currentSelected != null){
+                        selectedNode = currentSelected;
+                    }
+                }
+            }
+        }
+        for (int i = wordIndex - 3; i <= wordIndex; i++){
+            if (i >= 0 && i + 3 < sentence.wordCount()){
+                AnnotatedWord word1 = (AnnotatedWord) sentence.getWord(i);
+                AnnotatedWord word2 = (AnnotatedWord) sentence.getWord(i + 1);
+                AnnotatedWord word3 = (AnnotatedWord) sentence.getWord(i + 2);
+                AnnotatedWord word4 = (AnnotatedWord) sentence.getWord(i + 3);
+                if (word1.getParse() != null && word2.getParse() != null && word3.getParse() != null && word4.getParse() != null){
+                    ArrayList<SynSet> idioms = wordNet.constructIdiomSynSets(word1.getParse(), word2.getParse(), word3.getParse(), word4.getParse(), word1.getMetamorphicParse(), word2.getMetamorphicParse(), word3.getMetamorphicParse(), word4.getMetamorphicParse(), fsm);
+                    DefaultMutableTreeNode currentSelected = addSynSets(word, idioms);
+                    if (currentSelected != null){
+                        selectedNode = currentSelected;
+                    }
+                }
+            }
+        }
         for (int i = wordIndex - 2; i <= wordIndex; i++){
             if (i >= 0 && i + 2 < sentence.wordCount()){
                 AnnotatedWord word1 = (AnnotatedWord) sentence.getWord(i);
