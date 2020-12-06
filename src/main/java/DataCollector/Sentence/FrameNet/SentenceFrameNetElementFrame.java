@@ -5,6 +5,8 @@ import DataCollector.Sentence.SentenceAnnotatorPanel;
 import FrameNet.FrameNet;
 import WordNet.WordNet;
 
+import javax.swing.*;
+
 public class SentenceFrameNetElementFrame extends SentenceAnnotatorFrame {
 
     private FrameNet frameNet;
@@ -14,6 +16,7 @@ public class SentenceFrameNetElementFrame extends SentenceAnnotatorFrame {
         super();
         this.wordNet = wordNet;
         frameNet = new FrameNet();
+        JOptionPane.showMessageDialog(this, "WordNet and frameNet are loaded!", "Frame Element Selection", JOptionPane.INFORMATION_MESSAGE);
     }
 
     @Override

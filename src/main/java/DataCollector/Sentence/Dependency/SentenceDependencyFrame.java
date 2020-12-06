@@ -6,6 +6,7 @@ import AnnotatedSentence.AnnotatedWord;
 import AnnotatedSentence.DependencyError.DependencyError;
 import DataCollector.DataCollector;
 import DataCollector.ParseTree.TreeEditorPanel;
+import DataCollector.Sentence.FrameNet.SentenceFrameNetPredicatePanel;
 import DataCollector.Sentence.SentenceAnnotatorFrame;
 import DataCollector.Sentence.SentenceAnnotatorPanel;
 import DependencyParser.Universal.UniversalDependencyRelation;
@@ -22,6 +23,7 @@ public class SentenceDependencyFrame extends SentenceAnnotatorFrame {
 
     static final protected String DELETEWORD = "deleteword";
     JList<String> errorList;
+    private JCheckBox autoDependencyDetectionOption;
 
     @Override
     protected SentenceAnnotatorPanel generatePanel(String currentPath, String rawFileName) {
@@ -30,6 +32,8 @@ public class SentenceDependencyFrame extends SentenceAnnotatorFrame {
 
     public SentenceDependencyFrame(){
         super();
+        autoDependencyDetectionOption = new JCheckBox("Auto Dependency Detection", false);
+        toolBar.add(autoDependencyDetectionOption);
         JPanel errorPanel = new JPanel(new BorderLayout(50, 0));
         errorList = new JList<>();
         errorPanel.add(errorList);
@@ -67,6 +71,7 @@ public class SentenceDependencyFrame extends SentenceAnnotatorFrame {
         itemViewAnnotated.addActionListener(e -> {
             new ViewSentenceDependencyAnnotationFrame(corpus, this);
         });
+        JOptionPane.showMessageDialog(this, "Annotated corpus is loaded!", "Dependency Annotation", JOptionPane.INFORMATION_MESSAGE);
     }
 
     protected void deleteWord(){
@@ -90,6 +95,24 @@ public class SentenceDependencyFrame extends SentenceAnnotatorFrame {
             } else {
                 errorList.setVisible(false);
             }
+        }
+    }
+
+    public void next(int count){
+        super.next(count);
+        SentenceDependencyPanel current;
+        current = (SentenceDependencyPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
+        if (autoDependencyDetectionOption.isSelected()){
+            current.autoDetect();
+        }
+    }
+
+    public void previous(int count){
+        super.previous(count);
+        SentenceDependencyPanel current;
+        current = (SentenceDependencyPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
+        if (autoDependencyDetectionOption.isSelected()){
+            current.autoDetect();
         }
     }
 

@@ -20,6 +20,7 @@ public class SentenceFrameNetPredicateFrame extends SentenceAnnotatorFrame {
         toolBar.add(autoPredicateDetectionOption);
         wordNet = new WordNet();
         frameNet = new FrameNet();
+        JOptionPane.showMessageDialog(this, "WordNet and frameNet are loaded!", "Predicate Annotation", JOptionPane.INFORMATION_MESSAGE);
     }
 
     @Override

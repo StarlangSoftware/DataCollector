@@ -58,6 +58,7 @@ public class SentenceMorphologicalAnalyzerFrame extends SentenceAnnotatorFrame {
         itemViewAnnotated.addActionListener(e -> {
             new ViewSentenceMorphologicalAnnotationFrame(corpus, this);
         });
+        JOptionPane.showMessageDialog(this, "WordNet, dictionary and annotated corpus are loaded!", "Morphological Annotation", JOptionPane.INFORMATION_MESSAGE);
     }
 
     @Override

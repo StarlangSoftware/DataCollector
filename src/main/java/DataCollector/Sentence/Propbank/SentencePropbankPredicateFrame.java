@@ -18,6 +18,7 @@ public class SentencePropbankPredicateFrame extends SentenceAnnotatorFrame {
         wordNet = new WordNet();
         toolBar.add(autoPredicateDetectionOption);
         xmlParser = new FramesetList();
+        JOptionPane.showMessageDialog(this, "WordNet and PropBank are loaded!", "PropBank Predicate Annotation", JOptionPane.INFORMATION_MESSAGE);
     }
 
     @Override

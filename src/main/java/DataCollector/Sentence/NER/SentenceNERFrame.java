@@ -23,6 +23,7 @@ public class SentenceNERFrame extends SentenceAnnotatorFrame {
         itemViewAnnotated.addActionListener(e -> {
             new ViewSentenceNERAnnotationFrame(corpus, this);
         });
+        JOptionPane.showMessageDialog(this, "Annotated corpus is loaded!", "Named Entity Annotation", JOptionPane.INFORMATION_MESSAGE);
     }
 
     @Override

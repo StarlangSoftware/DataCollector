@@ -2,6 +2,8 @@ package DataCollector.Sentence.Dependency;
 
 import AnnotatedSentence.AnnotatedSentence;
 import AnnotatedSentence.AnnotatedWord;
+import AnnotatedSentence.AutoProcessor.AutoDependency.TurkishSentenceAutoDependency;
+import AnnotatedSentence.AutoProcessor.AutoPredicate.TurkishSentenceAutoFramePredicate;
 import AnnotatedSentence.ViewLayerType;
 import DataCollector.Sentence.SentenceAnnotatorPanel;
 import DependencyParser.Universal.UniversalDependencyRelation;
@@ -16,9 +18,11 @@ import java.awt.geom.Point2D;
 public class SentenceDependencyPanel extends SentenceAnnotatorPanel {
     private boolean dragged = false;
     private int dragX = -1, dragY = -1;
+    private TurkishSentenceAutoDependency turkishSentenceAutoDependency;
 
     public SentenceDependencyPanel(String currentPath, String rawFileName) {
         super(currentPath, rawFileName, ViewLayerType.DEPENDENCY);
+        turkishSentenceAutoDependency = new TurkishSentenceAutoDependency();
     }
 
     public void deleteWord(){
@@ -28,6 +32,12 @@ public class SentenceDependencyPanel extends SentenceAnnotatorPanel {
             selectedWordIndex = -1;
             this.repaint();
         }
+    }
+
+    public void autoDetect(){
+        turkishSentenceAutoDependency.autoDependency(sentence);
+        sentence.save();
+        this.repaint();
     }
 
     public void mouseReleased(MouseEvent mouseEvent) {

@@ -20,6 +20,7 @@ public class SentenceShallowParseFrame extends SentenceAnnotatorFrame {
         itemViewAnnotated.addActionListener(e -> {
             new ViewSentenceShallowParseAnnotationFrame(corpus, this);
         });
+        JOptionPane.showMessageDialog(this, "Annotated corpus is loaded!", "Shallow Parse Annotation", JOptionPane.INFORMATION_MESSAGE);
     }
 
     @Override

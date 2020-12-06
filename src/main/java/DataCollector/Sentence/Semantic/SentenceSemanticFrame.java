@@ -140,6 +140,7 @@ public class SentenceSemanticFrame extends SentenceAnnotatorFrame {
         });
         autoSemanticDetectionOption = new JCheckBox("Auto Semantic Detection", false);
         toolBar.add(autoSemanticDetectionOption);
+        JOptionPane.showMessageDialog(this, "WordNet, dictionary, and annotated corpus are loaded!", "Semantic Annotation", JOptionPane.INFORMATION_MESSAGE);
     }
 
     protected SentenceAnnotatorPanel generatePanel(String currentPath, String rawFileName) {
