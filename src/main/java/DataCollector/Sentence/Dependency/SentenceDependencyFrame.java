@@ -42,6 +42,11 @@ public class SentenceDependencyFrame extends SentenceAnnotatorFrame {
         JButton button = new DrawingButton(DataCollector.class, this, "delete", DELETEWORD, "Delete Word");
         button.setVisible(true);
         toolBar.add(button);
+        projectPane.addChangeListener(e -> {
+            if (projectPane.getTabCount() > 0) {
+                showErrors((SentenceDependencyPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView());
+            }
+        });
         AnnotatedCorpus corpus;
         corpus = new AnnotatedCorpus(new File(TreeEditorPanel.phrasePath));
         JMenuItem itemShowUnannotated = addMenuItem(projectMenu, "Show Unannotated Files", KeyStroke.getKeyStroke(KeyEvent.VK_U, ActionEvent.CTRL_MASK));
@@ -70,11 +75,6 @@ public class SentenceDependencyFrame extends SentenceAnnotatorFrame {
         JMenuItem itemViewAnnotated = addMenuItem(projectMenu, "View Annotations", KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
         itemViewAnnotated.addActionListener(e -> {
             new ViewSentenceDependencyAnnotationFrame(corpus, this);
-        });
-        projectPane.addChangeListener(e -> {
-            if (projectPane.getTabCount() > 0) {
-                showErrors((SentenceDependencyPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView());
-            }
         });
         JOptionPane.showMessageDialog(this, "Annotated corpus is loaded!", "Dependency Annotation", JOptionPane.INFORMATION_MESSAGE);
     }
