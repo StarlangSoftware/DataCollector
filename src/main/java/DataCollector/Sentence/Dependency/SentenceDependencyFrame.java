@@ -71,6 +71,11 @@ public class SentenceDependencyFrame extends SentenceAnnotatorFrame {
         itemViewAnnotated.addActionListener(e -> {
             new ViewSentenceDependencyAnnotationFrame(corpus, this);
         });
+        projectPane.addChangeListener(e -> {
+            if (projectPane.getTabCount() > 0) {
+                showErrors((SentenceDependencyPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView());
+            }
+        });
         JOptionPane.showMessageDialog(this, "Annotated corpus is loaded!", "Dependency Annotation", JOptionPane.INFORMATION_MESSAGE);
     }
 
@@ -81,8 +86,7 @@ public class SentenceDependencyFrame extends SentenceAnnotatorFrame {
         }
     }
 
-    protected void showErrors(){
-        SentenceDependencyPanel current = (SentenceDependencyPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
+    protected void showErrors(SentenceDependencyPanel current){
         if (current != null){
             ArrayList<DependencyError> errors = current.sentence.getDependencyErrors();
             if (errors.size() > 0){
@@ -128,7 +132,7 @@ public class SentenceDependencyFrame extends SentenceAnnotatorFrame {
             case FAST_FORWARD:
             case FAST_FAST_BACKWARD:
             case FAST_FAST_FORWARD:
-                showErrors();
+                showErrors((SentenceDependencyPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView());
                 break;
         }
     }
