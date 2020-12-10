@@ -1,15 +1,14 @@
 package DataCollector.Sentence.FrameNet;
 
 import FrameNet.Frame;
-import FrameNet.LexicalUnit;
 
 import java.util.Objects;
 
 public class DisplayedFrame {
     private Frame frame;
-    private LexicalUnit lexicalUnit;
+    private String lexicalUnit;
 
-    public DisplayedFrame(Frame frame, LexicalUnit lexicalUnit) {
+    public DisplayedFrame(Frame frame, String lexicalUnit) {
         this.frame = frame;
         this.lexicalUnit = lexicalUnit;
     }
@@ -20,7 +19,7 @@ public class DisplayedFrame {
         if (o == null || getClass() != o.getClass()) return false;
         DisplayedFrame that = (DisplayedFrame) o;
         return frame.getName().equals(that.frame.getName()) &&
-                lexicalUnit.getSynSetId().equals(that.lexicalUnit.getSynSetId());
+                lexicalUnit.equals(that.lexicalUnit);
     }
 
     @Override
@@ -32,7 +31,7 @@ public class DisplayedFrame {
         return frame;
     }
 
-    public LexicalUnit getLexicalUnit() {
+    public String getLexicalUnit() {
         return lexicalUnit;
     }
 

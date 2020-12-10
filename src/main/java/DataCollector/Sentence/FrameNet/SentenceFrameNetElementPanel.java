@@ -6,7 +6,6 @@ import AnnotatedSentence.AnnotatedWord;
 import DataCollector.Sentence.SentenceAnnotatorPanel;
 import FrameNet.Frame;
 import FrameNet.FrameNet;
-import FrameNet.LexicalUnit;
 import WordNet.*;
 
 import javax.swing.*;
@@ -45,7 +44,7 @@ public class SentenceFrameNetElementPanel extends SentenceAnnotatorPanel {
                 if (node.getLevel() == 2){
                     DisplayedFrame displayedFrame = (DisplayedFrame) ((DefaultMutableTreeNode)node.getParent()).getUserObject();
                     String frameElement = (String) node.getUserObject();
-                    clickedWord.setFrameElement(frameElement + "$" + displayedFrame.getFrame().getName() + "$" + displayedFrame.getLexicalUnit().getSynSetId());
+                    clickedWord.setFrameElement(frameElement + "$" + displayedFrame.getFrame().getName() + "$" + displayedFrame.getLexicalUnit());
                     sentence.writeToFile(new File(fileDescription.getFileName()));
                 } else {
                     if (node.getLevel() == 0){
@@ -73,8 +72,8 @@ public class SentenceFrameNetElementPanel extends SentenceAnnotatorPanel {
                 SynSet synSet = wordNet.getSynSetWithId(word.getSemantic());
                 if (synSet != null && frameNet.lexicalUnitExists(synSet.getId())){
                     for (Frame frame : frameNet.getFrames(synSet.getId())){
-                        if (!currentFrames.contains(new DisplayedFrame(frame, frame.getLexicalUnitWithId(synSet.getId())))){
-                            currentFrames.add(new DisplayedFrame(frame, frame.getLexicalUnitWithId(synSet.getId())));
+                        if (!currentFrames.contains(new DisplayedFrame(frame, synSet.getId()))){
+                            currentFrames.add(new DisplayedFrame(frame, synSet.getId()));
                         }
                     }
                 }
@@ -91,11 +90,11 @@ public class SentenceFrameNetElementPanel extends SentenceAnnotatorPanel {
         for (DisplayedFrame frame : currentFrames){
             DefaultMutableTreeNode frameNode = new DefaultMutableTreeNode(frame);
             ((DefaultMutableTreeNode) treeModel.getRoot()).add(frameNode);
-            LexicalUnit lexicalUnit = frame.getLexicalUnit();
-            for (String frameElement : lexicalUnit.getFrameElements()){
+            for (int i = 0; i < frame.getFrame().frameElementSize(); i++){
+                String frameElement = frame.getFrame().getFrameElement(i);
                 DefaultMutableTreeNode frameElementNode = new DefaultMutableTreeNode(frameElement);
                 frameNode.add(frameElementNode);
-                if (word.getFrameElement() != null && word.getFrameElement().getId() != null && word.getFrameElement().getId().equals(lexicalUnit.getSynSetId()) && word.getFrameElement().getFrameElementType() != null && word.getFrameElement().getFrameElementType().equals(frameElement) && word.getFrameElement().getFrame() != null && word.getFrameElement().getFrame().equals(frame.getFrame().getName())){
+                if (word.getFrameElement() != null && word.getFrameElement().getId() != null && word.getFrameElement().getFrameElementType() != null && word.getFrameElement().getFrameElementType().equals(frameElement) && word.getFrameElement().getFrame() != null && word.getFrameElement().getFrame().equals(frame.getFrame().getName())){
                     selectedNode = frameElementNode;
                 }
             }

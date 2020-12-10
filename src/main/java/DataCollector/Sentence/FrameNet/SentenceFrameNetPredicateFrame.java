@@ -1,10 +1,8 @@
 package DataCollector.Sentence.FrameNet;
 
-import DataCollector.Sentence.Propbank.SentencePropbankPredicatePanel;
 import DataCollector.Sentence.SentenceAnnotatorFrame;
 import DataCollector.Sentence.SentenceAnnotatorPanel;
 import FrameNet.FrameNet;
-import PropBank.FramesetList;
 import WordNet.WordNet;
 
 import javax.swing.*;
