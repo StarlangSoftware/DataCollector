@@ -2,8 +2,6 @@ package DataCollector.ParseTree;
 
 import AnnotatedTree.TreeBankDrawable;
 import DataCollector.ParseTree.MorphologicalAnalyzer.ViewTreeMorphologicalAnnotationFrame;
-import DataCollector.ParseTree.NER.ViewTreeNERAnnotationFrame;
-import DataCollector.ParseTree.Semantic.ViewTreeSemanticAnnotationFrame;
 import DataCollector.Sentence.ViewSentenceAnnotationFrame;
 import Util.DrawingButton;
 
@@ -98,12 +96,12 @@ public abstract class ViewTreeAnnotationFrame extends JFrame implements ActionLi
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case WORD_SORT:
-                data.sort(new ViewTreeSemanticAnnotationFrame.RowComparatorAccordingToWord());
+                data.sort(new RowComparatorAccordingToWord());
                 updateGroupColors(WORD_INDEX);
                 JOptionPane.showMessageDialog(this, "Words Sorted!", "Sorting Complete", JOptionPane.INFORMATION_MESSAGE);
                 break;
             case ID_SORT:
-                data.sort(new ViewTreeSemanticAnnotationFrame.RowComparatorAccordingToTag());
+                data.sort(new RowComparatorAccordingToTag());
                 updateGroupColors(TAG_INDEX);
                 JOptionPane.showMessageDialog(this, "Tags Sorted!", "Sorting Complete", JOptionPane.INFORMATION_MESSAGE);
                 break;
@@ -217,7 +215,7 @@ public abstract class ViewTreeAnnotationFrame extends JFrame implements ActionLi
         dataTable.getColumnModel().getColumn(1).setMaxWidth(60);
         dataTable.getColumnModel().getColumn(2).setWidth(200);
         dataTable.getColumnModel().getColumn(TAG_INDEX).setWidth(200);
-        dataTable.setDefaultRenderer(Object.class, new ViewTreeNERAnnotationFrame.CellRenderer());
+        dataTable.setDefaultRenderer(Object.class, new CellRenderer());
     }
 
 }

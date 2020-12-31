@@ -2,9 +2,6 @@ package DataCollector.ParseTree;
 
 import AnnotatedSentence.ViewLayerType;
 import DataCollector.ParseTree.MorphologicalAnalyzer.TreeMorphologicalAnalyzerPanel;
-import DataCollector.ParseTree.NER.TreeNERPanel;
-import DataCollector.ParseTree.Propbank.TreePropbankArgumentPanel;
-import DataCollector.ParseTree.Semantic.TreeTurkishSemanticPanel;
 import DataCollector.ParseTree.Translate.TreeTranslatorPanel;
 import MorphologicalAnalysis.FsmMorphologicalAnalyzer;
 import AnnotatedTree.*;
@@ -141,15 +138,6 @@ public class TreeTraverseProcessedFrame extends TreeTraverseFrame {
                 break;
             case 2:
                 viewer = new TreeMorphologicalAnalyzerPanel(TreeEditorPanel.treePath, treeFiles.get(treeIndex), fsm, false);
-                break;
-            case 3:
-                viewer = new TreeNERPanel(TreeEditorPanel.treePath, treeFiles.get(treeIndex), false);
-                break;
-            case 4:
-                viewer = new TreeTurkishSemanticPanel(TreeEditorPanel.treePath, treeFiles.get(treeIndex), turkish, fsm, false);
-                break;
-            case 5:
-                viewer = new TreePropbankArgumentPanel(TreeEditorPanel.treePath, treeFiles.get(treeIndex), turkish);
                 break;
         }
         viewer.setNodeWidth(widthSlider.getValue() * 5);

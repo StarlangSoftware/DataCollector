@@ -3,9 +3,6 @@ package DataCollector.ParseTree;
 import AnnotatedSentence.ViewLayerType;
 import DataCollector.ParseTree.MetaMorphemeMover.TreeMetaMorphemeMoverPanel;
 import DataCollector.ParseTree.MorphologicalAnalyzer.TreeMorphologicalAnalyzerPanel;
-import DataCollector.ParseTree.NER.TreeNERPanel;
-import DataCollector.ParseTree.Semantic.TreeEnglishSemanticPanel;
-import DataCollector.ParseTree.Semantic.TreeTurkishSemanticPanel;
 import DataCollector.ParseTree.Translate.TreeTranslatorPanel;
 import ParseTree.ParseNode;
 import MorphologicalAnalysis.FsmMorphologicalAnalyzer;
@@ -121,15 +118,6 @@ public class TreeSearchFrame extends TreeTraverseFrame {
                 break;
             case 4:
                 viewer = new TreeMetaMorphemeMoverPanel(TreeEditorPanel.treePath, treeFiles.get(treeIndex));
-                break;
-            case 5:
-                viewer = new TreeNERPanel(TreeEditorPanel.treePath, treeFiles.get(treeIndex), true);
-                break;
-            case 6:
-                viewer = new TreeTurkishSemanticPanel(TreeEditorPanel.treePath, treeFiles.get(treeIndex), turkish, fsm, true);
-                break;
-            case 7:
-                viewer = new TreeEnglishSemanticPanel(TreeEditorPanel.treePath, treeFiles.get(treeIndex), english, turkish);
                 break;
         }
         viewer.setNodeWidth(widthSlider.getValue() * 5);

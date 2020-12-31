@@ -54,7 +54,7 @@
         <dependency>
             <groupId>io.github.starlangsoftware</groupId>
             <artifactId>FrameNet</artifactId>
-            <version>1.0.5</version>
+            <version>1.0.6</version>
         </dependency>
         <dependency>
             <groupId>io.github.starlangsoftware</groupId>
@@ -120,11 +120,6 @@
             <groupId>io.github.starlangsoftware</groupId>
             <artifactId>WordNet</artifactId>
             <version>1.0.41</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.starlangsoftware</groupId>
-            <artifactId>MorphologicalDisambiguation</artifactId>
-            <version>1.0.16</version>
         </dependency>
         <dependency>
             <groupId>io.github.starlangsoftware</groupId>
@@ -195,21 +190,6 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>sentence-dependency</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <archive>
-                                <manifest>
-                                    <mainClass>DataCollector.Sentence.Dependency.TestSentenceDependencyFrame</mainClass>
-                                </manifest>
-                            </archive>
-                            <finalName>sentence-dependency</finalName>
-                        </configuration>
-                    </execution>
-                    <execution>
                         <id>sentence-morphological-analyzer</id>
                         <phase>package</phase>
                         <goals>
@@ -222,51 +202,6 @@
                                 </manifest>
                             </archive>
                             <finalName>sentence-morphological-analyzer</finalName>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>sentence-framenet-predicate</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <archive>
-                                <manifest>
-                                    <mainClass>DataCollector.Sentence.FrameNet.TestSentenceFrameNetPredicateFrame</mainClass>
-                                </manifest>
-                            </archive>
-                            <finalName>sentence-framenet-predicate</finalName>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>sentence-framenet-element</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <archive>
-                                <manifest>
-                                    <mainClass>DataCollector.Sentence.FrameNet.TestSentenceFrameNetElementFrame</mainClass>
-                                </manifest>
-                            </archive>
-                            <finalName>sentence-framenet-element</finalName>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>sentence-semantics</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <archive>
-                                <manifest>
-                                    <mainClass>DataCollector.Sentence.Semantic.TestSentenceSemanticFrame</mainClass>
-                                </manifest>
-                            </archive>
-                            <finalName>sentence-semantics</finalName>
                         </configuration>
                     </execution>
                 </executions>
