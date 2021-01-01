@@ -1,7 +1,6 @@
 package DataCollector.ParseTree;
 
 import AnnotatedSentence.ViewLayerType;
-import DataCollector.ParseTree.MorphologicalAnalyzer.TreeMorphologicalAnalyzerPanel;
 import DataCollector.ParseTree.Translate.TreeTranslatorPanel;
 import MorphologicalAnalysis.FsmMorphologicalAnalyzer;
 import AnnotatedTree.*;
@@ -135,9 +134,6 @@ public class TreeTraverseProcessedFrame extends TreeTraverseFrame {
                 break;
             case 1:
                 viewer = new TreeTranslatorPanel(dictionary, bilingualDictionary, TreeEditorPanel.treePath, treeFiles.get(treeIndex), ViewLayerType.TURKISH_WORD);
-                break;
-            case 2:
-                viewer = new TreeMorphologicalAnalyzerPanel(TreeEditorPanel.treePath, treeFiles.get(treeIndex), fsm, false);
                 break;
         }
         viewer.setNodeWidth(widthSlider.getValue() * 5);

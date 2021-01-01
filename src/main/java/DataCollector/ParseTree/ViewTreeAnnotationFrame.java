@@ -1,7 +1,6 @@
 package DataCollector.ParseTree;
 
 import AnnotatedTree.TreeBankDrawable;
-import DataCollector.ParseTree.MorphologicalAnalyzer.ViewTreeMorphologicalAnnotationFrame;
 import DataCollector.Sentence.ViewSentenceAnnotationFrame;
 import Util.DrawingButton;
 
@@ -194,7 +193,7 @@ public abstract class ViewTreeAnnotationFrame extends JFrame implements ActionLi
         WORD_INDEX = 2;
         TAG_INDEX = 3;
         JToolBar toolBar = new JToolBar("ToolBox");
-        JButton idSort = new DrawingButton(ViewTreeMorphologicalAnnotationFrame.class, this, "sortnumbers", ID_SORT, "");
+        JButton idSort = new DrawingButton(ViewSentenceAnnotationFrame.class, this, "sortnumbers", ID_SORT, "");
         toolBar.add(idSort);
         JButton textSort = new DrawingButton(ViewSentenceAnnotationFrame.class, this, "sorttext", WORD_SORT, "");
         toolBar.add(textSort);

@@ -2,7 +2,6 @@ package DataCollector.ParseTree;
 
 import AnnotatedSentence.ViewLayerType;
 import DataCollector.ParseTree.MetaMorphemeMover.TreeMetaMorphemeMoverPanel;
-import DataCollector.ParseTree.MorphologicalAnalyzer.TreeMorphologicalAnalyzerPanel;
 import DataCollector.ParseTree.Translate.TreeTranslatorPanel;
 import ParseTree.ParseNode;
 import MorphologicalAnalysis.FsmMorphologicalAnalyzer;
@@ -109,9 +108,6 @@ public class TreeSearchFrame extends TreeTraverseFrame {
                 break;
             case 1:
                 viewer = new TreeTranslatorPanel(dictionary, bilingualDictionary, TreeEditorPanel.treePath, treeFiles.get(treeIndex), ViewLayerType.TURKISH_WORD);
-                break;
-            case 2:
-                viewer = new TreeMorphologicalAnalyzerPanel(TreeEditorPanel.treePath, treeFiles.get(treeIndex), fsm, true);
                 break;
             case 3:
                 viewer = new TreeViewerPanel(TreeEditorPanel.treePath, treeFiles.get(treeIndex), ViewLayerType.META_MORPHEME);
