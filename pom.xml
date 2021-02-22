@@ -6,7 +6,7 @@
 
     <groupId>io.github.starlangsoftware</groupId>
     <artifactId>DataCollector</artifactId>
-    <version>1.0.10</version>
+    <version>1.0.11</version>
     <packaging>jar</packaging>
 
     <name>NlpToolkit.DataCollector</name>
@@ -185,34 +185,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.2-beta-5</version>
-                <executions>
-                    <execution>
-                        <id>syntactic-editor</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <configuration>
-                            <archive>
-                                <manifest>
-                                    <mainClass>DataCollector.ParseTree.Syntactic.TestSyntacticFrame</mainClass>
-                                </manifest>
-                            </archive>
-                            <finalName>syntactic-editor</finalName>
-                        </configuration>
-                    </execution>
-                </executions>
-                <configuration>
-                    <descriptorRefs>
-                        <descriptorRef>jar-with-dependencies</descriptorRef>
-                    </descriptorRefs>
-                    <appendAssemblyId>false</appendAssemblyId>
-                </configuration>
             </plugin>
         </plugins>
     </build>
