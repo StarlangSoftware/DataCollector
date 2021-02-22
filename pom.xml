@@ -6,7 +6,7 @@
 
     <groupId>io.github.starlangsoftware</groupId>
     <artifactId>DataCollector</artifactId>
-    <version>1.0.9</version>
+    <version>1.0.10</version>
     <packaging>jar</packaging>
 
     <name>NlpToolkit.DataCollector</name>
@@ -59,7 +59,7 @@
         <dependency>
             <groupId>io.github.starlangsoftware</groupId>
             <artifactId>AnnotatedSentence</artifactId>
-            <version>1.0.23</version>
+            <version>1.0.25</version>
         </dependency>
         <dependency>
             <groupId>io.github.starlangsoftware</groupId>
@@ -99,7 +99,7 @@
         <dependency>
             <groupId>io.github.starlangsoftware</groupId>
             <artifactId>NamedEntityRecognition</artifactId>
-            <version>1.0.2</version>
+            <version>1.0.5</version>
         </dependency>
         <dependency>
             <groupId>io.github.starlangsoftware</groupId>
@@ -192,7 +192,7 @@
                 <version>2.2-beta-5</version>
                 <executions>
                     <execution>
-                        <id>interlingual-editor</id>
+                        <id>syntactic-editor</id>
                         <phase>package</phase>
                         <goals>
                             <goal>single</goal>
@@ -200,10 +200,10 @@
                         <configuration>
                             <archive>
                                 <manifest>
-                                    <mainClass>DataCollector.WordNet.TestInterlingualRelationFrame</mainClass>
+                                    <mainClass>DataCollector.ParseTree.Syntactic.TestSyntacticFrame</mainClass>
                                 </manifest>
                             </archive>
-                            <finalName>interlingual-editor</finalName>
+                            <finalName>syntactic-editor</finalName>
                         </configuration>
                     </execution>
                 </executions>

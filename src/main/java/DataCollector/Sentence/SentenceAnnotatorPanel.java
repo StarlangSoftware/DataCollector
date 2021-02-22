@@ -56,6 +56,9 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
                         case FRAMENET:
                             clickedWord.setFrameElement(list.getSelectedValue().toString());
                             break;
+                        case SLOT:
+                            clickedWord.setSlot(list.getSelectedValue().toString());
+                            break;
                         case SHALLOW_PARSE:
                             clickedWord.setShallowParse((String) list.getSelectedValue());
                             break;
@@ -185,6 +188,14 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
                     }
                 }
                 break;
+            case SLOT:
+                if (word.getSlot() != null){
+                    size = g.getFontMetrics().stringWidth(word.getSlot().toString());
+                    if (size > maxSize){
+                        maxSize = size;
+                    }
+                }
+                break;
             case SHALLOW_PARSE:
                 if (word.getShallowParse() != null){
                     size = g.getFontMetrics().stringWidth(word.getShallowParse());
@@ -304,6 +315,12 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
                 case FRAMENET:
                     if (word.getFrameElement() != null){
                         correct = word.getFrameElement().getFrameElementType();
+                        g.drawString(correct, currentLeft, (lineIndex + 1) * lineSpace + 30);
+                    }
+                    break;
+                case SLOT:
+                    if (word.getSlot() != null){
+                        correct = word.getSlot().toString();
                         g.drawString(correct, currentLeft, (lineIndex + 1) * lineSpace + 30);
                     }
                     break;
