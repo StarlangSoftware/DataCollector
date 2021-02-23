@@ -433,7 +433,7 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
                 lastClickedWord = clickedWord;
                 pane.setVisible(true);
                 pane.getVerticalScrollBar().setValue(0);
-                if (layerType == ViewLayerType.PROPBANK || layerType == ViewLayerType.INFLECTIONAL_GROUP){
+                if (layerType == ViewLayerType.PROPBANK || layerType == ViewLayerType.INFLECTIONAL_GROUP || layerType == ViewLayerType.SLOT){
                     pane.setBounds(((AnnotatedWord)sentence.getWord(selectedWordIndex)).getArea().x, ((AnnotatedWord)sentence.getWord(selectedWordIndex)).getArea().y + 20, 240, 30 + Math.max(3, Math.min(15, list.getModel().getSize())) * 18);
                 } else {
                     if (layerType != ViewLayerType.SEMANTICS){
