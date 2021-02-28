@@ -434,10 +434,10 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
                 pane.setVisible(true);
                 pane.getVerticalScrollBar().setValue(0);
                 if (layerType == ViewLayerType.PROPBANK || layerType == ViewLayerType.INFLECTIONAL_GROUP || layerType == ViewLayerType.SLOT){
-                    pane.setBounds(((AnnotatedWord)sentence.getWord(selectedWordIndex)).getArea().x, ((AnnotatedWord)sentence.getWord(selectedWordIndex)).getArea().y + 20, 240, 30 + Math.max(3, Math.min(15, list.getModel().getSize())) * 18);
+                    pane.setBounds(((AnnotatedWord)sentence.getWord(selectedWordIndex)).getArea().x, ((AnnotatedWord)sentence.getWord(selectedWordIndex)).getArea().y + 20, 240, (int) (Toolkit.getDefaultToolkit().getScreenSize().height * 0.4));
                 } else {
                     if (layerType != ViewLayerType.SEMANTICS){
-                        pane.setBounds(((AnnotatedWord)sentence.getWord(selectedWordIndex)).getArea().x, ((AnnotatedWord)sentence.getWord(selectedWordIndex)).getArea().y + ((AnnotatedWord)sentence.getWord(selectedWordIndex)).getArea().height, 120, 30 + Math.max(3, Math.min(15, list.getModel().getSize())) * 18);
+                        pane.setBounds(((AnnotatedWord)sentence.getWord(selectedWordIndex)).getArea().x, ((AnnotatedWord)sentence.getWord(selectedWordIndex)).getArea().y + ((AnnotatedWord)sentence.getWord(selectedWordIndex)).getArea().height, 120, (int) (Toolkit.getDefaultToolkit().getScreenSize().height * 0.4));
                     }
                 }
                 this.repaint();
