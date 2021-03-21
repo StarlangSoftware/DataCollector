@@ -59,6 +59,9 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
                         case SLOT:
                             clickedWord.setSlot(list.getSelectedValue().toString());
                             break;
+                        case POLARITY:
+                            clickedWord.setPolarity(list.getSelectedValue().toString());
+                            break;
                         case SHALLOW_PARSE:
                             clickedWord.setShallowParse((String) list.getSelectedValue());
                             break;
@@ -196,6 +199,14 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
                     }
                 }
                 break;
+            case POLARITY:
+                if (word.getPolarity() != null){
+                    size = g.getFontMetrics().stringWidth(word.getPolarity().toString());
+                    if (size > maxSize){
+                        maxSize = size;
+                    }
+                }
+                break;
             case SHALLOW_PARSE:
                 if (word.getShallowParse() != null){
                     size = g.getFontMetrics().stringWidth(word.getShallowParse());
@@ -324,6 +335,12 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
                         g.drawString(correct, currentLeft, (lineIndex + 1) * lineSpace + 30);
                     }
                     break;
+                case POLARITY:
+                    if (word.getPolarity() != null){
+                        correct = word.getPolarity().toString();
+                        g.drawString(correct, currentLeft, (lineIndex + 1) * lineSpace + 30);
+                    }
+                    break;
                 case SHALLOW_PARSE:
                     if (word.getShallowParse() != null){
                         correct = word.getShallowParse();
@@ -436,8 +453,12 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
                 if (layerType == ViewLayerType.PROPBANK || layerType == ViewLayerType.INFLECTIONAL_GROUP || layerType == ViewLayerType.SLOT){
                     pane.setBounds(((AnnotatedWord)sentence.getWord(selectedWordIndex)).getArea().x, ((AnnotatedWord)sentence.getWord(selectedWordIndex)).getArea().y + 20, 240, (int) (Toolkit.getDefaultToolkit().getScreenSize().height * 0.4));
                 } else {
-                    if (layerType != ViewLayerType.SEMANTICS){
-                        pane.setBounds(((AnnotatedWord)sentence.getWord(selectedWordIndex)).getArea().x, ((AnnotatedWord)sentence.getWord(selectedWordIndex)).getArea().y + ((AnnotatedWord)sentence.getWord(selectedWordIndex)).getArea().height, 120, (int) (Toolkit.getDefaultToolkit().getScreenSize().height * 0.4));
+                    if (layerType == ViewLayerType.POLARITY){
+                        pane.setBounds(((AnnotatedWord)sentence.getWord(selectedWordIndex)).getArea().x, ((AnnotatedWord)sentence.getWord(selectedWordIndex)).getArea().y + 20, 120, 80);
+                    } else {
+                        if (layerType != ViewLayerType.SEMANTICS){
+                            pane.setBounds(((AnnotatedWord)sentence.getWord(selectedWordIndex)).getArea().x, ((AnnotatedWord)sentence.getWord(selectedWordIndex)).getArea().y + ((AnnotatedWord)sentence.getWord(selectedWordIndex)).getArea().height, 120, (int) (Toolkit.getDefaultToolkit().getScreenSize().height * 0.4));
+                        }
                     }
                 }
                 this.repaint();

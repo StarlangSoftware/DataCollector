@@ -6,7 +6,7 @@
 
     <groupId>io.github.starlangsoftware</groupId>
     <artifactId>DataCollector</artifactId>
-    <version>1.0.12</version>
+    <version>1.0.13</version>
     <packaging>jar</packaging>
 
     <name>NlpToolkit.DataCollector</name>
@@ -59,7 +59,7 @@
         <dependency>
             <groupId>io.github.starlangsoftware</groupId>
             <artifactId>AnnotatedSentence</artifactId>
-            <version>1.0.25</version>
+            <version>1.0.26</version>
         </dependency>
         <dependency>
             <groupId>io.github.starlangsoftware</groupId>
@@ -79,7 +79,7 @@
         <dependency>
             <groupId>io.github.starlangsoftware</groupId>
             <artifactId>DependencyParser</artifactId>
-            <version>1.0.11</version>
+            <version>1.0.14</version>
         </dependency>
         <dependency>
             <groupId>io.github.starlangsoftware</groupId>
@@ -89,12 +89,12 @@
         <dependency>
             <groupId>io.github.starlangsoftware</groupId>
             <artifactId>MorphologicalAnalysis</artifactId>
-            <version>1.0.28</version>
+            <version>1.0.34</version>
         </dependency>
         <dependency>
             <groupId>io.github.starlangsoftware</groupId>
             <artifactId>Dictionary</artifactId>
-            <version>1.0.19</version>
+            <version>1.0.21</version>
         </dependency>
         <dependency>
             <groupId>io.github.starlangsoftware</groupId>
@@ -104,12 +104,12 @@
         <dependency>
             <groupId>io.github.starlangsoftware</groupId>
             <artifactId>Util</artifactId>
-            <version>1.0.1</version>
+            <version>1.0.3</version>
         </dependency>
         <dependency>
             <groupId>io.github.starlangsoftware</groupId>
             <artifactId>PropBank</artifactId>
-            <version>1.0.10</version>
+            <version>1.0.11</version>
         </dependency>
         <dependency>
             <groupId>io.github.starlangsoftware</groupId>
@@ -119,7 +119,7 @@
         <dependency>
             <groupId>io.github.starlangsoftware</groupId>
             <artifactId>WordNet</artifactId>
-            <version>1.0.41</version>
+            <version>1.0.42</version>
         </dependency>
         <dependency>
             <groupId>io.github.starlangsoftware</groupId>
