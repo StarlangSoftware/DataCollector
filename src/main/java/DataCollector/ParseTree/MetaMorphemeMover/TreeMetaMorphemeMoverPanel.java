@@ -98,7 +98,7 @@ public class TreeMetaMorphemeMoverPanel extends TreeStructureEditorPanel {
 
     public void mouseMoved(MouseEvent mouseEvent) {
         ParseNodeDrawable node = currentTree.getNodeAt(mouseEvent.getX(), mouseEvent.getY());
-        if (node.isLeaf()){
+        if (node != null && node.isLeaf()){
             if (!dragged){
                 if (node != null){
                     selectedIndex = currentTree.getSubItemAt(mouseEvent.getX(), mouseEvent.getY());

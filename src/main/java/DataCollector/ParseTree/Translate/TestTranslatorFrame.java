@@ -2,8 +2,8 @@ package DataCollector.ParseTree.Translate;
 
 import AnnotatedSentence.ViewLayerType;
 import DataCollector.ParseTree.TreeEditorPanel;
-import Translation.AutomaticTranslationDictionary;
-import Translation.BilingualDictionary;
+import Translation.Phrase.AutomaticTranslationDictionary;
+import Translation.Phrase.BilingualDictionary;
 
 public class TestTranslatorFrame {
 

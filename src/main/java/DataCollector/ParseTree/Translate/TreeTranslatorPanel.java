@@ -7,6 +7,7 @@ import AnnotatedTree.*;
 import DataCollector.ParseTree.TreeAction.LayerAction;
 import DataCollector.ParseTree.TreeStructureEditorPanel;
 import Translation.*;
+import Translation.Phrase.*;
 
 import javax.swing.*;
 import java.awt.event.*;

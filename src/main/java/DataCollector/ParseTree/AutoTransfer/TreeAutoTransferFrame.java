@@ -3,12 +3,12 @@ package DataCollector.ParseTree.AutoTransfer;
 import AnnotatedSentence.ViewLayerType;
 import Corpus.Sentence;
 import AnnotatedTree.*;
-import AnnotatedTree.AutoProcessor.AutoTransfer.TransferredSentence;
-import AnnotatedTree.AutoProcessor.AutoTransfer.TurkishAutoTransfer;
 import AnnotatedTree.Processor.NodeModification.ConvertToLayeredFormat;
 import AnnotatedTree.Processor.TreeModifier;
 import DataCollector.ParseTree.TreeEditorPanel;
 import DataCollector.ParseTree.TreeStructureEditorFrame;
+import Translation.Tree.Rule.AutoTransfer.TransferredSentence;
+import Translation.Tree.Rule.AutoTransfer.TurkishAutoTransfer;
 
 import javax.swing.*;
 import java.awt.*;

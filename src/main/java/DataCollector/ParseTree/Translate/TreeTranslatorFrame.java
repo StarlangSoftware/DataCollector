@@ -6,11 +6,11 @@ import AnnotatedTree.Processor.*;
 import AnnotatedTree.Processor.Condition.IsLeafNode;
 import AnnotatedTree.Processor.LayerExist.NotContainsLayerInformation;
 import AnnotatedTree.Processor.NodeModification.ConvertToLayeredFormat;
-import AnnotatedTree.AutoProcessor.AutoTranslation.AutoTranslator;
-import AnnotatedTree.AutoProcessor.AutoTranslation.PersianAutoTranslator;
-import AnnotatedTree.AutoProcessor.AutoTranslation.TurkishAutoTranslator;
 import DataCollector.ParseTree.TreeEditorPanel;
 import DataCollector.ParseTree.TreeStructureEditorFrame;
+import Translation.Tree.Rule.AutoTranslator;
+import Translation.Tree.Rule.PersianAutoTranslator;
+import Translation.Tree.Rule.TurkishAutoTranslator;
 
 import javax.swing.*;
 import java.io.File;

@@ -2,10 +2,10 @@ package DataCollector.ParseTree.MetaMorphemeMover;
 
 import AnnotatedSentence.ViewLayerType;
 import DataCollector.DataCollector;
-import AnnotatedTree.AutoProcessor.AutoMetaMorphemeMovement.AutoMetaMorphemeMover;
-import AnnotatedTree.AutoProcessor.AutoMetaMorphemeMovement.TurkishAutoMetaMorphemeMover;
 import DataCollector.ParseTree.TreeEditorPanel;
 import DataCollector.ParseTree.TreeStructureEditorFrame;
+import Translation.Tree.Rule.AutoMetaMorphemeMovement.AutoMetaMorphemeMover;
+import Translation.Tree.Rule.AutoMetaMorphemeMovement.TurkishAutoMetaMorphemeMover;
 import Util.DrawingButton;
 
 import javax.swing.*;

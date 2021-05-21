@@ -2,8 +2,8 @@ package DataCollector.ParseTree;
 
 import AnnotatedTree.TreeBankDrawable;
 import MorphologicalAnalysis.FsmMorphologicalAnalyzer;
-import Translation.AutomaticTranslationDictionary;
-import Translation.BilingualDictionary;
+import Translation.Phrase.AutomaticTranslationDictionary;
+import Translation.Phrase.BilingualDictionary;
 import WordNet.WordNet;
 
 import java.io.File;

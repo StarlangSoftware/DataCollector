@@ -5,8 +5,8 @@ import AnnotatedTree.ParseNodeDrawable;
 import AnnotatedTree.Processor.Condition.IsTurkishLeafNode;
 import AnnotatedTree.Processor.NodeDrawableCollector;
 import DataCollector.*;
-import Translation.AutomaticTranslationDictionary;
-import Translation.BilingualDictionary;
+import Translation.Phrase.AutomaticTranslationDictionary;
+import Translation.Phrase.BilingualDictionary;
 import Util.DrawingButton;
 
 import javax.swing.*;

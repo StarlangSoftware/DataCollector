@@ -5,14 +5,14 @@ import DataCollector.ParseTree.TreeEditorPanel;
 import DataCollector.ParseTree.TreeStructureEditorPanel;
 import Dictionary.Word;
 import AnnotatedTree.*;
-import AnnotatedTree.AutoProcessor.AutoTransfer.TransferredSentence;
-import AnnotatedTree.AutoProcessor.AutoTransfer.TurkishAutoTransfer;
 import AnnotatedTree.Processor.Condition.IsLeafNode;
 import AnnotatedTree.Processor.Condition.IsTurkishLeafNode;
 import AnnotatedTree.Processor.NodeDrawableCollector;
 import AnnotatedTree.Processor.NodeModification.ConvertToLayeredFormat;
 import AnnotatedTree.Processor.TreeModifier;
 import DataCollector.ParseTree.TreeAction.LayerAction;
+import Translation.Tree.Rule.AutoTransfer.TransferredSentence;
+import Translation.Tree.Rule.AutoTransfer.TurkishAutoTransfer;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;

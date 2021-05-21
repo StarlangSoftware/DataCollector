@@ -2,10 +2,10 @@ package DataCollector.ParseTree;
 
 import AnnotatedSentence.ViewLayerType;
 import DataCollector.DataCollector;
-import Translation.AutomaticTranslationDictionary;
-import Translation.BilingualDictionary;
 import MorphologicalAnalysis.FsmMorphologicalAnalyzer;
 import AnnotatedTree.TreeBankDrawable;
+import Translation.Phrase.AutomaticTranslationDictionary;
+import Translation.Phrase.BilingualDictionary;
 import Util.DrawingButton;
 import WordNet.WordNet;
 
