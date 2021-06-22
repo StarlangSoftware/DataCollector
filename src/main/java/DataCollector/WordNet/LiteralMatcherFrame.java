@@ -2,6 +2,7 @@ package DataCollector.WordNet;
 
 import DataCollector.DataCollector;
 import Util.DrawingButton;
+import WordNet.Annotation.LiteralMatcherPanel;
 import WordNet.WordNet;
 
 import javax.swing.*;

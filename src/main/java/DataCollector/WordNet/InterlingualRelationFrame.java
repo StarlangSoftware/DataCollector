@@ -3,6 +3,7 @@ package DataCollector.WordNet;
 import DataCollector.DataCollector;
 import Util.DrawingButton;
 import WordNet.WordNet;
+import WordNet.Annotation.InterlingualRelationPanel;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;

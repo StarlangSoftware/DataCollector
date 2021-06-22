@@ -352,33 +352,89 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
                         g.drawString(word.getParse().getUniversalDependencyPos(), currentLeft, (lineIndex + 1) * lineSpace + 30);
                     }
                     if (word.getUniversalDependency() != null){
-                        correct = word.getUniversalDependency().toString();
+                        correct = word.getUniversalDependency().toString().toLowerCase();
                         if (word.getUniversalDependency().to() != 0){
+                            Color color = Color.BLACK;
+                            switch (correct){
+                                case "acl":
+                                    color = Color.YELLOW;
+                                    break;
+                                case "advcl":
+                                    color = new Color(0, 128, 128);
+                                    break;
+                                case "advmod":
+                                    color = Color.BLUE;
+                                    break;
+                                case "amod":
+                                    color = Color.RED;
+                                    break;
+                                case "aux":
+                                    color = new Color(0, 0, 128);
+                                    break;
+                                case "case":
+                                    color = Color.WHITE;
+                                    break;
+                                case "cc":
+                                    color = new Color(128, 0, 0);
+                                    break;
+                                case "ccomp":
+                                    color = new Color(255, 215, 0);
+                                    break;
+                                case "compound":
+                                    color = Color.LIGHT_GRAY;
+                                    break;
+                                case "conj":
+                                    color = new Color(128, 128, 0);
+                                    break;
+                                case "det":
+                                    color = Color.PINK;
+                                    break;
+                                case "flat":
+                                    color = new Color(128, 0, 128);
+                                    break;
+                                case "mark":
+                                    color = new Color(255, 127, 80);
+                                    break;
+                                case "nmod":
+                                    color = Color.ORANGE;
+                                    break;
+                                case "nsubj":
+                                    color = Color.CYAN;
+                                    break;
+                                case "nummod":
+                                    color = Color.GRAY;
+                                    break;
+                                case "obj":
+                                    color = Color.GREEN;
+                                    break;
+                                case "obl":
+                                    color = Color.MAGENTA;
+                                    break;
+                                case "xcomp":
+                                    color = new Color(184, 134, 11);
+                                    break;
+                            }
+                            g.setColor(color);
                             int startX = currentLeft + maxSize / 2;
                             int startY = lineIndex * lineSpace + 50;
-                            int added;
-                            int distance = word.getUniversalDependency().to() - 1 - i;
-                            if (distance < 0){
-                                added = (sentence.wordCount() - word.getUniversalDependency().to() - Math.abs(distance) + 1) * 5;
-                            } else {
-                                added = (distance - word.getUniversalDependency().to()) * 6;
-                            }
-                            int toX = wordTotal.get(word.getUniversalDependency().to() - 1) + wordSize.get(word.getUniversalDependency().to() - 1) / 2 + added;
-                            pointEnd = new Point2D.Double(startX, startY);
+                            double height = Math.pow(Math.abs(word.getUniversalDependency().to() - 1 - i), 0.7);
+                            int toX = wordTotal.get(word.getUniversalDependency().to() - 1) + wordSize.get(word.getUniversalDependency().to() - 1) / 2 /*+ added*/;
+                            pointEnd = new Point2D.Double(startX + 5 * Math.signum(word.getUniversalDependency().to() - 1 - i), startY);
                             pointStart = new Point2D.Double(toX, startY);
-                            g.drawString(correct, ((int) (pointStart.x + pointEnd.x) / 2) - g.getFontMetrics().stringWidth(correct) / 2, (int) (pointStart.y + 7 - 8 * Math.abs(distance)));
-                            pointCtrl1 = new Point2D.Double(pointStart.x, pointStart.y - 10 - 10 * Math.abs(distance));
-                            pointCtrl2 = new Point2D.Double(pointEnd.x, pointEnd.y - 10 - 10 * Math.abs(distance));
+                            int controlY = (int) (pointStart.y - 20 - 20 * height);
+                            g.drawString(correct, ((int) (pointStart.x + pointEnd.x) / 2) - g.getFontMetrics().stringWidth(correct) / 2, (int) (controlY + 30 + 4 * height));
+                            pointCtrl1 = new Point2D.Double(pointStart.x, controlY);
+                            pointCtrl2 = new Point2D.Double(pointEnd.x, controlY);
                             cubicCurve = new CubicCurve2D.Double(pointStart.x, pointStart.y, pointCtrl1.x, pointCtrl1.y, pointCtrl2.x, pointCtrl2.y, pointEnd.x, pointEnd.y);
                             Graphics2D g2 = (Graphics2D)g;
-                            g2.setColor(Color.MAGENTA);
+                            g2.setColor(color);
                             g2.draw(cubicCurve);
                             g.drawOval((int) pointStart.x - 2, (int) pointStart.y - 2, 4, 4);
                             g.drawLine((int) pointEnd.x, (int) pointEnd.y, (int) pointEnd.x - 5, (int) pointEnd.y - 5);
                             g.drawLine((int) pointEnd.x, (int) pointEnd.y, (int) pointEnd.x + 5, (int) pointEnd.y - 5);
                         } else {
                             g.drawString("root", currentLeft + maxSize / 2 - g.getFontMetrics().stringWidth("root") / 2, lineIndex * lineSpace);
-                            g.setColor(Color.MAGENTA);
+                            g.setColor(Color.BLACK);
                             g.drawLine(currentLeft + maxSize / 2, lineIndex * lineSpace + 50, currentLeft + maxSize / 2, lineIndex * lineSpace + 15);
                         }
                     }
