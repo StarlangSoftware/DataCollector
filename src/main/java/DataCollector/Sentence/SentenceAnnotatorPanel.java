@@ -65,6 +65,9 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
                         case SHALLOW_PARSE:
                             clickedWord.setShallowParse((String) list.getSelectedValue());
                             break;
+                        case POS_TAG:
+                            clickedWord.setPosTag((String) list.getSelectedValue());
+                            break;
                         case DEPENDENCY:
                             String relation = ((String) list.getSelectedValue()).toLowerCase();
                             if (relation.equals("root")){
@@ -215,6 +218,14 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
                     }
                 }
                 break;
+            case POS_TAG:
+                if (word.getPosTag() != null){
+                    size = g.getFontMetrics().stringWidth(word.getPosTag());
+                    if (size > maxSize){
+                        maxSize = size;
+                    }
+                }
+                break;
         }
         return maxSize;
     }
@@ -344,6 +355,12 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
                 case SHALLOW_PARSE:
                     if (word.getShallowParse() != null){
                         correct = word.getShallowParse();
+                        g.drawString(correct, currentLeft, (lineIndex + 1) * lineSpace + 30);
+                    }
+                    break;
+                case POS_TAG:
+                    if (word.getPosTag() != null){
+                        correct = word.getPosTag();
                         g.drawString(correct, currentLeft, (lineIndex + 1) * lineSpace + 30);
                     }
                     break;
