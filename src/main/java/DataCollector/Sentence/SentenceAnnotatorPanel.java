@@ -365,8 +365,8 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
                     }
                     break;
                 case DEPENDENCY:
-                    if (word.getParse() != null){
-                        g.drawString(word.getParse().getUniversalDependencyPos(), currentLeft, (lineIndex + 1) * lineSpace + 30);
+                    if (word.getUniversalDependencyPos() != null){
+                        g.drawString(word.getUniversalDependencyPos(), currentLeft, (lineIndex + 1) * lineSpace + 30);
                     }
                     if (word.getUniversalDependency() != null){
                         correct = word.getUniversalDependency().toString().toLowerCase();
