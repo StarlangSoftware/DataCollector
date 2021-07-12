@@ -226,6 +226,14 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
                     }
                 }
                 break;
+            case CCG:
+                if (word.getCcg() != null) {
+                    size = g.getFontMetrics().stringWidth(word.getCcg());
+                    if (size > maxSize){
+                        maxSize = size;
+                    }
+                }
+                break;
         }
         return maxSize;
     }
@@ -361,6 +369,12 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
                 case POS_TAG:
                     if (word.getPosTag() != null){
                         correct = word.getPosTag();
+                        g.drawString(correct, currentLeft, (lineIndex + 1) * lineSpace + 30);
+                    }
+                    break;
+                case CCG:
+                    if (word.getCcg() != null){
+                        correct = word.getCcg();
                         g.drawString(correct, currentLeft, (lineIndex + 1) * lineSpace + 30);
                     }
                     break;
