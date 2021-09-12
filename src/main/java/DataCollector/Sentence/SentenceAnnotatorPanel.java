@@ -69,7 +69,7 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
                             clickedWord.setPosTag((String) list.getSelectedValue());
                             break;
                         case DEPENDENCY:
-                            String relation = ((String) list.getSelectedValue()).toLowerCase();
+                            String relation = ((String) list.getSelectedValue()).toLowerCase().replace('_', ':');
                             if (relation.equals("root")){
                                 clickedWord.setUniversalDependency(0, relation);
                             } else {
