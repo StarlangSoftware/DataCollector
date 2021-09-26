@@ -6,7 +6,7 @@
 
     <groupId>io.github.starlangsoftware</groupId>
     <artifactId>DataCollector</artifactId>
-    <version>1.0.26</version>
+    <version>1.0.27</version>
     <packaging>jar</packaging>
 
     <name>NlpToolkit.DataCollector</name>
@@ -49,7 +49,7 @@
         <dependency>
             <groupId>io.github.starlangsoftware</groupId>
             <artifactId>DataGenerator</artifactId>
-            <version>1.0.15</version>
+            <version>1.0.16</version>
         </dependency>
         <dependency>
             <groupId>io.github.starlangsoftware</groupId>
