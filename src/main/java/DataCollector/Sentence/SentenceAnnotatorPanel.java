@@ -407,61 +407,64 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
                             Color color = Color.BLACK;
                             switch (correct){
                                 case "acl":
-                                    color = Color.YELLOW;
+                                    color = new Color(255, 214, 0);
                                     break;
                                 case "advcl":
-                                    color = new Color(0, 128, 128);
-                                    break;
-                                case "advmod":
-                                    color = Color.BLUE;
-                                    break;
-                                case "amod":
-                                    color = Color.RED;
+                                    color = new Color(0, 121, 107);
                                     break;
                                 case "aux":
                                     color = new Color(0, 0, 128);
                                     break;
-                                case "case":
-                                    color = Color.WHITE;
+                                case "advmod":
+                                    color = new Color(30, 136, 229);
                                     break;
-                                case "cc":
-                                    color = new Color(128, 0, 0);
-                                    break;
-                                case "ccomp":
-                                    color = new Color(255, 215, 0);
-                                    break;
-                                case "compound":
-                                    color = Color.LIGHT_GRAY;
-                                    break;
-                                case "conj":
-                                    color = new Color(128, 128, 0);
+                                case "amod":
+                                    color = new Color(183, 28, 28);
                                     break;
                                 case "det":
-                                    color = Color.PINK;
+                                    color = new Color(255, 128, 171);
                                     break;
                                 case "flat":
-                                    color = new Color(128, 0, 128);
-                                    break;
-                                case "mark":
-                                    color = new Color(255, 127, 80);
-                                    break;
-                                case "nmod":
-                                    color = Color.ORANGE;
-                                    break;
-                                case "nsubj":
-                                    color = Color.CYAN;
-                                    break;
-                                case "nummod":
-                                    color = Color.GRAY;
+                                    color = new Color(106, 27, 154);
                                     break;
                                 case "obj":
-                                    color = Color.GREEN;
+                                    color = new Color(67, 160, 71);
+                                    break;
+                                case "conj":
+                                    color = new Color(175, 180, 43);
+                                    break;
+                                case "mark":
+                                    color = new Color(255, 111, 0);
+                                    break;
+                                case "nmod":
+                                    color = new Color(255, 138, 101);
+                                    break;
+                                case "nsubj":
+                                    color = new Color(179, 157, 219);
                                     break;
                                 case "obl":
-                                    color = Color.MAGENTA;
+                                    color = new Color(135, 206, 250);
+                                    break;
+                                case "compound":
+                                    color = new Color(84, 110, 122);
+                                    break;
+                                case "cc":
+                                    color = new Color(121, 85, 72);
+                                    break;
+                                case "ccomp":
+                                    color = new Color(205, 92, 92);
+                                    break;
+                                case "case":
+                                    color = new Color(188, 143, 143);
+                                    break;
+                                case "nummod":
+                                    color = new Color(143, 188, 143);
                                     break;
                                 case "xcomp":
-                                    color = new Color(184, 134, 11);
+                                    color = new Color(210, 105, 30);
+                                    break;
+                                case "parataxis":
+                                    color = new Color(92, 107, 192);
                                     break;
                             }
                             g.setColor(color);
