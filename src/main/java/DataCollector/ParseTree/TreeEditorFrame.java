@@ -5,6 +5,7 @@ import AnnotatedTree.ParseNodeDrawable;
 import AnnotatedTree.Processor.Condition.IsTurkishLeafNode;
 import AnnotatedTree.Processor.NodeDrawableCollector;
 import DataCollector.*;
+import DataCollector.Sentence.SentenceAnnotatorPanel;
 import Translation.Phrase.AutomaticTranslationDictionary;
 import Translation.Phrase.BilingualDictionary;
 import Util.DrawingButton;
@@ -113,7 +114,7 @@ public abstract class TreeEditorFrame extends DataCollector{
         });
         itemOpen.addActionListener(e -> {
             final JFileChooser fcinput = new JFileChooser();
-            fcinput.setDialogTitle("Select project file");
+            fcinput.setDialogTitle("Select annotated tree file");
             fcinput.setDialogType(JFileChooser.OPEN_DIALOG);
             fcinput.setCurrentDirectory(new File(TreeEditorPanel.treePath));
             int returnVal = fcinput.showOpenDialog(null);
@@ -121,6 +122,16 @@ public abstract class TreeEditorFrame extends DataCollector{
                 TreeEditorPanel editorPanel = generatePanel(fcinput.getSelectedFile().getParent(), fcinput.getSelectedFile().getName());
                 if (editorPanel != null){
                     addPanelToFrame(editorPanel, fcinput.getSelectedFile().getName());
+                }
+            }
+        });
+        itemGoToFile.addActionListener(e -> {
+            String result = JOptionPane.showInputDialog(null, "Annotated tree file name:", "",
+                    JOptionPane.PLAIN_MESSAGE);
+            if (result != null) {
+                TreeEditorPanel editorPanel = generatePanel(TreeEditorPanel.treePath, result);
+                if (editorPanel != null){
+                    addPanelToFrame(editorPanel, result);
                 }
             }
         });

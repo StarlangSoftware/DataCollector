@@ -69,7 +69,7 @@ public class TreeEnglishViewerFrame extends DataCollector{
         heightSlider.addChangeListener(e -> setNodeHeight(40 + heightSlider.getValue() * 5));
         itemOpen.addActionListener(e -> {
             final JFileChooser fcinput = new JFileChooser();
-            fcinput.setDialogTitle("Select project file");
+            fcinput.setDialogTitle("Select English tree file");
             fcinput.setDialogType(JFileChooser.OPEN_DIALOG);
             fcinput.setCurrentDirectory(new File(TreeEditorPanel.englishPath));
             int returnVal = fcinput.showOpenDialog(null);

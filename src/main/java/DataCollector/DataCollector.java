@@ -18,6 +18,7 @@ public class DataCollector extends JFrame implements ActionListener {
     protected JMenuItem itemSave;
     protected JMenuItem itemOpen;
     protected JMenuItem itemOpenMultiple;
+    protected JMenuItem itemGoToFile;
     protected JLabel infoTop;
     protected JLabel infoBottom;
     protected JPanel bottom;
@@ -176,6 +177,7 @@ public class DataCollector extends JFrame implements ActionListener {
         itemSave = addMenuItem(projectMenu, "Save", KeyStroke.getKeyStroke(KeyEvent.VK_S, ActionEvent.CTRL_MASK));
         itemClose = addMenuItem(projectMenu, "Close", KeyStroke.getKeyStroke(KeyEvent.VK_E, ActionEvent.CTRL_MASK));
         itemCloseAll = addMenuItem(projectMenu, "Close All", null);
+        itemGoToFile = addMenuItem(projectMenu, "Go To File", KeyStroke.getKeyStroke(KeyEvent.VK_G, ActionEvent.CTRL_MASK));
         projectPane = new JTabbedPane();
         projectPane.setFocusable(false);
         disableMenu();

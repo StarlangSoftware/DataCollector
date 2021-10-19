@@ -229,6 +229,7 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
                     }
                 }
                 break;
+//            case DEPENDENCY:
             case SHALLOW_PARSE:
                 if (word.getShallowParse() != null){
                     size = g.getFontMetrics().stringWidth(word.getShallowParse());
@@ -400,6 +401,11 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
                 case DEPENDENCY:
                     if (word.getUniversalDependencyPos() != null){
                         g.drawString(word.getUniversalDependencyPos(), currentLeft, (lineIndex + 1) * lineSpace + 30);
+/*
+                        if (word.getShallowParse() != null){
+                            g.drawString(word.getShallowParse(), currentLeft, (lineIndex + 1) * lineSpace + 60);
+                        }
+*/
                     }
                     if (word.getUniversalDependency() != null){
                         correct = word.getUniversalDependency().toString().toLowerCase();

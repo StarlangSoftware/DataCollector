@@ -72,6 +72,14 @@ public abstract class SentenceAnnotatorFrame extends DataCollector {
                 addPanelToFrame(annotatorPanel, fcinput.getSelectedFile().getName());
             }
         });
+        itemGoToFile.addActionListener(e -> {
+            String result = JOptionPane.showInputDialog(null, "Annotated sentence file name:", "",
+                    JOptionPane.PLAIN_MESSAGE);
+            if (result != null) {
+                SentenceAnnotatorPanel annotatorPanel = generatePanel(TreeEditorPanel.phrasePath, result);
+                addPanelToFrame(annotatorPanel, result);
+            }
+        });
         itemOpenMultiple.addActionListener(e -> {
             final JFileChooser fcinput = new JFileChooser();
             fcinput.setDialogTitle("Select project file containing file names");
