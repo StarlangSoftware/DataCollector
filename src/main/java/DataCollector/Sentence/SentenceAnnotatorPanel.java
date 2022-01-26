@@ -29,6 +29,7 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
     protected abstract int getMaxLayerLength(AnnotatedWord word, Graphics g);
     protected abstract void drawLayer(AnnotatedWord word, Graphics g, int currentLeft, int lineIndex, int wordIndex, int maxSize, ArrayList<Integer> wordSize, ArrayList<Integer> wordTotal);
     protected abstract void setBounds();
+    protected abstract void setLineSpace();
 
     public SentenceAnnotatorPanel(String currentPath, String rawFileName, final ViewLayerType layerType){
         this.fileDescription = new FileDescription(currentPath, rawFileName);
@@ -132,24 +133,6 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
 
     public String getRawFileName(){
         return fileDescription.getRawFileName();
-    }
-
-    private void setLineSpace(){
-        if (layerType != ViewLayerType.INFLECTIONAL_GROUP){
-            lineSpace = 60;
-        }
-        int maxSize = 1;
-        for (int i = 0; i < sentence.wordCount(); i++){
-            AnnotatedWord word = (AnnotatedWord) sentence.getWord(i);
-            switch (layerType){
-                case INFLECTIONAL_GROUP:
-                    if (word.getParse() != null && word.getParse().size() > maxSize){
-                        maxSize = word.getParse().size();
-                    }
-                    break;
-            }
-        }
-        lineSpace = 40 * (maxSize + 1);
     }
 
     protected void paintComponent(Graphics g){
