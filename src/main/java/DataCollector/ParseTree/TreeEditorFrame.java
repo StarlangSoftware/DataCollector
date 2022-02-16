@@ -5,9 +5,6 @@ import AnnotatedTree.ParseNodeDrawable;
 import AnnotatedTree.Processor.Condition.IsTurkishLeafNode;
 import AnnotatedTree.Processor.NodeDrawableCollector;
 import DataCollector.*;
-import DataCollector.Sentence.SentenceAnnotatorPanel;
-import Translation.Phrase.AutomaticTranslationDictionary;
-import Translation.Phrase.BilingualDictionary;
 import Util.DrawingButton;
 
 import javax.swing.*;
@@ -32,18 +29,6 @@ public abstract class TreeEditorFrame extends DataCollector{
      * Menu items responsible for displaying the next and previous trees and saving trees.
      */
     protected JMenuItem itemNext, itemPrevious, itemSaveTree;
-    /**
-     * In NER, Morphological analyzer and semantic frames, the system displays maximum likelihood estimate for each word.
-     * The counts for each word with its NER label, morphological analysis or semantic WordNet id is stored in a dictionary.
-     * The system checks for each word, if it's NER label, morphological analysis or semantic WordNet id exists, and put that
-     * maximum occurring label as a default label.
-     */
-    protected AutomaticTranslationDictionary dictionary;
-    /**
-     * In translator panel, the system automatically fills the list box for a candidate English word with its possible translations
-     * retrieved from a bilingual dictionary.
-     */
-    protected BilingualDictionary bilingualDictionary;
 
     /**
      * Constructor for the Editor Frame. This Frame will be automatically inherited from Translator, NER, MorphologicalAnalyzer, Dependency
@@ -183,14 +168,6 @@ public abstract class TreeEditorFrame extends DataCollector{
         }
         infoTop.setText("<html>" + current.getTargetSentence() + "</html>");
         infoBottom.setText("<html>" + current.getSourceSentence() + "</html>");
-    }
-
-    public void loadAutomaticTranslationDictionary(AutomaticTranslationDictionary dictionary){
-        this.dictionary = dictionary;
-    }
-
-    public void loadBilingualDictionary(BilingualDictionary bilingualDictionary){
-        this.bilingualDictionary = bilingualDictionary;
     }
 
     /**
