@@ -64,21 +64,7 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
                 if (!newText.contains(" ")){
                     clickedWord.setName(newText);
                 } else {
-                    String[] words = newText.split(" ");
-                    for (int i = words.length - 1; i >= 1; i--){
-                        switch (clickedWord.getLanguage()){
-                            case ENGLISH:
-                                sentence.insertWord(selectedWordIndex + 1, new AnnotatedWord("{english=" + words[i] + "}"));
-                                break;
-                            case TURKISH:
-                                sentence.insertWord(selectedWordIndex + 1, new AnnotatedWord("{turkish=" + words[i] + "}"));
-                                break;
-                            case PERSIAN:
-                                sentence.insertWord(selectedWordIndex + 1, new AnnotatedWord("{persian=" + words[i] + "}"));
-                                break;
-                        }
-                    }
-                    clickedWord.setName(words[0]);
+                    sentence.insertWord(newText, clickedWord, selectedWordIndex);
                 }
                 sentence.writeToFile(new File(fileDescription.getFileName()));
                 editText.setVisible(false);
