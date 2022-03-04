@@ -28,7 +28,7 @@ public abstract class TreeEditorFrame extends DataCollector{
     /**
      * Menu items responsible for displaying the next and previous trees and saving trees.
      */
-    protected JMenuItem itemNext, itemPrevious, itemSaveTree;
+    protected JMenuItem itemNext, itemPrevious;
 
     /**
      * Constructor for the Editor Frame. This Frame will be automatically inherited from Translator, NER, MorphologicalAnalyzer, Dependency
@@ -64,7 +64,6 @@ public abstract class TreeEditorFrame extends DataCollector{
         menu.add(treeMenu);
         itemNext = addMenuItem(treeMenu, "Next Tree", KeyStroke.getKeyStroke('s'));
         itemPrevious = addMenuItem(treeMenu, "Previous Tree", KeyStroke.getKeyStroke('w'));
-        itemSaveTree = addMenuItem(treeMenu, "Save Tree In Svg Format", KeyStroke.getKeyStroke('t'));
         treeMenu.addSeparator();
         JMenuItem itemUndo = addMenuItem(treeMenu, "Undo", KeyStroke.getKeyStroke("control Z"));
         itemSave.setVisible(false);
@@ -147,7 +146,6 @@ public abstract class TreeEditorFrame extends DataCollector{
         });
         itemNext.addActionListener(e -> nextTree(1));
         itemPrevious.addActionListener(e -> previousTree(1));
-        itemSaveTree.addActionListener(e -> saveTree());
     }
 
     /**
@@ -205,16 +203,6 @@ public abstract class TreeEditorFrame extends DataCollector{
         updateInfo(editorPanel);
         enableMenu();
         editorPanel.setFocusable(true);
-    }
-
-    /**
-     * Saves current tree in the panel of this frame.
-     */
-    protected void saveTree(){
-        TreeViewerPanel current = (TreeViewerPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
-        if (current != null){
-            current.saveTree();
-        }
     }
 
     protected void nextTree(int count){
