@@ -1,6 +1,5 @@
 package DataCollector.ParseTree;
 
-import AnnotatedSentence.LayerNotExistsException;
 import AnnotatedSentence.ViewLayerType;
 import AnnotatedTree.*;
 import AnnotatedTree.Processor.LeafConverter.LeafToPersian;
@@ -9,8 +8,6 @@ import AnnotatedTree.Processor.TreeToStringConverter;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.CubicCurve2D;
-import java.awt.geom.Point2D;
 
 public class TreeViewerPanel extends JPanel {
 
