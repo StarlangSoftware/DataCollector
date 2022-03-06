@@ -1,5 +1,6 @@
 package DataCollector.ParseTree.Dependency;
 
+import AnnotatedSentence.LayerNotExistsException;
 import AnnotatedSentence.ViewLayerType;
 import DataCollector.ParseTree.TreeEditorPanel;
 import ParseTree.ParseNode;
@@ -183,6 +184,100 @@ public class TreeDependencyPanel extends TreeEditorPanel {
             Graphics2D g2 = (Graphics2D)g;
             g2.setColor(Color.MAGENTA);
             g2.draw(cubicCurve);
+        }
+    }
+
+    protected void drawDependency(ParseNodeDrawable parseNode, Graphics g, ParseTreeDrawable tree){
+        ParseNodeDrawable toNode;
+        int toIG;
+        String dependency;
+        int startX, startY, dragX, dragY;
+        Point2D.Double pointCtrl1, pointCtrl2, pointStart, pointEnd;
+        CubicCurve2D.Double cubicCurve;
+        if (parseNode.numberOfChildren() == 0 && parseNode.getLayerInfo() != null && parseNode.getLayerData(ViewLayerType.DEPENDENCY) != null){
+            String[] words = parseNode.getLayerData(ViewLayerType.DEPENDENCY).split(",");
+            toNode = tree.getLeafWithIndex(Integer.parseInt(words[0]));
+            toIG = Integer.parseInt(words[1]);
+            dependency = words[2];
+            startX = parseNode.getArea().x + parseNode.getArea().width / 2;
+            startY = parseNode.getArea().y + 20;
+            dragX = toNode.getArea().x + toNode.getArea().width / 2;
+            dragY = toNode.getArea().y + 20 * toIG;
+            pointStart = new Point2D.Double(startX, startY);
+            pointEnd = new Point2D.Double(dragX, dragY);
+            if (dragY > startY){
+                pointCtrl1 = new Point2D.Double(startX, (startY + dragY) / 2 + 40);
+                pointCtrl2 = new Point2D.Double((startX + dragX) / 2, dragY + 50);
+            } else {
+                pointCtrl1 = new Point2D.Double((startX + dragX) / 2, startY + 30);
+                pointCtrl2 = new Point2D.Double(dragX, (startY + dragY) / 2 + 40);
+            }
+            cubicCurve = new CubicCurve2D.Double(pointStart.x, pointStart.y, pointCtrl1.x, pointCtrl1.y, pointCtrl2.x, pointCtrl2.y, pointEnd.x, pointEnd.y);
+            Graphics2D g2 = (Graphics2D)g;
+            g2.setColor(Color.RED);
+            g.drawString(dependency, (startX + dragX) / 2, Math.max(startY, dragY) + 50);
+            g2.draw(cubicCurve);
+            g2.setColor(Color.BLACK);
+        } else {
+            for (int i = 0; i < parseNode.numberOfChildren(); i++) {
+                ParseNodeDrawable aChild = (ParseNodeDrawable) parseNode.getChild(i);
+                drawDependency(aChild, g, tree);
+            }
+        }
+    }
+
+    protected void paint(ParseTreeDrawable parseTree, Graphics g, int nodeWidth, int nodeHeight, ViewLayerType viewLayer){
+        paint(((ParseNodeDrawable)parseTree.getRoot()), g, nodeWidth, nodeHeight, parseTree.maxDepth(), viewLayer);
+        drawDependency((ParseNodeDrawable)parseTree.getRoot(), g, parseTree);
+    }
+
+    protected int getStringSize(ParseNodeDrawable parseNode, Graphics g) {
+        int i, stringSize = 0;
+        if (parseNode.numberOfChildren() == 0) {
+            if (parseNode.getLayerInfo().getLayerSize(ViewLayerType.INFLECTIONAL_GROUP) == 0){
+                return g.getFontMetrics().stringWidth(parseNode.getLayerData(ViewLayerType.TURKISH_WORD));
+            }
+            for (i = 0; i < parseNode.getLayerInfo().getLayerSize(ViewLayerType.INFLECTIONAL_GROUP); i++)
+                try {
+                    if (g.getFontMetrics().stringWidth(parseNode.getLayerInfo().getLayerInfoAt(ViewLayerType.INFLECTIONAL_GROUP, i)) > stringSize){
+                        stringSize = g.getFontMetrics().stringWidth(parseNode.getLayerInfo().getLayerInfoAt(ViewLayerType.INFLECTIONAL_GROUP, i));
+                    }
+                } catch (LayerNotExistsException | LayerItemNotExistsException | WordNotExistsException e) {
+                    return g.getFontMetrics().stringWidth(parseNode.getData().getName());
+                }
+            return stringSize;
+        } else {
+            return g.getFontMetrics().stringWidth(parseNode.getData().getName());
+        }
+    }
+
+    protected void drawString(ParseNodeDrawable parseNode, Graphics g, int x, int y){
+        int i;
+        if (parseNode.numberOfChildren() == 0){
+            if (parseNode.getLayerInfo().getLayerSize(ViewLayerType.INFLECTIONAL_GROUP) == 0){
+                g.drawString(parseNode.getLayerData(ViewLayerType.TURKISH_WORD), x, y);
+            }
+            for (i = 0; i < parseNode.getLayerInfo().getLayerSize(ViewLayerType.INFLECTIONAL_GROUP); i++){
+                if (i > 0 && !parseNode.isGuessed()){
+                    g.setColor(Color.RED);
+                }
+                try {
+                    g.drawString(parseNode.getLayerInfo().getLayerInfoAt(ViewLayerType.INFLECTIONAL_GROUP, i), x, y);
+                    y += 20;
+                } catch (LayerNotExistsException | LayerItemNotExistsException | WordNotExistsException e) {
+                    g.drawString(parseNode.getData().getName(), x, y);
+                }
+            }
+        } else {
+            g.drawString(parseNode.getData().getName(), x, y);
+        }
+    }
+
+    protected void setArea(ParseNodeDrawable parseNode, int x, int y, int stringSize){
+        if (parseNode.numberOfChildren() == 0){
+            parseNode.setArea(x - 5, y - 15, stringSize + 10, 20 * (parseNode.getLayerInfo().getLayerSize(ViewLayerType.PART_OF_SPEECH) + 1));
+        } else {
+            parseNode.setArea(x - 5, y - 15, stringSize + 10, 20);
         }
     }
 
