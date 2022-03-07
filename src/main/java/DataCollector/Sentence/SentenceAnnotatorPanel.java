@@ -5,6 +5,7 @@ import Corpus.FileDescription;
 import AnnotatedSentence.AnnotatedWord;
 import DataCollector.ParseTree.TreeEditorPanel;
 import AnnotatedTree.ParseTreeDrawable;
+import Util.RectAngle;
 
 import javax.swing.*;
 import java.awt.*;
@@ -172,10 +173,10 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
             if (layerType == ViewLayerType.PROPBANK){
                 g.setFont(currentFont);
             }
-            word.setArea(new Rectangle(currentLeft - 5, ((lineIndex + 1) * lineSpace - stringHeight), stringWidth + 10, (int) (1.5 * stringHeight)));
+            word.setArea(new RectAngle(currentLeft - 5, ((lineIndex + 1) * lineSpace - stringHeight), stringWidth + 10, (int) (1.5 * stringHeight)));
             if (word.isSelected()){
                 g.setColor(Color.BLUE);
-                g.drawRect(word.getArea().x, word.getArea().y, word.getArea().width, word.getArea().height);
+                g.drawRect(word.getArea().getX(), word.getArea().getY(), word.getArea().getWidth(), word.getArea().getHeight());
             }
             g.setColor(Color.RED);
             drawLayer(word, g, currentLeft, lineIndex, i, maxSize, wordSize, wordTotal);
@@ -227,7 +228,7 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
                 clickedWord = ((AnnotatedWord)sentence.getWord(selectedWordIndex));
                 lastClickedWord = clickedWord;
                 editText.setText(clickedWord.getName());
-                editText.setBounds(clickedWord.getArea().x - 5, clickedWord.getArea().y + 20, 100, 30);
+                editText.setBounds(clickedWord.getArea().getX() - 5, clickedWord.getArea().getY() + 20, 100, 30);
                 editText.setVisible(true);
                 pane.setVisible(false);
                 editText.requestFocus();

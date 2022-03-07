@@ -101,7 +101,7 @@ public class TreeDependencyPanel extends TreeEditorPanel {
             pane.setVisible(true);
             list.clearSelection();
             pane.getVerticalScrollBar().setValue(0);
-            pane.setBounds((fromNode.getArea().x + draggedNode.getArea().x) / 2, (fromNode.getArea().y + draggedNode.getArea().y) / 2, 200, 90);
+            pane.setBounds((fromNode.getArea().getX() + draggedNode.getArea().getX()) / 2, (fromNode.getArea().getY() + draggedNode.getArea().getY()) / 2, 200, 90);
         }
         dragged = false;
         this.repaint();
@@ -169,8 +169,8 @@ public class TreeDependencyPanel extends TreeEditorPanel {
         CubicCurve2D.Double cubicCurve;
         super.paintComponent(g);
         if (dragged && previousNode != null){
-            startX = previousNode.getArea().x + previousNode.getArea().width / 2;
-            startY = previousNode.getArea().y + 20;
+            startX = previousNode.getArea().getX() + previousNode.getArea().getWidth() / 2;
+            startY = previousNode.getArea().getY() + 20;
             pointStart = new Point2D.Double(startX, startY);
             pointEnd = new Point2D.Double(dragX, dragY);
             if (dragY > startY){
@@ -199,10 +199,10 @@ public class TreeDependencyPanel extends TreeEditorPanel {
             toNode = tree.getLeafWithIndex(Integer.parseInt(words[0]));
             toIG = Integer.parseInt(words[1]);
             dependency = words[2];
-            startX = parseNode.getArea().x + parseNode.getArea().width / 2;
-            startY = parseNode.getArea().y + 20;
-            dragX = toNode.getArea().x + toNode.getArea().width / 2;
-            dragY = toNode.getArea().y + 20 * toIG;
+            startX = parseNode.getArea().getX() + parseNode.getArea().getWidth() / 2;
+            startY = parseNode.getArea().getY() + 20;
+            dragX = toNode.getArea().getX() + toNode.getArea().getWidth() / 2;
+            dragY = toNode.getArea().getY() + 20 * toIG;
             pointStart = new Point2D.Double(startX, startY);
             pointEnd = new Point2D.Double(dragX, dragY);
             if (dragY > startY){
