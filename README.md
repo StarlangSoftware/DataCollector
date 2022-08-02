@@ -1,3 +1,8 @@
+Video Lectures
+============
+
+[<img src=video1.jpg width="50%">](https://youtu.be/VH-TrFdtGk0)
+
 For Developers
 ============
 
