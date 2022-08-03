@@ -1,7 +1,7 @@
 Video Lectures
 ============
 
-[<img src=video1.jpg width="50%">](https://youtu.be/VH-TrFdtGk0)
+[<img src=video1.jpg width="50%">](https://youtu.be/VH-TrFdtGk0)[<img src=video2.jpg width="50%">](https://youtu.be/SdnEBmdZLqQ)
 
 For Developers
 ============
