@@ -6,6 +6,7 @@ import DataCollector.ParseTree.TreeEditorPanel;
 import Util.DrawingButton;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,6 +16,8 @@ import java.util.Arrays;
 import java.util.Properties;
 
 public abstract class SentenceAnnotatorFrame extends DataCollector {
+
+    protected JSlider widthSlider;
 
     protected abstract SentenceAnnotatorPanel generatePanel(String currentPath, String rawFileName);
 
@@ -48,6 +51,14 @@ public abstract class SentenceAnnotatorFrame extends DataCollector {
         button.setVisible(true);
         toolBar.add(button, 5);
         toolBar.addSeparator();
+        widthSlider = new JSlider(SwingConstants.HORIZONTAL, 5, 80, 60);
+        widthSlider.setMinorTickSpacing(1);
+        widthSlider.setMajorTickSpacing(5);
+        widthSlider.setPaintTicks(true);
+        widthSlider.setPaintLabels(true);
+        widthSlider.setMaximumSize(new Dimension(250, 35));
+        toolBar.add(widthSlider);
+        widthSlider.addChangeListener(e -> setWordSpace(widthSlider.getValue()));
         File[] listOfFiles = new File(".").listFiles();
         Arrays.sort(listOfFiles);
         projectPane.addChangeListener(e -> {
@@ -136,6 +147,11 @@ public abstract class SentenceAnnotatorFrame extends DataCollector {
                 next(100);
                 break;
         }
+    }
+
+    protected void setWordSpace(int wordSpace){
+        SentenceAnnotatorPanel current = (SentenceAnnotatorPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
+        current.setWordSpace(wordSpace);
     }
 
     /**

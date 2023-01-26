@@ -109,6 +109,10 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
         }
     }
 
+    public void setWordSpace(int wordSpace){
+        this.wordSpace = wordSpace;
+    }
+
     public String getOriginalSentence(){
         AnnotatedSentence originalSentence = new AnnotatedSentence(new File(TreeEditorPanel.originalPath + fileDescription.getRawFileName()));
         return originalSentence.toWords();
