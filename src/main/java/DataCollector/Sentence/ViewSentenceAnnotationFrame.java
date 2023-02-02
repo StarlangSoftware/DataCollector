@@ -50,8 +50,14 @@ public abstract class ViewSentenceAnnotationFrame extends JFrame implements Acti
         int groupCount = 0;
         data.get(0).set(COLOR_COLUMN_INDEX, "0");
         for (int i = 1; i < data.size(); i++){
-            if (!data.get(i).get(groupIndex).equals(data.get(i - 1).get(groupIndex))){
+            if ((data.get(i - 1).get(groupIndex) == null && data.get(i).get(groupIndex) != null) ||
+                    (data.get(i - 1).get(groupIndex) != null && data.get(i).get(groupIndex) == null)){
                 groupCount++;
+            } else {
+                if (data.get(i - 1).get(groupIndex) != null && data.get(i).get(groupIndex) != null &&
+                        !data.get(i).get(groupIndex).equals(data.get(i - 1).get(groupIndex))){
+                    groupCount++;
+                }
             }
             data.get(i).set(COLOR_COLUMN_INDEX, "" + groupCount);
         }
@@ -70,10 +76,37 @@ public abstract class ViewSentenceAnnotationFrame extends JFrame implements Acti
             collator = Collator.getInstance(locale);
         }
 
+        private int checkForNull(ArrayList<String> o1, ArrayList<String> o2, int index){
+            if (o1.get(index) == null && o2.get(index) == null){
+                return 0;
+            } else {
+                if (o1.get(index) == null){
+                    return 1;
+                } else {
+                    if (o2.get(index) == null){
+                        return -1;
+                    }
+                }
+            }
+            return 2;
+        }
+
         @Override
         public int compare(ArrayList<String> o1, ArrayList<String> o2) {
+            int compareResultForNullCase = checkForNull(o1, o2, firstIndex);
+            if (compareResultForNullCase != 2){
+                return compareResultForNullCase;
+            }
             if (o1.get(firstIndex).equals(o2.get(firstIndex))) {
+                compareResultForNullCase = checkForNull(o1, o2, secondIndex);
+                if (compareResultForNullCase != 2){
+                    return compareResultForNullCase;
+                }
                 if (o1.get(secondIndex).equals(o2.get(secondIndex))) {
+                    compareResultForNullCase = checkForNull(o1, o2, thirdIndex);
+                    if (compareResultForNullCase != 2){
+                        return compareResultForNullCase;
+                    }
                     return collator.compare(o1.get(thirdIndex), o2.get(thirdIndex));
                 } else {
                     return collator.compare(o1.get(secondIndex), o2.get(secondIndex));
