@@ -4,6 +4,8 @@ import AnnotatedSentence.AnnotatedCorpus;
 import Util.DrawingButton;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
@@ -25,10 +27,15 @@ public abstract class ViewSentenceAnnotationFrame extends JFrame implements Acti
     protected static final String COPY = "copy";
     protected static final String PASTE = "paste";
     protected static final int FILENAME_INDEX = 0;
+
     protected static final int WORD_POS_INDEX = 1;
     protected static final int WORD_INDEX = 2;
     protected int TAG_INDEX;
     protected int COLOR_COLUMN_INDEX;
+
+    protected int sortIndex;
+
+    protected JTextField search;
 
     public class CellRenderer extends DefaultTableCellRenderer {
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column){
@@ -120,13 +127,15 @@ public abstract class ViewSentenceAnnotationFrame extends JFrame implements Acti
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case ID_SORT:
+                sortIndex = TAG_INDEX;
                 data.sort(new RowComparator(TAG_INDEX, WORD_INDEX, FILENAME_INDEX));
-                updateGroupColors(TAG_INDEX);
+                updateGroupColors(sortIndex);
                 JOptionPane.showMessageDialog(this, "Words Sorted!", "Sorting Complete", JOptionPane.INFORMATION_MESSAGE);
                 break;
             case WORD_SORT:
+                sortIndex = WORD_INDEX;
                 data.sort(new RowComparator(WORD_INDEX, TAG_INDEX, FILENAME_INDEX));
-                updateGroupColors(WORD_INDEX);
+                updateGroupColors(sortIndex);
                 JOptionPane.showMessageDialog(this, "Words Sorted!", "Sorting Complete", JOptionPane.INFORMATION_MESSAGE);
                 break;
             case COPY:
@@ -163,6 +172,15 @@ public abstract class ViewSentenceAnnotationFrame extends JFrame implements Acti
 
     }
 
+    public void scrollToText(){
+        for (int i = 1; i < data.size() - 50; i++){
+            if (data.get(i).get(sortIndex) != null && data.get(i).get(sortIndex).compareToIgnoreCase(search.getText()) >= 0){
+                dataTable.scrollRectToVisible(dataTable.getCellRect(i + 50, 0, false));
+                break;
+            }
+        }
+    }
+
     public ViewSentenceAnnotationFrame(AnnotatedCorpus corpus){
         this.corpus = corpus;
         JToolBar toolBar = new JToolBar("ToolBox");
@@ -174,6 +192,25 @@ public abstract class ViewSentenceAnnotationFrame extends JFrame implements Acti
         toolBar.add(copy);
         JButton paste = new DrawingButton(ViewSentenceAnnotationFrame.class, this, "paste", PASTE, "Paste Id");
         toolBar.add(paste);
+        search = new JTextField();
+        search.getDocument().addDocumentListener(new DocumentListener() {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                scrollToText();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                scrollToText();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                scrollToText();
+            }
+        });
+        search.setMaximumSize(new Dimension(100, 25));
+        toolBar.add(search);
         add(toolBar, BorderLayout.PAGE_START);
         toolBar.setVisible(true);
         setLocationRelativeTo(null);
