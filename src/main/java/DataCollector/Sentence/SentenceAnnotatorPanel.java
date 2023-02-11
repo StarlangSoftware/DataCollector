@@ -65,7 +65,16 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
                 if (!newText.contains(" ")){
                     clickedWord.setName(newText);
                 } else {
-                    sentence.insertWord(newText, clickedWord, selectedWordIndex);
+                    int index = -1;
+                    for (int i = 0; i < sentence.wordCount(); i++){
+                        if (sentence.getWord(i) == clickedWord){
+                            index = i;
+                            break;
+                        }
+                    }
+                    if (index != -1){
+                        sentence.insertWord(newText, clickedWord, index);
+                    }
                 }
                 sentence.writeToFile(new File(fileDescription.getFileName()));
                 editText.setVisible(false);
