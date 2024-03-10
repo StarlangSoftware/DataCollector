@@ -49,8 +49,8 @@
     <dependencies>
         <dependency>
             <groupId>io.github.starlangsoftware</groupId>
-            <artifactId>DataGenerator</artifactId>
-            <version>1.0.46</version>
+            <artifactId>AnnotatedTree</artifactId>
+            <version>1.0.54</version>
         </dependency>
     </dependencies>
 
