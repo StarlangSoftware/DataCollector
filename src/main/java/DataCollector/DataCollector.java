@@ -9,6 +9,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class DataCollector extends JFrame implements ActionListener {
@@ -144,13 +146,13 @@ public class DataCollector extends JFrame implements ActionListener {
      * @return an {@link ArrayList} of file names to be loaded.
      */
     protected ArrayList<FileWithSelectedWords> loadMultipleFileNames(String fileName) {
-        ArrayList<FileWithSelectedWords> fileList = new ArrayList<FileWithSelectedWords>();
+        ArrayList<FileWithSelectedWords> fileList = new ArrayList<>();
         try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(fileName), StandardCharsets.UTF_8));
+            BufferedReader br = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(fileName)), StandardCharsets.UTF_8));
             String line = br.readLine();
             while (line != null) {
                 FileWithSelectedWords fileWithSelectedWords = new FileWithSelectedWords(line.trim());
-                if (fileList.size() == 0 || !fileWithSelectedWords.getFileName().equals(fileList.get(fileList.size() - 1).getFileName())) {
+                if (fileList.isEmpty() || !fileWithSelectedWords.getFileName().equals(fileList.get(fileList.size() - 1).getFileName())) {
                     fileList.add(fileWithSelectedWords);
                 } else {
                     fileList.get(fileList.size() - 1).addWord(fileWithSelectedWords.getWord(0));
@@ -158,7 +160,7 @@ public class DataCollector extends JFrame implements ActionListener {
                 line = br.readLine();
             }
             br.close();
-        } catch (IOException e) {
+        } catch (IOException ignored) {
         }
         return fileList;
     }

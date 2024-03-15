@@ -6,9 +6,9 @@ import DataCollector.ParseTree.TreeEditorPanel;
 
 public class MorphologicalAnalysisAction extends TreeEditAction {
 
-    private LayerInfo info;
-    private String morphologicalAnalysis;
-    private String morphotactics;
+    private final LayerInfo info;
+    private final String morphologicalAnalysis;
+    private final String morphotactics;
     private String previousMorphologicalAnalysis;
     private String previousMorphotactics;
 

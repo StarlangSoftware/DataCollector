@@ -5,9 +5,9 @@ import DataCollector.ParseTree.TreeEditorPanel;
 import AnnotatedTree.ParseNodeDrawable;
 
 public class EditSymbolAction extends TreeEditAction {
-    private ParseNodeDrawable node;
+    private final ParseNodeDrawable node;
     private Symbol oldSymbol;
-    private Symbol newSymbol;
+    private final Symbol newSymbol;
 
     public EditSymbolAction(TreeEditorPanel associatedPanel, ParseNodeDrawable node, Symbol newSymbol){
         this.associatedPanel = associatedPanel;

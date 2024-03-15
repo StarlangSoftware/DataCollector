@@ -3,8 +3,8 @@ package DataCollector;
 import java.util.ArrayList;
 
 public class FileWithSelectedWords {
-    private ArrayList<String> wordList;
-    private String fileName;
+    private final ArrayList<String> wordList;
+    private final String fileName;
 
     public FileWithSelectedWords(String line){
         wordList = new ArrayList<>();

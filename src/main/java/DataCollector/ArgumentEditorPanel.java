@@ -19,9 +19,9 @@ public class ArgumentEditorPanel extends JPanel {
     public static final int SAVE = 1;
     public static final int DELETE = 2;
 
-    private FramesetList xmlParser;
-    private SynSet currentSynSet;
-    private TxtDictionary dictionary;
+    private final FramesetList xmlParser;
+    private final SynSet currentSynSet;
+    private final TxtDictionary dictionary;
     private JTextField definition;
 
     public ArgumentEditorPanel(SynSet currentSynSet, String treeName, FramesetList xmlParser) {
@@ -83,9 +83,10 @@ public class ArgumentEditorPanel extends JPanel {
                     prefix = words[0] + " " + words[1] + " ";
                     break;
             }
-            TxtWord verbRoot = (TxtWord) dictionary.getWord(verbForm.substring(0, verbForm.length() - 3));
+            String verbRootForm = verbForm.substring(0, verbForm.length() - 3);
+            TxtWord verbRoot = (TxtWord) dictionary.getWord(verbRootForm);
             if (verbRoot == null){
-                verbRoot = new TxtWord(verbForm.substring(0, verbForm.length() - 3));
+                verbRoot = new TxtWord(verbRootForm);
                 verbRoot.addFlag("CL_FIIL");
             }
             switch ((ArgumentType) argumentList.getSelectedItem()){
@@ -132,7 +133,7 @@ public class ArgumentEditorPanel extends JPanel {
             }
         });
         saveButton.addActionListener(evt -> {
-            if (definition.getText().length() != 0 && argumentList.getSelectedItem() != ArgumentType.NONE) {
+            if (!definition.getText().isEmpty() && argumentList.getSelectedItem() != ArgumentType.NONE) {
                 //xmlParser.saveAsXml(currentSynSet.getId(), argumentList.getSelectedItem().toString(), definition.getText(), SAVE);
             }
             fillFrameList(frameList);
@@ -236,8 +237,8 @@ public class ArgumentEditorPanel extends JPanel {
 
     public ArrayList<String> getFrameListFromXml(String id){
         Map<ArgumentType, String> frameset = xmlParser.readFromXML(id);
-        ArrayList<String> stringFrame = new ArrayList<String>();
-        if (frameset.size() != 0) {
+        ArrayList<String> stringFrame = new ArrayList<>();
+        if (!frameset.isEmpty()) {
             stringFrame = new ArrayList<>();
             for (int i = 0; i < frameset.size(); i++) {
                 stringFrame.add(frameset.keySet().toArray()[i].toString() + ":" + frameset.get(frameset.keySet().toArray()[i]));

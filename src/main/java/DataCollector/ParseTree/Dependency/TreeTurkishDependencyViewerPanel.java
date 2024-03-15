@@ -11,7 +11,7 @@ import java.awt.geom.Point2D;
 
 public class TreeTurkishDependencyViewerPanel extends JPanel {
 
-    private TurkishDependencyTreeBankCorpus corpus;
+    private final TurkishDependencyTreeBankCorpus corpus;
     private int currentIndex;
     private TurkishDependencyTreeBankSentence currentSentence;
     public static final int WORD_WIDTH = 150;

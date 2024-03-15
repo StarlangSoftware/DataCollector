@@ -11,8 +11,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -41,11 +41,10 @@ public abstract class TreeEditorFrame extends DataCollector{
         Properties properties;
         properties = new Properties();
         try {
-            properties.load(new FileInputStream(new File("config.properties")));
+            properties.load(Files.newInputStream(new File("config.properties").toPath()));
             TreeEditorPanel.treePath = properties.getProperty("treePath", TreeEditorPanel.treePath);
             TreeEditorPanel.phrasePath = properties.getProperty("phrasePath", TreeEditorPanel.phrasePath);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ignored) {
         }
         JButton button;
         button = new DrawingButton(DataCollector.class, this, "fastfastbackward", FAST_FAST_BACKWARD, "Previous 100 Tree");

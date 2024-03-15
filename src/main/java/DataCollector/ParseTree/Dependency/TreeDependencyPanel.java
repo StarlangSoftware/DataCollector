@@ -22,8 +22,8 @@ public class TreeDependencyPanel extends TreeEditorPanel {
     private int dragX, dragY, selectedIndex = -1;
     private ParseNodeDrawable fromNode = null;
     private boolean dragged = false;
-    private JList list;
-    private JScrollPane pane;
+    private final JList list;
+    private final JScrollPane pane;
 
     public TreeDependencyPanel(String path, String fileName) {
         super(path, fileName, ViewLayerType.INFLECTIONAL_GROUP);
@@ -153,14 +153,6 @@ public class TreeDependencyPanel extends TreeEditorPanel {
                 }
             }
         }
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
     }
 
     protected void paintComponent(Graphics g){

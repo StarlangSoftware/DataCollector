@@ -5,8 +5,8 @@ import DataCollector.ParseTree.TreeEditorPanel;
 
 public class MoveRightAction extends TreeEditAction{
 
-    private ParseTreeDrawable tree;
-    private ParseNodeDrawable node;
+    private final ParseTreeDrawable tree;
+    private final ParseNodeDrawable node;
 
     public MoveRightAction(TreeEditorPanel associatedPanel, ParseTreeDrawable tree, ParseNodeDrawable node){
         this.associatedPanel = associatedPanel;

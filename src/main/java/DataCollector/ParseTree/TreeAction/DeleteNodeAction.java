@@ -4,7 +4,7 @@ import AnnotatedTree.ParseNodeDrawable;
 import DataCollector.ParseTree.TreeEditorPanel;
 
 public class DeleteNodeAction extends TreeEditAction{
-    private ParseNodeDrawable node;
+    private final ParseNodeDrawable node;
     private ParseNodeDrawable oldParent;
     private int nodeIndex, childCount;
 

@@ -4,7 +4,7 @@ import DataCollector.ParseTree.TreeEditorPanel;
 import AnnotatedTree.ParseNodeDrawable;
 
 public class AddParentAction extends TreeEditAction{
-    private ParseNodeDrawable node;
+    private final ParseNodeDrawable node;
     private ParseNodeDrawable oldParent;
     private ParseNodeDrawable newParent;
 

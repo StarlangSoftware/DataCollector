@@ -70,7 +70,7 @@ public abstract class ViewSentenceAnnotationFrame extends JFrame implements Acti
         }
     }
 
-    protected class RowComparator implements Comparator<ArrayList<String>> {
+    protected static class RowComparator implements Comparator<ArrayList<String>> {
 
         int firstIndex, secondIndex, thirdIndex;
         Collator collator;

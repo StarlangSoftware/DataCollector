@@ -118,12 +118,10 @@ public class TreeViewerPanel extends JPanel {
     public String getTargetSentence(){
         TreeToStringConverter treeToStringConverter;
         switch (viewerLayer){
-            case TURKISH_WORD:
-                treeToStringConverter = new TreeToStringConverter(currentTree, new LeafToTurkish());
-                break;
             case PERSIAN_WORD:
                 treeToStringConverter = new TreeToStringConverter(currentTree, new LeafToPersian());
                 break;
+            case TURKISH_WORD:
             default:
                 treeToStringConverter = new TreeToStringConverter(currentTree, new LeafToTurkish());
                 break;

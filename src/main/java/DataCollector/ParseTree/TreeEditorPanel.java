@@ -20,7 +20,7 @@ public class TreeEditorPanel extends TreeViewerPanel implements MouseListener, M
 
     public TreeEditorPanel(String path, String fileName, ViewLayerType viewLayer) {
         super(path, fileName, viewLayer);
-        actionList = new ArrayList<TreeEditAction>();
+        actionList = new ArrayList<>();
     }
 
     private void clear(){
@@ -42,7 +42,7 @@ public class TreeEditorPanel extends TreeViewerPanel implements MouseListener, M
     }
 
     public void undo(){
-        if (actionList.size() != 0){
+        if (!actionList.isEmpty()){
             actionList.get(actionList.size() - 1).undo();
             actionList.remove(actionList.size() - 1);
             repaint();

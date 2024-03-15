@@ -9,8 +9,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Properties;
@@ -31,11 +31,10 @@ public abstract class SentenceAnnotatorFrame extends DataCollector {
         Properties properties;
         properties = new Properties();
         try {
-            properties.load(new FileInputStream(new File("config.properties")));
+            properties.load(Files.newInputStream(new File("config.properties").toPath()));
             TreeEditorPanel.treePath = properties.getProperty("treePath", TreeEditorPanel.treePath);
             TreeEditorPanel.phrasePath = properties.getProperty("phrasePath", TreeEditorPanel.phrasePath);
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (IOException ignored) {
         }
         JButton button;
         button = new DrawingButton(DataCollector.class, this, "fastfastbackward", FAST_FAST_BACKWARD, "Previous 100 Sentence");
@@ -60,7 +59,9 @@ public abstract class SentenceAnnotatorFrame extends DataCollector {
         toolBar.add(widthSlider);
         widthSlider.addChangeListener(e -> setWordSpace(widthSlider.getValue()));
         File[] listOfFiles = new File(".").listFiles();
-        Arrays.sort(listOfFiles);
+        if (listOfFiles != null){
+            Arrays.sort(listOfFiles);
+        }
         projectPane.addChangeListener(e -> {
             SentenceAnnotatorPanel current;
             if (projectPane.getTabCount() > 0) {

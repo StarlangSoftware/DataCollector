@@ -6,10 +6,10 @@ import AnnotatedTree.LayerInfo;
 
 public class LayerAction extends TreeEditAction{
 
-    private LayerInfo info;
-    private String layerData;
+    private final LayerInfo info;
+    private final String layerData;
     private String previousLayerData;
-    private ViewLayerType viewLayerType;
+    private final ViewLayerType viewLayerType;
 
     public LayerAction(TreeEditorPanel associatedPanel, LayerInfo info, String layerData, ViewLayerType viewLayerType){
         this.associatedPanel = associatedPanel;

@@ -5,8 +5,8 @@ import DataCollector.ParseTree.TreeEditorPanel;
 import AnnotatedTree.LayerInfo;
 
 public class LayerClearAction extends TreeEditAction{
-    private LayerInfo info;
-    private ViewLayerType viewLayerType;
+    private final LayerInfo info;
+    private final ViewLayerType viewLayerType;
     private String previousLayerData;
 
     public LayerClearAction(TreeEditorPanel associatedPanel, LayerInfo info, ViewLayerType viewLayerType){

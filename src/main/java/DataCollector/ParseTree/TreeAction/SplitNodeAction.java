@@ -4,9 +4,9 @@ import AnnotatedTree.*;
 import DataCollector.ParseTree.TreeEditorPanel;
 
 public class SplitNodeAction extends TreeEditAction{
-    private ParseNodeDrawable node;
-    private ParseNodeDrawable parent;
-    private ParseTreeDrawable parseTree;
+    private final ParseNodeDrawable node;
+    private final ParseNodeDrawable parent;
+    private final ParseTreeDrawable parseTree;
 
     public SplitNodeAction(TreeEditorPanel associatedPanel, ParseTreeDrawable parseTree, ParseNodeDrawable node){
         this.associatedPanel = associatedPanel;

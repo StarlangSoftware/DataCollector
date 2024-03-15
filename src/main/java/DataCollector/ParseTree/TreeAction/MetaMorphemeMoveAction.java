@@ -8,9 +8,9 @@ import DataCollector.ParseTree.TreeEditorPanel;
 
 public class MetaMorphemeMoveAction extends TreeEditAction{
 
-    private LayerInfo fromLayer;
-    private LayerInfo toLayer;
-    private int fromIndex;
+    private final LayerInfo fromLayer;
+    private final LayerInfo toLayer;
+    private final int fromIndex;
     private MetamorphicParse removedParse;
 
     public MetaMorphemeMoveAction(TreeEditorPanel associatedPanel, LayerInfo fromLayer, LayerInfo toLayer, int fromIndex){
@@ -24,12 +24,7 @@ public class MetaMorphemeMoveAction extends TreeEditAction{
         try {
             toLayer.setLayerData(ViewLayerType.META_MORPHEME_MOVED, fromLayer.getMetaMorphemeFromIndex(fromIndex));
             removedParse = fromLayer.metaMorphemeRemove(fromIndex);
-        } catch (LayerNotExistsException e) {
-            e.printStackTrace();
-        } catch (WordNotExistsException e) {
-            e.printStackTrace();
-        } catch (LayerItemNotExistsException e) {
-            e.printStackTrace();
+        } catch (LayerNotExistsException | WordNotExistsException | LayerItemNotExistsException ignored) {
         }
         associatedPanel.save();
     }
