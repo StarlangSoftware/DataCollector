@@ -1,5 +1,6 @@
 package DataCollector.Sentence;
 
+import AnnotatedSentence.AnnotatedCorpus;
 import AnnotatedSentence.AnnotatedWord;
 import DataCollector.*;
 import DataCollector.ParseTree.TreeEditorPanel;
@@ -113,6 +114,25 @@ public abstract class SentenceAnnotatorFrame extends DataCollector {
                 }
             }
         });
+    }
+
+    protected AnnotatedCorpus readCorpus(String subFolder){
+        AnnotatedCorpus corpus;
+        if (subFolder.equals("false")){
+            corpus = new AnnotatedCorpus(new File(TreeEditorPanel.phrasePath));
+        } else {
+            corpus = new AnnotatedCorpus();
+            File[] listOfFiles = new File(TreeEditorPanel.phrasePath).listFiles();
+            if (listOfFiles != null){
+                Arrays.sort(listOfFiles);
+                for (File file:listOfFiles){
+                    if (file.isDirectory() && !file.isHidden()){
+                        corpus.combine(new AnnotatedCorpus(file));
+                    }
+                }
+            }
+        }
+        return corpus;
     }
 
     /**
