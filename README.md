@@ -87,5 +87,5 @@ DataCollector
 	<dependency>
   	<groupId>io.github.starlangsoftware</groupId>
   	<artifactId>DataCollector</artifactId>
-  	<version>1.0.8</version>
+  	<version>1.0.61</version>
 	</dependency>
