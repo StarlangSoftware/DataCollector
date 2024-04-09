@@ -23,10 +23,21 @@ public abstract class SentenceAnnotatorFrame extends DataCollector {
     protected abstract SentenceAnnotatorPanel generatePanel(String currentPath, String rawFileName);
 
     /**
-     * The {@link SentenceAnnotatorFrame} constructor takes a prefix as input and starts to creates items of the menu. I.e fastbackward, fast_backward,
-     * fastfastbackward, and fastfastforward. It then gets the list of files and loops through them, if there has been some
-     * trained models it adds them to the model {@link JComboBox}. Then, adds actions to this {@link JComboBox} in order to
-     * select project and annotation files.
+     * <p>The {@link SentenceAnnotatorFrame} constructor first reads the properties file which gets the tree and sentence
+     * paths for tree and sentence corpora respectively. Then it creates items of the menu i.e. fastbackward,
+     * fast_backward, fastfastbackward, and fastfastforward. There is also a width slider, which adjusts the space
+     * between the words displayed.</p>
+     *
+     * The menu consists of:
+     * <p>itemOpen: The user will select an annotated sentence file, and a new panel depending on the task will be
+     * generated via the abstract method generatePanel. The new panel will be inserted into this frame.</p>
+     * <p>itemGoToFile: The user will enter a file name, then the system will get that annotated sentence file,
+     * and a new panel depending on the task will be generated via the abstract method generatePanel. The new panel
+     * will be inserted into this frame.</p>
+     * <p>itemOpenMultiple: The user will select a file which contains the filenames and also possibly words in that
+     * annotated sentences residing in those files, then the system will generate that many panels via the abstract
+     * method generatePanel. The words will also be selected (done with selected attribute) in those panels. All those
+     * panels will be inserted into this frame.</p>
      */
     public SentenceAnnotatorFrame() {
         Properties properties;
@@ -59,10 +70,6 @@ public abstract class SentenceAnnotatorFrame extends DataCollector {
         widthSlider.setMaximumSize(new Dimension(250, 35));
         toolBar.add(widthSlider);
         widthSlider.addChangeListener(e -> setWordSpace(widthSlider.getValue()));
-        File[] listOfFiles = new File(".").listFiles();
-        if (listOfFiles != null){
-            Arrays.sort(listOfFiles);
-        }
         projectPane.addChangeListener(e -> {
             SentenceAnnotatorPanel current;
             if (projectPane.getTabCount() > 0) {
@@ -116,6 +123,12 @@ public abstract class SentenceAnnotatorFrame extends DataCollector {
         });
     }
 
+    /**
+     * Constructs an annotated corpus either from all subfolders of the current phrase path, or directly from the
+     * phrase path.
+     * @param subFolder If true, subfolders of the phrase path will be considered.
+     * @return An annotated corpus read from the phrase path.
+     */
     protected AnnotatedCorpus readCorpus(String subFolder){
         AnnotatedCorpus corpus;
         if (subFolder.equals("false")){
@@ -170,6 +183,10 @@ public abstract class SentenceAnnotatorFrame extends DataCollector {
         }
     }
 
+    /**
+     * Sets the space between annotated words displayed in the current selected panel (not all panels in this frame)
+     * @param wordSpace New space width between annotated words.
+     */
     protected void setWordSpace(int wordSpace){
         SentenceAnnotatorPanel current = (SentenceAnnotatorPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
         current.setWordSpace(wordSpace);
@@ -188,8 +205,9 @@ public abstract class SentenceAnnotatorFrame extends DataCollector {
     }
 
     /**
-     * The addPanelToFrame method takes an {@link SentenceAnnotatorPanel} and a file name as inputs. It creates a new {@link JScrollPane}
-     * and adds given {@link SentenceAnnotatorPanel} which can be scrolled. It then adds to {@link JTabbedPane}, updates top and bottom info.
+     * The addPanelToFrame method takes an {@link SentenceAnnotatorPanel} and a file name as inputs. It creates a new
+     * {@link JScrollPane} and adds given {@link SentenceAnnotatorPanel} which can be scrolled. It then adds to
+     * {@link JTabbedPane}, updates top and bottom info.
      *
      * @param annotatorPanel {@link SentenceAnnotatorPanel} input.
      * @param fileName       File name input.

@@ -14,14 +14,30 @@ import java.io.File;
 import java.util.ArrayList;
 
 public abstract class SentenceAnnotatorPanel extends JPanel implements MouseListener, MouseMotionListener {
+
     protected JTextField editText;
+
+    /**
+     * Current sentence displayed in the panel.
+     */
     public AnnotatedSentence sentence;
+
     protected FileDescription fileDescription;
     protected int wordSpace = 60, lineSpace;
     protected int selectedWordIndex = -1, draggedWordIndex = -1;
     protected boolean selectionMode = false;
     protected AnnotatedWord clickedWord = null, lastClickedWord = null;
+
+    /**
+     * The sentence is displayed according to the given viewerLayer. If viewerLayer is PART_OF_SPEECH or
+     * INFLECTIONAL_GROUP, the sentence will show the morphological analysis of the word.  If viewerLayer is SEMANTICS,
+     * the sentence will show the semantic id of the Turkish word according to the WordNet. If viewerLayer is NER,
+     * the sentence will show the named entity tag of the Turkish word. If viewerLayer is DEPENDENCY, the sentence
+     * will show the Dependency information of the Turkish  word according to the Dependency
+     * annotation.
+     */
     protected ViewLayerType layerType;
+
     protected JList list;
     protected DefaultListModel listModel;
     protected JScrollPane pane;
@@ -32,6 +48,15 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
     protected abstract void setBounds();
     protected abstract void setLineSpace();
 
+    /**
+     * Constructs base annotator panel which is the base panel for all possible annotations such as NER, SRL, WSD,
+     * Morphological Disambiguation, etc. The method first read the annotated sentence, then constructs
+     * the default option list, which shows options for NER, SRL, Morphological Analysis, WSD. Then the method
+     * constructs the edit text, which is used for modifying a single word (also possibly inserting a word)
+     * @param currentPath The absolute path for the annotated file.
+     * @param rawFileName The raw file name of the annotated file.
+     * @param layerType The layerType shows the annotation layer for which this panel is constructed.
+     */
     public SentenceAnnotatorPanel(String currentPath, String rawFileName, final ViewLayerType layerType){
         this.fileDescription = new FileDescription(currentPath, rawFileName);
         this.layerType = layerType;
@@ -91,6 +116,12 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
         setFocusable(false);
     }
 
+    /**
+     * Displays the previous sentence according to the index of the parse tree. For example, if the current
+     * sentence fileName is 0123.train, after the call of previous(4), the panel will display 0119.train. If the
+     * previous sentence does not exist, nothing will happen.
+     * @param count Number of sentences to go backward
+     */
     public void previous(int count) {
         if (fileDescription.previousFileExists(count)){
             fileDescription.addToIndex(-count);
@@ -100,6 +131,12 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
         }
     }
 
+    /**
+     * Displays the next sentence according to the index of the sentence. For example, if the
+     * current sentence fileName is 0123.train, after the call of nextT(3), panel will display 0126.train. If the next
+     * sentence does not exist, nothing will happen.
+     * @param count Number of sentences to go forward
+     */
     public void next(int count) {
         if (fileDescription.nextFileExists(count)){
             fileDescription.addToIndex(count);
@@ -109,6 +146,12 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
         }
     }
 
+    /**
+     * If this annotated corpus has also a parallel English treebank corpus, this method returns the parallel tree as
+     * a sentence string. The sentence is read from the English path with the same raw file name. Currently, NlpToolkit
+     * supports only one source language, namely English.
+     * @return Parallel source string in English.
+     */
     public String getSourceSentence(){
         ParseTreeDrawable englishTree = new ParseTreeDrawable(TreeEditorPanel.englishPath, fileDescription);
         if (englishTree.getRoot() != null){
@@ -118,23 +161,53 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
         }
     }
 
+    /**
+     * Sets the space between annotated words displayed in the current panel
+     * @param wordSpace New space width between annotated words.
+     */
     public void setWordSpace(int wordSpace){
         this.wordSpace = wordSpace;
     }
 
+    /**
+     * If this annotated corpus has also a parallel sentence corpus, this method returns the parallel sentence as a
+     * string. The sentence is read from the 'Original' path.
+     * @return Parallel sentence string.
+     */
     public String getOriginalSentence(){
         AnnotatedSentence originalSentence = new AnnotatedSentence(new File(TreeEditorPanel.originalPath + fileDescription.getRawFileName()));
         return originalSentence.toWords();
     }
 
+    /**
+     * Getter for the lastClickedWord.
+     * @return lastClickedWord.
+     */
     public AnnotatedWord getClickedWord(){
         return lastClickedWord;
     }
 
+    /**
+     * Returns the raw file name of annotated file associated with this panel.
+     * @return Raw file name of annotated file associated with this panel.
+     */
     public String getRawFileName(){
         return fileDescription.getRawFileName();
     }
 
+    /**
+     * Draws the annotated sentence on the panel. If the layer is dependency, draws the sentence  in one line.
+     * Otherwise, draws the sentence in multiple lines if the width of the sentence does not fit to the length of the
+     * screen. If the word is selected, prints a blue rectangle surrounding the word. If the layer is propbank and if
+     * the shallow parse layer is annotated, draws separate shallow parse groups in bold and not bold interchangeably.
+     * The function also calls abstract methods:
+     * <p> drawLayer: to draw extra information for layer associated with this panel. </p>
+     * <p> setLineSpace: to calculate the space between multiple lines, depending on the layer associated with this
+     * panel.</p>
+     * <p> getMaxLayerLength: to get the width of the layer info in pixels.</p>
+     *
+     * @param g Graphics to paint on.
+     */
     protected void paintComponent(Graphics g){
         super.paintComponent(g);
         AnnotatedWord previousWord = null, word;
@@ -203,6 +276,13 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
         getParent().invalidate();
     }
 
+    /**
+     * Base mouse event handling procedure for selecting and deselecting a word. If the mouse is in the area of a word,
+     * it will be selected by setting selectedWordIndex to that word's index. Also, previously selected word's selected
+     * property is set to false. If the mouse is not on one of the word's area, previously selected word becomes
+     * unselected.
+     * @param e Mouse event to be processed.
+     */
     @Override
     public void mouseMoved(MouseEvent e) {
         for (int i = 0; i < sentence.wordCount(); i++){
@@ -230,10 +310,22 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
         }
     }
 
+    /**
+     * Base method for populating the list. It does nothing.
+     * @param sentence Sentence used to populate for the current word.
+     * @param wordIndex Index of the selected word.
+     * @return Index of the selected item in the list.
+     */
     protected int populateLeaf(AnnotatedSentence sentence, int wordIndex){
         return -1;
     }
 
+    /**
+     * Base mouse event handling procedure for clicking a word. There are two possibilities:
+     * <p>If the mouse is clicked without control key is pressed, the list box with possible options is displayed.</p>
+     * <p>If the mouse is clicked with control key is pressed, the EditText is displayed with the word in it.</p>
+     * @param mouseEvent Mouse event to be processed.
+     */
     public void mouseClicked(MouseEvent mouseEvent) {
         int selectedIndex;
         if (selectedWordIndex != -1){

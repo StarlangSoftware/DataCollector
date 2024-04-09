@@ -5,7 +5,6 @@ import AnnotatedTree.ParseNodeDrawable;
 import AnnotatedTree.Processor.Condition.IsTurkishLeafNode;
 import AnnotatedTree.Processor.NodeDrawableCollector;
 import DataCollector.*;
-import Util.DrawingButton;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,26 +15,26 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Properties;
 
-public abstract class TreeEditorFrame extends DataCollector{
+public abstract class TreeEditorFrame extends TreeViewerFrame{
 
     protected abstract TreeEditorPanel generatePanel(String currentPath, String rawFileName);
-    protected JSlider widthSlider;
-    protected JSlider heightSlider;
-    /**
-     * Menu to display the basic tree operations, such as next tree, previous tree, etc.
-     */
-    protected JMenu treeMenu;
-    /**
-     * Menu items responsible for displaying the next and previous trees and saving trees.
-     */
-    protected JMenuItem itemNext, itemPrevious;
 
     /**
-     * Constructor for the Editor Frame. This Frame will be automatically inherited from Translator, NER, MorphologicalAnalyzer, Dependency
-     * and Semantic frames. The constructor simply adds next and previous tree menu items and connects corresponding ActionListeners
-     * to those menu items. The method also checks if the active tab changed in the TabbedPane. When the active tab changes in the TabbedPane,
-     * the method should display source and target language sentence in the bottom info labels. Another function is adding undo ActionListener
-     * to undo menu item.
+     * <p>The constructor first reads the properties file which gets the tree and sentence
+     * paths for tree and sentence corpora respectively.</p>
+     *
+     * <p>This Frame will be automatically inherited from Translator, NER, MorphologicalAnalyzer, Dependency
+     * and Semantic frames.</p>
+     * The menu consists of:
+     * <p>itemOpen: The user will select a tree file, and a new panel depending on the task will be
+     * generated via the abstract method generatePanel. The new panel will be inserted into this frame.</p>
+     * <p>itemGoToFile: The user will enter a file name, then the system will get that tree file,
+     * and a new panel depending on the task will be generated via the abstract method generatePanel. The new panel
+     * will be inserted into this frame.</p>
+     * <p>itemOpenMultiple: The user will select a file which contains the filenames and also possibly words in that
+     * trees residing in those files, then the system will generate that many panels via the abstract
+     * method generatePanel. The words will also be selected (done with selected attribute) in those panels. All those
+     * panels will be inserted into this frame.</p>
      */
     public TreeEditorFrame(){
         Properties properties;
@@ -46,43 +45,7 @@ public abstract class TreeEditorFrame extends DataCollector{
             TreeEditorPanel.phrasePath = properties.getProperty("phrasePath", TreeEditorPanel.phrasePath);
         } catch (IOException ignored) {
         }
-        JButton button;
-        button = new DrawingButton(DataCollector.class, this, "fastfastbackward", FAST_FAST_BACKWARD, "Previous 100 Tree");
-        button.setVisible(true);
-        toolBar.add(button, 0);
-        button = new DrawingButton(DataCollector.class, this, "fastbackward", FAST_BACKWARD, "Previous 10 Tree");
-        button.setVisible(true);
-        toolBar.add(button, 1);
-        button = new DrawingButton(DataCollector.class, this, "fastforward", FAST_FORWARD, "Next 10 Tree");
-        button.setVisible(true);
-        toolBar.add(button, 4);
-        button = new DrawingButton(DataCollector.class, this, "fastfastforward", FAST_FAST_FORWARD, "Next 100 Tree");
-        button.setVisible(true);
-        toolBar.add(button, 5);
-        treeMenu = new JMenu("Tree");
-        menu.add(treeMenu);
-        itemNext = addMenuItem(treeMenu, "Next Tree", KeyStroke.getKeyStroke('s'));
-        itemPrevious = addMenuItem(treeMenu, "Previous Tree", KeyStroke.getKeyStroke('w'));
-        treeMenu.addSeparator();
         JMenuItem itemUndo = addMenuItem(treeMenu, "Undo", KeyStroke.getKeyStroke("control Z"));
-        itemSave.setVisible(false);
-        toolBar.addSeparator();
-        widthSlider = new JSlider(SwingConstants.HORIZONTAL, 10, 25, 12);
-        widthSlider.setMinorTickSpacing(1);
-        widthSlider.setMajorTickSpacing(5);
-        widthSlider.setPaintTicks(true);
-        widthSlider.setPaintLabels(true);
-        widthSlider.setMaximumSize(new Dimension(250, 35));
-        toolBar.add(widthSlider);
-        widthSlider.addChangeListener(e -> setNodeWidth(widthSlider.getValue() * 5));
-        heightSlider = new JSlider(SwingConstants.HORIZONTAL, 1, 10, 8);
-        heightSlider.setMinorTickSpacing(1);
-        heightSlider.setMajorTickSpacing(1);
-        heightSlider.setPaintTicks(true);
-        heightSlider.setPaintLabels(true);
-        heightSlider.setMaximumSize(new Dimension(150, 35));
-        toolBar.add(heightSlider);
-        heightSlider.addChangeListener(e -> setNodeHeight(40 + heightSlider.getValue() * 5));
         itemUndo.addActionListener(e -> undo());
         projectPane.addChangeListener(c -> {
             if (projectPane.getSelectedIndex() != -1) {
@@ -137,9 +100,7 @@ public abstract class TreeEditorFrame extends DataCollector{
                             }
                         }
                     }
-                    if (editorPanel != null){
-                        addPanelToFrame(editorPanel, fileItem.getFileName());
-                    }
+                    addPanelToFrame(editorPanel, fileItem.getFileName());
                 }
             }
         });
@@ -150,7 +111,7 @@ public abstract class TreeEditorFrame extends DataCollector{
     /**
      * If the current tree displayed in the panel is changed, this function will display source and target sentences in the
      * labels shown in the bottom. In some parse trees, the tree is so large that, the display does not fit in a single line.
-     * For that purpose, the labels 's text are set with html tags.
+     * For that purpose, the label's text are set with html tags.
      * @param current Current panel that displays the current tree.
      */
     protected void updateInfo(TreeEditorPanel current){
@@ -180,16 +141,7 @@ public abstract class TreeEditorFrame extends DataCollector{
             current.undo();
         }
     }
-
-    protected void setNodeWidth(int nodeWidth){
-        TreeEditorPanel current = (TreeEditorPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
-        current.setNodeWidth(nodeWidth);
-    }
-
-    protected void setNodeHeight(int nodeHeight){
-        TreeEditorPanel current = (TreeEditorPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
-        current.setNodeHeight(nodeHeight);
-    }
+    
     /**
      * Adds the given editor panel to this frame.
      * @param editorPanel Editor panel to be added.
@@ -204,6 +156,12 @@ public abstract class TreeEditorFrame extends DataCollector{
         editorPanel.setFocusable(true);
     }
 
+    /**
+     * The function displays the next tree according to the index of the parse tree. For example, if the current
+     * tree fileName is 0123.train, after the call of nextTree(3), ViewerPanel will display 0126.train. If the next tree
+     * does not exist, nothing will happen.
+     * @param count Number of trees to go forward
+     */
     protected void nextTree(int count){
         TreeEditorPanel current = (TreeEditorPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
         if (current != null){
@@ -215,6 +173,12 @@ public abstract class TreeEditorFrame extends DataCollector{
         }
     }
 
+    /**
+     * Overloaded function that displays the previous tree according to the index of the parse tree. For example, if the current
+     * tree fileName is 0123.train, after the call of previousTree(4), ViewerPanel will display 0119.train. If the
+     * previous tree does not exist, nothing will happen.
+     * @param count Number of trees to go backward
+     */
     protected void previousTree(int count){
         TreeEditorPanel current = (TreeEditorPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
         if (current != null){

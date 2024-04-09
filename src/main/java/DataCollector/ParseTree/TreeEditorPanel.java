@@ -18,11 +18,21 @@ public class TreeEditorPanel extends TreeViewerPanel implements MouseListener, M
     protected ArrayList<TreeEditAction> actionList;
     protected boolean isEditing;
 
+    /**
+     * Constructor for the base class of tree editing panels. Displays the tree with the given filename in the given
+     * path. The editing will be done in the given layer type.
+     * @param path File path of the current tree.
+     * @param fileName Raw file name of the current tree.
+     * @param viewLayer Name of the layer that will be edited for the current tree.
+     */
     public TreeEditorPanel(String path, String fileName, ViewLayerType viewLayer) {
         super(path, fileName, viewLayer);
         actionList = new ArrayList<>();
     }
 
+    /**
+     * Clears the undo action list for the new tree displayed.
+     */
     private void clear(){
         actionList.clear();
         if (previousNode != null){
@@ -31,16 +41,31 @@ public class TreeEditorPanel extends TreeViewerPanel implements MouseListener, M
         previousNode = null;
     }
 
+    /**
+     * Overloaded function that displays the next tree according to the index of the parse tree. For example, if the current
+     * tree fileName is 0123.train, after the call of nextTree(3), ViewerPanel will display 0126.train. If the next tree
+     * does not exist, nothing will happen.
+     * @param count Number of trees to go forward
+     */
     protected void nextTree(int count){
         clear();
         super.nextTree(count);
     }
 
+    /**
+     * Overloaded function that displays the previous tree according to the index of the parse tree. For example, if the current
+     * tree fileName is 0123.train, after the call of previousTree(4), ViewerPanel will display 0119.train. If the
+     * previous tree does not exist, nothing will happen.
+     * @param count Number of trees to go backward
+     */
     protected void previousTree(int count){
         clear();
         super.previousTree(count);
     }
 
+    /**
+     * If the action list is not empty, undoes the last action read from the action list.
+     */
     public void undo(){
         if (!actionList.isEmpty()){
             actionList.get(actionList.size() - 1).undo();
@@ -49,35 +74,29 @@ public class TreeEditorPanel extends TreeViewerPanel implements MouseListener, M
         }
     }
 
+    /**
+     * Saves the current tree.
+     */
     public void save(){
         currentTree.save();
     }
 
+    /**
+     * Base method for filling the options in the list or tree.
+     * @param node Selected node for which options will be displayed.
+     */
     protected void populateLeaf(ParseNodeDrawable node){
     }
 
+    /**
+     * When the user clicks on a node, this function identifies the node clicked and populates the list or tree
+     * displayed for editing.
+     * @param mouseEvent Mouse click event to handle.
+     */
     public void mouseClicked(MouseEvent mouseEvent) {
         ParseNodeDrawable node = currentTree.getLeafNodeAt(mouseEvent.getX(), mouseEvent.getY());
         if (node != null){
             populateLeaf(node);
-        }
-    }
-
-    public void mouseMoved(MouseEvent mouseEvent) {
-        ParseNodeDrawable node = currentTree.getNodeAt(mouseEvent.getX(), mouseEvent.getY());
-        if (node != null && node != previousNode && !isEditing){
-            if (previousNode != null) {
-                previousNode.setSelected(false);
-            }
-            node.setSelected(true);
-            previousNode = node;
-            this.repaint();
-        } else {
-            if (node == null && previousNode != null && !isEditing){
-                previousNode.setSelected(false);
-                previousNode = null;
-                this.repaint();
-            }
         }
     }
 
@@ -103,7 +122,29 @@ public class TreeEditorPanel extends TreeViewerPanel implements MouseListener, M
 
     @Override
     public void mouseDragged(MouseEvent e) {
+    }
 
+    /**
+     * When the user moves the mouse, two thing may happen, either selected node wil be deselected, or a new node will
+     * be selected. This function handles those selection and deselection events.
+     * @param mouseEvent Mouse move event to handle.
+     */
+    public void mouseMoved(MouseEvent mouseEvent) {
+        ParseNodeDrawable node = currentTree.getNodeAt(mouseEvent.getX(), mouseEvent.getY());
+        if (node != null && node != previousNode && !isEditing){
+            if (previousNode != null) {
+                previousNode.setSelected(false);
+            }
+            node.setSelected(true);
+            previousNode = node;
+            this.repaint();
+        } else {
+            if (node == null && previousNode != null && !isEditing){
+                previousNode.setSelected(false);
+                previousNode = null;
+                this.repaint();
+            }
+        }
     }
 
 }

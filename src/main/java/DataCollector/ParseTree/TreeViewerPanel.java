@@ -90,9 +90,9 @@ public class TreeViewerPanel extends JPanel {
 
     /**
      * Overloaded function that displays the next tree according to the index of the parse tree. For example, if the current
-     * tree fileName is 0123.train, after the call of nextTree, ViewerPanel will display 0124.train. If the next tree does not
-     * exist, nothing will happen.
-     * @param count Number of trees to pass next
+     * tree fileName is 0123.train, after the call of nextTree(3), ViewerPanel will display 0126.train. If the next tree
+     * does not exist, nothing will happen.
+     * @param count Number of trees to go forward
      */
     protected void nextTree(int count){
         currentTree.nextTree(count);
@@ -101,9 +101,9 @@ public class TreeViewerPanel extends JPanel {
 
     /**
      * Overloaded function that displays the previous tree according to the index of the parse tree. For example, if the current
-     * tree fileName is 0123.train, after the call of previousTree, ViewerPanel will display 0122.train. If the previous tree does not
-     * exist, nothing will happen.
-     * @param count Number of trees to pass before
+     * tree fileName is 0123.train, after the call of previousTree(4), ViewerPanel will display 0119.train. If the
+     * previous tree does not exist, nothing will happen.
+     * @param count Number of trees to go backward
      */
     protected void previousTree(int count){
         currentTree.previousTree(count);
@@ -129,11 +129,19 @@ public class TreeViewerPanel extends JPanel {
         return treeToStringConverter.convert();
     }
 
+    /**
+     * Sets the horizontal distance in terms of pixels between two nodes in the tree.
+     * @param nodeWidth The new horizontal distance
+     */
     protected void setNodeWidth(int nodeWidth){
         this.nodeWidth = nodeWidth;
         repaint();
     }
 
+    /**
+     * Sets the vertical distance in terms of pixels between two nodes in the tree.
+     * @param nodeHeight The new vertical distance
+     */
     protected void setNodeHeight(int nodeHeight){
         this.nodeHeight = nodeHeight;
         repaint();
@@ -150,9 +158,9 @@ public class TreeViewerPanel extends JPanel {
     }
 
     /**
-     * Draws current parse tree in the panel. The width of the parse tree is calculated by multiplying the maximum inorder traversal
-     * index of the current tree with nodeWidth. The height of the parse tree is calculated by multiplying the maximum depth of the
-     * current tree with nodeHeight.
+     * Draws current parse tree in the panel. The width of the parse tree is calculated by multiplying the maximum
+     * inorder traversal index of the current tree with nodeWidth. The height of the parse tree is calculated by
+     * multiplying the maximum depth of the current tree with nodeHeight.
      * @param g Graphics object used to draw the parse tree.
      */
     protected void paintComponent(Graphics g){
@@ -165,22 +173,72 @@ public class TreeViewerPanel extends JPanel {
         getParent().revalidate();
     }
 
+    /**
+     * Calls the recursive paint method with the root of the tree.
+     * @param parseTree Tree to be drawn.
+     * @param g Graphics on which tree will be drawn.
+     * @param nodeWidth Horizontal distance between nodes.
+     * @param nodeHeight Vertical distance between nodes.
+     * @param viewLayer View layer to be drawn.
+     */
     protected void paint(ParseTreeDrawable parseTree, Graphics g, int nodeWidth, int nodeHeight, ViewLayerType viewLayer){
         paint(((ParseNodeDrawable)parseTree.getRoot()), g, nodeWidth, nodeHeight, parseTree.maxDepth(), viewLayer);
     }
 
+    /**
+     * Returns the size of the symbol in a parse node in terms of pixels.
+     * @param parseNode Parse node
+     * @param g Graphics on which tree will be drawn.
+     * @return Size of the string in terms of pixels.
+     */
     protected int getStringSize(ParseNodeDrawable parseNode, Graphics g){
         return g.getFontMetrics().stringWidth(parseNode.getData().getName());
     }
 
+    /**
+     * Draws the symbol in the parse node at a given (x, y) coordinate.
+     * @param parseNode Parse Node
+     * @param g Graphics on which symbol is drawn.
+     * @param x x coordinate
+     * @param y y coordinate
+     */
     protected void drawString(ParseNodeDrawable parseNode, Graphics g, int x, int y){
         g.drawString(parseNode.getData().getName(), x, y);
     }
 
+    /**
+     * Determines the area of the parse node given its center and size of its symbol.
+     * @param parseNode Parse Node
+     * @param x x coordinate of the center of the node.
+     * @param y y coordinate of the center of the node.
+     * @param stringSize Size of the string in terms of pixels.
+     */
     protected void setArea(ParseNodeDrawable parseNode, int x, int y, int stringSize){
         parseNode.setArea(x - 5, y - 15, stringSize + 10, 20);
     }
 
+    /**
+     * Recursive node drawing method. The function
+     * <ul>
+     *     <li> Adds extra vertical space to the top, and removes extra space from the bottom.</li>
+     *     <li> Draws a rectangle in color<ul>
+     *         <li>Blue, if the node is searched</li>
+     *         <li>Red, if the node is in edit mode</li>
+     *         <li>Magenta, if the node is in dragged</li>
+     *         <li>Black, if the node is selected</li>
+     *     </ul>
+     *     </li>
+     *     <li>The leaf nodes are drawn in different colors than black</li>
+     *     <li>Draws lines to its children</li>
+     *     <li>Calls recursively itself to draw its child nodes.</li>
+     * </ul>
+     * @param parseNode Parse Node to be drawn.
+     * @param g Graphics on which tree will be drawn.
+     * @param nodeWidth Horizontal distance between nodes.
+     * @param nodeHeight Vertical distance between nodes.
+     * @param maxDepth Maximum depth of the tree.
+     * @param viewLayer View layer to be drawn.
+     */
     public void paint(ParseNodeDrawable parseNode, Graphics g, int nodeWidth, int nodeHeight, int maxDepth, ViewLayerType viewLayer){
         int stringSize, addY, x, y;
         ViewLayerType originalLayer = viewLayer;

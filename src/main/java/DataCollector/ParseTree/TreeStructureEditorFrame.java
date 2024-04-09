@@ -10,6 +10,10 @@ public abstract class TreeStructureEditorFrame extends TreeEditorFrame {
     static final protected String MOVELEFT = "moveleft";
     static final protected String MOVERIGHT = "moveright";
 
+    /**
+     * Base constructor for the tree structure modifier frames. It adds moveLeft and moveRight buttons and corresponding
+     * action listeners.
+     */
     public TreeStructureEditorFrame(){
         JButton button;
         toolBar.addSeparator();
@@ -26,6 +30,9 @@ public abstract class TreeStructureEditorFrame extends TreeEditorFrame {
         itemRight.addActionListener(e -> moveRight());
     }
 
+    /**
+     * Swaps selected node with its left sibling.
+     */
     protected void moveLeft(){
         TreeStructureEditorPanel current = (TreeStructureEditorPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
         if (current != null){
@@ -34,6 +41,9 @@ public abstract class TreeStructureEditorFrame extends TreeEditorFrame {
         }
     }
 
+    /**
+     * Swaps selected node with its right sibling.
+     */
     protected void moveRight(){
         TreeStructureEditorPanel current = (TreeStructureEditorPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
         if (current != null){
@@ -42,6 +52,10 @@ public abstract class TreeStructureEditorFrame extends TreeEditorFrame {
         }
     }
 
+    /**
+     * Depending on the action command of the event, the method calls moveLeft or moveRight.
+     * @param e Action event to be responded.
+     */
     public void actionPerformed(ActionEvent e) {
         super.actionPerformed(e);
         switch (e.getActionCommand()){
