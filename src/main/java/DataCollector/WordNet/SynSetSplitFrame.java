@@ -2,8 +2,8 @@ package DataCollector.WordNet;
 
 import DataCollector.DataCollector;
 import Util.DrawingButton;
+import WordNet.Annotation.SynSetSplitPanel;
 import WordNet.WordNet;
-import WordNet.Annotation.SynSetMatcherPanel;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -12,20 +12,20 @@ import java.io.File;
 /**
  * <p> Creating synsets with synonym literals can be challenging especially when the mapping is overgrown, the
  * transitivity decreases. This process poses a problem in creating meaningful and accurate synsets. Here, the
- * Synset Matcher plays a crucial role as it enables us to view all the literals in synsets and merge/split the
+ * Synset Splitter plays a crucial role as it enables us to view all the literals in synsets and merge/split the
  * synsets when necessary.</p>
  *
- * <p> The Synset Matcher receives data from the Literal Matcher and acts as a supportive editor. It provides
+ * <p> The Synset Splitter receives data from the SynSet Merger and acts as a supportive editor. It provides
  * editing options for synonym literals in languages and provides an easy and practical interface to check the
- * synsets built in the Literal Matcher. It allows us to identify the different synsets that should be grouped
+ * synsets built in the SynSet Merger. It allows us to identify the different synsets that should be grouped
  * together because of their meanings and enables us to merge them. Similarly, any synsets whose literals
  * should be separated because of their unrelated definitions that are grouped together as a result of transitivity
- * problems or any other mistakes during the previous processes can be split via the Synset Matcher. The Synset
- * Matcher makes it possible to see the whole picture of a synset by showing us the final matching maps of all of
+ * problems or any other mistakes during the previous processes can be split via the Synset Splitter. The Synset
+ * Splitter makes it possible to see the whole picture of a synset by showing us the final matching maps of all of
  * its literals and to prune the synset if need be. As a result of this mapping and editing process in the Synset
- * Matcher, we obtain the final version of synsets</p>
+ * Splitter, we obtain the final version of synsets</p>
  */
-public class SynSetMatcherFrame extends DataCollector {
+public class SynSetSplitFrame extends DataCollector {
 
     /**
      * Constructs a frame in which the annotators remove synsets from being part of a large synonym set. The system
@@ -40,8 +40,8 @@ public class SynSetMatcherFrame extends DataCollector {
      * <p>itemRandom: The program shows a random possible candidate.</p>
      * @param wordNet The wordnet for which the user will match literals for synsets.
      */
-    public SynSetMatcherFrame(final WordNet wordNet){
-        this.setTitle("SynSet Matcher");
+    public SynSetSplitFrame(final WordNet wordNet){
+        this.setTitle("SynSet Splitter");
         JButton button = new DrawingButton(DataCollector.class, this, "random", RANDOM, "Random Tree");
         button.setVisible(true);
         toolBar.add(button);
@@ -57,7 +57,7 @@ public class SynSetMatcherFrame extends DataCollector {
             fcinput.setCurrentDirectory(new File("./components"));
             int returnVal = fcinput.showOpenDialog(null);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
-                SynSetMatcherPanel synSetMatcherPanel = new SynSetMatcherPanel(wordNet, fcinput.getSelectedFile().getParent() + "/" + fcinput.getSelectedFile().getName());
+                SynSetSplitPanel synSetMatcherPanel = new SynSetSplitPanel(wordNet, fcinput.getSelectedFile().getParent() + "/" + fcinput.getSelectedFile().getName());
                 JScrollPane scrollPane = new JScrollPane();
                 scrollPane.setViewportView(synSetMatcherPanel);
                 projectPane.add(scrollPane, fcinput.getSelectedFile().getName(), projectPane.getSelectedIndex() + 1);
@@ -66,7 +66,7 @@ public class SynSetMatcherFrame extends DataCollector {
             }
         });
         itemSave.addActionListener(e -> {
-            SynSetMatcherPanel current = (SynSetMatcherPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
+            SynSetSplitPanel current = (SynSetSplitPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
             if (current != null){
                 current.save();
             }
@@ -80,7 +80,7 @@ public class SynSetMatcherFrame extends DataCollector {
      * Displays next synset set (a candidate)
      */
     private void nextSynSetCandidate(){
-        SynSetMatcherPanel current = (SynSetMatcherPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
+        SynSetSplitPanel current = (SynSetSplitPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
         if (current != null){
             infoBottom.setText(current.nextSynSetCandidate());
         }
@@ -90,7 +90,7 @@ public class SynSetMatcherFrame extends DataCollector {
      * Displays previous synset set (a candidate)
      */
     private void previousSynSetCandidate(){
-        SynSetMatcherPanel current = (SynSetMatcherPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
+        SynSetSplitPanel current = (SynSetSplitPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
         if (current != null){
             infoBottom.setText(current.previousSynSetCandidate());
         }
@@ -100,7 +100,7 @@ public class SynSetMatcherFrame extends DataCollector {
      * Displays random synset set (a candidate)
      */
     private void randomSynSetCandidate(){
-        SynSetMatcherPanel current = (SynSetMatcherPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
+        SynSetSplitPanel current = (SynSetSplitPanel) ((JScrollPane) projectPane.getSelectedComponent()).getViewport().getView();
         if (current != null){
             infoBottom.setText(current.randomSynSetCandidate());
         }
