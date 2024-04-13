@@ -117,7 +117,7 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
     }
 
     /**
-     * Displays the previous sentence according to the index of the parse tree. For example, if the current
+     * Displays the previous sentence according to the index of the sentence. For example, if the current
      * sentence fileName is 0123.train, after the call of previous(4), the panel will display 0119.train. If the
      * previous sentence does not exist, nothing will happen.
      * @param count Number of sentences to go backward
