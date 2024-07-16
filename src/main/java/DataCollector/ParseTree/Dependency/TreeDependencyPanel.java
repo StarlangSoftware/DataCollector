@@ -234,7 +234,7 @@ public class TreeDependencyPanel extends TreeEditorPanel {
                     if (g.getFontMetrics().stringWidth(parseNode.getLayerInfo().getLayerInfoAt(ViewLayerType.INFLECTIONAL_GROUP, i)) > stringSize){
                         stringSize = g.getFontMetrics().stringWidth(parseNode.getLayerInfo().getLayerInfoAt(ViewLayerType.INFLECTIONAL_GROUP, i));
                     }
-                } catch (LayerNotExistsException | LayerItemNotExistsException | WordNotExistsException e) {
+                } catch (LayerNotExistsException | LayerItemNotExistsException e) {
                     return g.getFontMetrics().stringWidth(parseNode.getData().getName());
                 }
             return stringSize;
@@ -256,7 +256,7 @@ public class TreeDependencyPanel extends TreeEditorPanel {
                 try {
                     g.drawString(parseNode.getLayerInfo().getLayerInfoAt(ViewLayerType.INFLECTIONAL_GROUP, i), x, y);
                     y += 20;
-                } catch (LayerNotExistsException | LayerItemNotExistsException | WordNotExistsException e) {
+                } catch (LayerNotExistsException | LayerItemNotExistsException e) {
                     g.drawString(parseNode.getData().getName(), x, y);
                 }
             }
