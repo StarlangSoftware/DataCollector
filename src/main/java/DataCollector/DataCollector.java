@@ -4,9 +4,7 @@ import Util.DrawingButton;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -29,6 +27,8 @@ public class DataCollector extends JFrame implements ActionListener {
     protected JToolBar toolBar;
     protected JMenuBar menu;
     protected JMenu projectMenu;
+    private JTextArea textArea;
+    public String userName;
 
     static final protected String BACKWARD = "backward";
     static final protected String FORWARD = "forward";
@@ -170,6 +170,7 @@ public class DataCollector extends JFrame implements ActionListener {
      * Then adds Open, Open Multiple, Save, Close and Close All items to the {@link JMenu} and define actions for Close and Close All items.
      */
     protected DataCollector() {
+        userName = JOptionPane.showInputDialog("Enter your user name");
         menu = new JMenuBar();
         setJMenuBar(menu);
         projectMenu = new JMenu("Project");
@@ -184,6 +185,19 @@ public class DataCollector extends JFrame implements ActionListener {
         projectPane.setFocusable(false);
         disableMenu();
         add(projectPane, BorderLayout.CENTER);
+        textArea = new JTextArea();
+        textArea.setColumns(10);
+        File f = new File(userName + ".txt");
+        if (f.exists()){
+            try {
+                FileReader reader = new FileReader(f);
+                BufferedReader br = new BufferedReader(reader);
+                textArea.read( br, null);
+                br.close();
+            } catch (IOException ignored) {
+            }
+        }
+        add(textArea, BorderLayout.EAST);
         toolBar = new JToolBar("ToolBox");
         addButtons(toolBar);
         add(toolBar, BorderLayout.PAGE_START);
@@ -213,6 +227,17 @@ public class DataCollector extends JFrame implements ActionListener {
                 projectPane.remove(0);
             }
             disableMenu();
+        });
+        addWindowListener(new WindowAdapter(){
+            public void windowClosing(WindowEvent e) {
+                try {
+                    FileWriter writer = new FileWriter( userName + ".txt");
+                    BufferedWriter bw = new BufferedWriter(writer);
+                    textArea.write(bw);
+                    bw.close();
+                } catch (IOException ignored) {
+                }
+            }
         });
     }
 
