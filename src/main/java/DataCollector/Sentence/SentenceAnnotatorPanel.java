@@ -290,7 +290,7 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
             if (word.getArea().contains(e.getX(), e.getY())){
                 word.setSelected(true);
                 if (i != selectedWordIndex){
-                    if (selectedWordIndex != -1){
+                    if (selectedWordIndex != -1 && !e.isShiftDown()){
                         ((AnnotatedWord)sentence.getWord(i)).setSelected(false);
                     }
                 }
@@ -300,7 +300,11 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
             }
         }
         if (selectedWordIndex != -1){
-            ((AnnotatedWord)sentence.getWord(selectedWordIndex)).setSelected(false);
+            if (!e.isShiftDown()){
+                for (int i = 0; i < sentence.wordCount(); i++) {
+                    ((AnnotatedWord)sentence.getWord(i)).setSelected(false);
+                }
+            }
             selectedWordIndex = -1;
             if (!editText.isVisible()){
                 clickedWord = null;
