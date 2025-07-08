@@ -1,18 +1,13 @@
 package DataCollector;
 
 import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
-public abstract class ViewAnnotationFrame extends JFrame implements ActionListener {
+public abstract class ViewAnnotationFrame extends ViewFrame implements ActionListener {
 
-    protected ArrayList<ArrayList<String>> data;
-    protected JTable dataTable;
-    protected int selectedRow = -1;
     protected static final String ID_SORT = "sortid";
     protected static final String WORD_SORT = "sortword";
     protected static final String COPY = "copy";
@@ -25,7 +20,7 @@ public abstract class ViewAnnotationFrame extends JFrame implements ActionListen
     /**
      * Implements the AbstractTableModel, so that the table could be displayed accordingly.
      */
-    public class TableDataModel extends AbstractTableModel {
+    public class TableDataModel extends TableRawDataModel {
 
         /**
          * Number of columns displayed in the table.
@@ -33,28 +28,6 @@ public abstract class ViewAnnotationFrame extends JFrame implements ActionListen
          */
         public int getColumnCount() {
             return COLOR_COLUMN_INDEX - 1;
-        }
-
-        /**
-         * Number of rows displayed in the table.
-         * @return Number of rows in the table.
-         */
-        public int getRowCount() {
-            return data.size();
-        }
-
-        public Class getColumnClass(int col) {
-            return Object.class;
-        }
-
-        /**
-         * Returns the value displayed in the cell on the row and column.
-         * @param row        the row whose value is to be queried
-         * @param col     the column whose value is to be queried
-         * @return Value to be displayed in the cell addressed (row, column)
-         */
-        public Object getValueAt(int row, int col) {
-            return data.get(row).get(col);
         }
 
         /**

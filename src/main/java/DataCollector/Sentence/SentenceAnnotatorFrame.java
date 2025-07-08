@@ -20,7 +20,7 @@ public abstract class SentenceAnnotatorFrame extends DataCollector {
 
     protected JSlider widthSlider;
 
-    protected abstract SentenceAnnotatorPanel generatePanel(String currentPath, String rawFileName);
+    public abstract SentenceAnnotatorPanel generatePanel(String currentPath, String rawFileName);
 
     /**
      * <p>The {@link SentenceAnnotatorFrame} constructor first reads the properties file which gets the tree and sentence
@@ -104,6 +104,7 @@ public abstract class SentenceAnnotatorFrame extends DataCollector {
             final JFileChooser fcinput = new JFileChooser();
             fcinput.setDialogTitle("Select project file containing file names");
             fcinput.setDialogType(JFileChooser.OPEN_DIALOG);
+            fcinput.setCurrentDirectory(new File(TreeEditorPanel.phrasePath));
             int returnVal = fcinput.showOpenDialog(null);
             if (returnVal == JFileChooser.APPROVE_OPTION) {
                 ArrayList<FileWithSelectedWords> fileList = loadMultipleFileNames(fcinput.getSelectedFile().getParent() + "/" + fcinput.getSelectedFile().getName());
