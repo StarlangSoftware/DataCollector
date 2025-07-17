@@ -113,7 +113,7 @@ public abstract class SentenceAnnotatorFrame extends DataCollector {
                     for (int i = 0; i < fileItem.size(); i++) {
                         for (int j = 0; j < annotatorPanel.sentence.wordCount(); j++) {
                             if (fileItem.getWord(i).equals(annotatorPanel.sentence.getWord(j).getName())) {
-                                ((AnnotatedWord) annotatorPanel.sentence.getWord(j)).setSelected(true);
+                                ((AnnotatedWord) annotatorPanel.sentence.getWord(j)).setForceSelected(true);
                                 break;
                             }
                         }

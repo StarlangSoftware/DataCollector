@@ -260,7 +260,7 @@ public abstract class SentenceAnnotatorPanel extends JPanel implements MouseList
                 g.setFont(currentFont);
             }
             word.setArea(new RectAngle(currentLeft - 5, ((lineIndex + 1) * lineSpace - stringHeight), stringWidth + 10, (int) (1.5 * stringHeight)));
-            if (word.isSelected()){
+            if (word.isSelected() || word.isForceSelected()){
                 g.setColor(Color.BLUE);
                 g.drawRect(word.getArea().getX(), word.getArea().getY(), word.getArea().getWidth(), word.getArea().getHeight());
             }
